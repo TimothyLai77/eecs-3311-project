@@ -1,5 +1,8 @@
 package Frontend;
 
 public class Placeholder {
-//hi there
+
+
+		private String example = null;
+		private String example2 = "Aum Patel";
 }
