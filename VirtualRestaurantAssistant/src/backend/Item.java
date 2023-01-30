@@ -1,4 +1,4 @@
-package Backend;
+package backend;
 public class Item {
 	private String name;
 	private String type;
@@ -8,6 +8,6 @@ public class Item {
 		this.name = name;
 		this.type = type;
 		this.quantity = quantity;
-		this.price = price
+		this.price = price;
 	}
 }

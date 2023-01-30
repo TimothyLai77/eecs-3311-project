@@ -1,4 +1,4 @@
-package Frontend;
+package frontend;
 
 public class Placeholder {
 
