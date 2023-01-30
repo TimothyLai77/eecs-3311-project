@@ -1,0 +1,3 @@
+Meeting Jan 30:
+* Went over how to use git on everyone's computer
+* Went over the class diagrams and the basic idea of the app
