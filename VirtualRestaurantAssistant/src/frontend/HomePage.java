@@ -32,6 +32,7 @@ public class HomePage extends JFrame{
 	//Frame feature variables (Dragging, Closing Etc...)
 	private int mouseX, mouseY;
 	private static HomePage frame ;
+	
 	/**
 	 * Launch the application.
 	 */
