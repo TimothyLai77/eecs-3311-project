@@ -101,7 +101,7 @@ public class HomePage extends JFrame{
 		employeeSelection.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
-//				new EmployeeLogin().setVisible(true);      UNCOMMENT THESE
+				new EmployeeLogin().setVisible(true);
 			}
 		});
 		panel.add(employeeSelection);
@@ -146,11 +146,12 @@ public class HomePage extends JFrame{
 		contentPane.add(appTitleLbl);
 		
 		
-		//CUSTOMER-ORDERING SIDE
+		//CUSTOMER-ORDERING SIDE  -- LABELS
 		JLabel customerImgLabel = new JLabel("New label");
 		customerImgLabel.setBounds(194, 206, 260, 240);
 		customerImgLabel.setIcon(new ImageIcon(ImageImports.img_customer));
 		contentPane.add(customerImgLabel);
+		
 		
 		JButton customerSelection = new JButton("Order Now!");
 		customerSelection.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
@@ -159,7 +160,7 @@ public class HomePage extends JFrame{
 		customerSelection.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
-//				new OrderingPage().setVisible(true);   UNCOMMENT ONCE ORDERING PAGE IS READY
+				new OrderingPage().setVisible(true);  
 			}
 		});
 		customerSelection.setBounds(266, 154, 146, 60);
