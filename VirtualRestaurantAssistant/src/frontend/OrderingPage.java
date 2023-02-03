@@ -1,7 +1,6 @@
 package frontend;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.EventQueue;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
@@ -11,9 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-
 import java.awt.Font;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -21,30 +18,21 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.swing.SwingConstants;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.border.LineBorder;
-
-
 import javax.swing.JSpinner;
-import javax.swing.JViewport;
-import javax.swing.JRadioButton;
-import javax.swing.JRadioButtonMenuItem;
-import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JCheckBox;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.JList;
-import java.awt.FlowLayout;
-
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.border.BevelBorder;
 
 public class OrderingPage extends JFrame {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	private JPanel contentPane;
 	
@@ -56,6 +44,9 @@ public class OrderingPage extends JFrame {
 	private ButtonGroup meatGroup = new ButtonGroup();
 	private ButtonGroup breadGroup = new ButtonGroup();
 	private ButtonGroup cheeseGroup = new ButtonGroup();
+	
+	//Quantity static calls
+	private JSpinner orderQuantity;
 	
 	//Static variables used in render logic
 	static int itemNum = 1;
@@ -357,7 +348,7 @@ public class OrderingPage extends JFrame {
 		 * ORDERING MANAGEMENT 
 		 * */
 		
-		JSpinner orderQuantity = new JSpinner();
+		orderQuantity = new JSpinner();
 		orderQuantity.setModel(new SpinnerNumberModel(Integer.valueOf(1), Integer.valueOf(1), null, Integer.valueOf(1)));
 		orderQuantity.setOpaque(false);
 		orderQuantity.setForeground(Color.BLACK);
@@ -420,7 +411,7 @@ public class OrderingPage extends JFrame {
 				//Dynamic rendering
 
 		        JLabel newItem = new JLabel("");
-		        newItem.setText("<html><body>Order item: " + itemNum++ + "<br>Item Name<br>Item options</body></html>");
+		        newItem.setText("<html><body>Order item: " + itemNum++ + "&emsp;&emsp; Qty: " + orderQuantity.getValue() + "<br>Item Name<br>Item options</body></html>");
 		        newItem.setAlignmentX(Component.CENTER_ALIGNMENT);
 		        
 		        newItem.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
@@ -458,6 +449,13 @@ public class OrderingPage extends JFrame {
 		//Defaulting position to center
 		setLocationRelativeTo(null);
 	}
+	
+	
+	/*
+	 * 
+	 * Iteratively clears all selections, and resets the state of the Customization Corner.
+	 * 
+	 * */
 	public void clearAllSelections() {
 		breadGroup.clearSelection();
 		meatGroup.clearSelection();
@@ -469,5 +467,6 @@ public class OrderingPage extends JFrame {
 		for(JCheckBox checkbox: checkboxes) {
 			checkbox.setSelected(false);
 		}
+		orderQuantity.setValue(1);
 	}
 }
