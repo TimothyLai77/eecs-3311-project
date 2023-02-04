@@ -32,13 +32,33 @@ public class Inventory {
 	}
 	
 	/**
-	 * this methods removes ingredients from the map and returns removed value  
+	 * this methods removes all ingredients from the map and returns removed value  
 	 * input:- ingredientName 
 	 * output:- List<ingredient>
 	 * 
 	 */
-	public List<Ingredient> removeIngredients(String ingredientName) {
+	public List<Ingredient> removeAllIngredients(String ingredientName) {
 		return inventory.remove(ingredientName);
+	}
+	
+	/**
+	 * this methods puts specific ingredients in the map and returns updated list  
+	 * input:- ingredientName 
+	 * output:- List<ingredient>
+	 * 
+	 */
+	public List<Ingredient> putIngredient(String ingredientName,Ingredient i) {
+		inventory.get(ingredientName).add(i);
+	return inventory.get(ingredientName);
+	}
+	
+	/**
+	 * this method adds new ingredient in the map
+	 * input:- ingredientName 
+	 * output:- List<ingredient>
+	 */
+	public List<Ingredient> addIngredient(String ingredientName,List<Ingredient> list){
+		return inventory.putIfAbsent(ingredientName, list);
 	}
 	
 }
