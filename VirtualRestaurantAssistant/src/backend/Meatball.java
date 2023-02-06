@@ -1,6 +1,6 @@
 package backend;
 
-public class Meetball {
+public class Meatball {
 	private String name;
 	private double price;
 	private String type;
