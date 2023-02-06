@@ -151,7 +151,7 @@ public class HomePage extends JFrame{
 		customerSelection.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
-				new OrderSelection().setVisible(true);  
+				new OrderSelectionPage().setVisible(true);  
 			}
 		});
 		customerSelection.setBounds(266, 154, 146, 60);

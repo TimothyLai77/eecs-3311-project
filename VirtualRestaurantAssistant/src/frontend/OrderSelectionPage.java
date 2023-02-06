@@ -29,10 +29,10 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JComboBox;
 
-public class OrderSelection extends JFrame {
+public class OrderSelectionPage extends JFrame {
 
 	/**
-	 * 
+	 * UNIQUE ID FOR FRAME
 	 */
 	private static final long serialVersionUID = 1L;
 
@@ -41,26 +41,24 @@ public class OrderSelection extends JFrame {
 	//Frame feature variables (Dragging, Closing Etc...)
 	private int mouseX, mouseY;
 	
-	//Quantity static calls
+	//Static variables used in the UI
 	private JSpinner orderQuantity;
+	private JPanel orderDetailPanel;
+	private static int itemNum = 1;
 	
-	//Static variables used in render logic
-	static int itemNum = 1;
-	
-	//Sandwich group
-	private List<JCheckBox> checkboxes = new ArrayList<>();
-	private ButtonGroup sandwichGroup = new ButtonGroup();
 	
 	//Sandwich Group Buttons
 	private static JButton chknBtn;
 	private static JButton beefBtn;
 	private static JButton mtballBtn;
+	
+	
 	/**
-	 * Create the frame.
+	 * Page constructor for the Order selection.
 	 */
-	public OrderSelection() {
+	public OrderSelectionPage() {
 		
-		// Frame setup
+		// Frame template setup
 		
 		setIconImage(ImageImports.frameLogo);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -98,6 +96,8 @@ public class OrderSelection extends JFrame {
 		panel.setBounds(481, 0, 269, 450);
 		contentPane.add(panel);
 		panel.setLayout(null);
+		
+		
 		//Custom Close Button
 		JButton closeBtn = new JButton("E X I T");
 		closeBtn.addActionListener(new ActionListener() {
@@ -108,13 +108,13 @@ public class OrderSelection extends JFrame {
 				}
 			}
 		});
-		
 		closeBtn.setBorder(null);
 		closeBtn.setForeground(Color.WHITE);
 		closeBtn.setBackground(Color.BLACK);
 		closeBtn.setBounds(207, 0, 62, 20);
 		panel.add(closeBtn);
 				
+		
 		//Custom Minimize Screen Button
 		JButton minBtn = new JButton("_");
 		minBtn.addActionListener(new ActionListener() {
@@ -130,7 +130,7 @@ public class OrderSelection extends JFrame {
 		
 		
 		// Updating visual cart
-		JPanel orderDetailPanel = new JPanel();
+		orderDetailPanel = new JPanel();
 		orderDetailPanel.setBackground(Color.DARK_GRAY);
 		orderDetailPanel.setLayout(new BoxLayout(orderDetailPanel, BoxLayout.Y_AXIS));
 		orderDetailPanel.setBorder(new EmptyBorder(20, 15, 20, 15));
@@ -191,18 +191,21 @@ public class OrderSelection extends JFrame {
 		  Sandwich Button components
 		 * */
 		chknBtn = new JButton("Chicken ");
+		chknBtn.setName("Chicken Sandwich");
 		chknBtn.setBounds(116, 50, 201, 35);
 	  	chknBtn.setBackground(Color.WHITE);
 	  	chknBtn.setBorder(null);
 		ingredientsPanel.add(chknBtn);
 		
 		beefBtn = new JButton("Beef ");
+		beefBtn.setName("Beef Sandwich");
 	  	beefBtn.setBackground(Color.WHITE);
 		beefBtn.setBounds(116, 107, 201, 35);
 		beefBtn.setBorder(null);
 		ingredientsPanel.add(beefBtn);
 		
 		mtballBtn = new JButton("Meatball");
+		mtballBtn.setName("Meatball Sandwich");
 	  	mtballBtn.setBackground(Color.WHITE);
 		mtballBtn.setBounds(116, 164, 201, 35);
 		mtballBtn.setBorder(null);
@@ -238,51 +241,30 @@ public class OrderSelection extends JFrame {
 		addToCartBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				int i = 1;
-				String bread = null;
-				String meat = null;
-				ArrayList<String> veggies = new ArrayList<>();
-				ArrayList<String> sauces = new ArrayList<>();
-				String cheese = null;
-				
 				/*
 				 * EDIT ONCE SANDWICH BUILDER IS READY TO RECIEVE INFORMATION
 				 * 
-				SandwichBuilder sb = new SandwichBuilder(bread, meat, veggies, sauces, cheese);
-				
-				// For debugging and error tracking 
-				System.out.println("Sandwich Added: "+ sb.getName());
-				System.out.println(sb.getOptions());
-				
 				*/
 				
-				//Dynamic rendering
-
-		        JLabel newItem = new JLabel("");
-		        newItem.setText("<html><body>Order item: " + itemNum++ + "&emsp;&emsp; Qty: " + orderQuantity.getValue() + "<br>" + getSelection() + "<br>Item options</body></html>");
-		        newItem.setAlignmentX(Component.CENTER_ALIGNMENT);
-		        
-		        newItem.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
-		        newItem.setBackground(Color.WHITE);
-		        newItem.setOpaque(true);
-		        newItem.setVisible(true);
-		        
-		        orderDetailPanel.add(newItem);
-		        orderDetailPanel.add(Box.createVerticalStrut(10));
-		        
-		        validate();
-				clearAllSelections();
+				//Dynamic rendering of the label into the cart
+				addLabelToCart();
+				
+				//Reset all selections, ready for the next item
+		        clearAllSelections();
 			}
 		});
 		
-		// BACK TO PREVIOUS PAGE i.e HomePage
+		
+		/*
+		 * Go back to previous page - in this case the APP HOME PAGE
+		 * */
 		
 		JButton backBtn = new JButton("");
 		backBtn.setFont(new Font("Teko SemiBold", Font.PLAIN, 19));
 		backBtn.setBorderPainted(false);
 		backBtn.setBackground(new Color(255, 255, 255));
 		backBtn.setBounds(14, 395, 80, 40);
-		backBtn.setIcon(new ImageIcon(ImageImports.imgBack));
+		backBtn.setIcon(new ImageIcon(ImageImports.imgBack));	
 		contentPane.add(backBtn);
 		backBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -306,9 +288,15 @@ public class OrderSelection extends JFrame {
 	 * */
 	public void clearAllSelections() {
 		
-		
-		sandwichGroup.clearSelection();
-		sandwichGroup.setSelected(checkboxes.get(0).getModel(), true);
+	  	chknBtn.setBackground(Color.WHITE);
+	  	chknBtn.setEnabled(true);
+
+	  	beefBtn.setBackground(Color.WHITE);
+	  	beefBtn.setEnabled(true);
+	  	
+	  	mtballBtn.setBackground(Color.WHITE);
+	  	mtballBtn.setEnabled(true);
+	  	
 		orderQuantity.setValue(1);
 	}
 	
@@ -353,10 +341,11 @@ public class OrderSelection extends JFrame {
 	
 	
 	/*
+	 * 
 	 * Method to retrieve current choice
+	 * 
 	 * */
-	
-	private static String getSelection(){
+	private String getSelection(){
 			if (!chknBtn.isEnabled()) {
 				return chknBtn.getName();
 	        } else if (!beefBtn.isEnabled()) {
@@ -368,5 +357,31 @@ public class OrderSelection extends JFrame {
 	        }
 	}
 	
+	/*
+	 *	Generate temp sandwich specification to send to the backend
+	 * */
+	private void generateSandwichSpec() {
+		
+	}
 	
+	/*
+	 * Method to add the current item into the cart.
+	 * */
+	private void addLabelToCart(){
+		
+		JLabel newItem = new JLabel("");
+        newItem.setText("<html><body>Order item: " + itemNum++ + "&emsp;&emsp; Qty: " + orderQuantity.getValue() + "<br>" + getSelection() + "<br>Item options</body></html>");
+        newItem.setAlignmentX(Component.CENTER_ALIGNMENT);
+        
+        newItem.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+        newItem.setBackground(Color.WHITE);
+        newItem.setOpaque(true);
+        newItem.setVisible(true);
+        
+        orderDetailPanel.add(newItem);
+        orderDetailPanel.add(Box.createVerticalStrut(10));
+        
+        validate();
+		
+	}
 }
