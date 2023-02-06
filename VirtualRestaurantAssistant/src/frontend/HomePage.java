@@ -33,24 +33,14 @@ public class HomePage extends JFrame{
 	private int mouseX, mouseY;
 	private static HomePage frame ;
 	
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
 	
-		frame = new HomePage();
-		frame.setIconImage(ImageImports.frameLogo);
-		frame.setVisible(true);
-		
-	}
-
 	/**
 	 * Create the frame.
 	 */
 	public HomePage() {
 		
 		//Design Panels and Components
-		
+		setIconImage(ImageImports.frameLogo);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setUndecorated(true);
 		setBounds(100, 100, 707, 374);
@@ -70,7 +60,7 @@ public class HomePage extends JFrame{
 				frame.setLocation(frame.getX()+ e.getX() - mouseX, frame.getY() + e.getY() - mouseY);
 			}
 		});
-		
+
 		dragBar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
