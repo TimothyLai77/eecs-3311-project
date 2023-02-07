@@ -1,3 +1,39 @@
+Meeting Jan 16:
+* Introduction to finalized team members. 
+* Categorized strenghts and weankesses of team for smoother division of labour. 
+
+
+Meeting Jan 18:
+* Brainstomed ideas for project. 
+* Conducted feasibility study on proposed ideas.
+* Planned office hours visit to for insight and apporval in ideas from professor.
+* Began work on UI
+Meeting Jan 23:
+* Visited office hours to receieve feedback on project idea from Professor.
+* Finalized project idea. 
+
 Meeting Jan 30:
 * Went over how to use git on everyone's computer
 * Went over the class diagrams and the basic idea of the app
+* Changing big user stories from customer side to managerial side
+
+Meeting Feb 2:
+* Architectural decision to pass proteins and sauces as list.
+* String proteins, bread and cheese
+* Change from mangerial side to customer side based on database requirement change to 
+  iteration 1
+* ADT map for protein types and quantity. 
+* Ingredient class is the main class for Virtual Restaurant Assisstant
+
+Meeting Feb 4:
+* Troubleshoot eclipse issues with github cloning
+* Work on finalizing inventory and ingredient classes.
+
+Meeting Feb 6:
+* Tim-UML diagram and rudimentary architecture sketch for updated design
+* Ticket Assignment to members: 
+	Muhammad- Sandiwch Interface
+	Aum-Inventory Class
+	Ali - Frontend
+	Toki-Ingredient Interface
+	Tim-SandwichFactory
