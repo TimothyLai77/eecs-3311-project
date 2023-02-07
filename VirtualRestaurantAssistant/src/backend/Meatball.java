@@ -1,6 +1,6 @@
 package backend;
 
-public class Meatball {
+public class Meatball implements Ingredient {
 	private String name;
 	private double price;
 	private String type;

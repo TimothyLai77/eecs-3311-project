@@ -1,6 +1,6 @@
 package backend;
 
-public class Chicken {
+public class Chicken implements Ingredient {
 	private String name;
 	private double price;
 	private String type;
