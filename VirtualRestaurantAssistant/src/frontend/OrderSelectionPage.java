@@ -264,7 +264,13 @@ public class OrderSelectionPage extends JFrame {
 		placeOrderBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-				new ReceiptGenerator();
+//				new ReceiptGenerator();
+				
+				/*
+				 * 
+				 * AWAITING BACKEND IMPLEMENTATION TO SEND ORDER
+				 * 
+				 * */
 				dispose();
 					
 			}
