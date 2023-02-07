@@ -4,20 +4,23 @@ import java.util.*;
 
 
 public class Inventory {
-	Map<String,List<Ingredient>> inventory ;
+	HashMap<String,LinkedList<Ingredient>> inventory ;
 	
 	public Inventory() {
-	inventory =  new HashMap<String,List<Ingredient>>();
+	inventory =  new HashMap<String,LinkedList<Ingredient>>();
 	}
 	
-	//this function returns the list of ingredients
+
 	/**
+	 * By this way we use the key to get the linked list containing the ingredient 
+	 * and then we poll the ingredient in front of the list ie: head element
 	 * input:- ingredientName 
 	 * output:- List<ingredient>
 	 * 
+	 * return the first item of list in the map and also remove it.
 	 */
-	public List<Ingredient> getIngredient(String ingredientName){
-		return inventory.get(ingredientName);
+	public Ingredient getIngredient(String ingredientName){
+		return this.inventory.get(ingredientName).poll();
 	}
 	
 	/**
@@ -25,31 +28,35 @@ public class Inventory {
 	 * input:- ingredientName 
 	 * output:- boolean value accordingly
 	 * 
+	 * checks if the list is populated 
 	 */
 	
 	public boolean searchIngredient(String ingredientName) {
-		return inventory.containsKey(ingredientName);
+		if(this.inventory.get(ingredientName)==null) {
+			return false;
+		}
+		
+		return this.inventory.get(ingredientName).size()>0;
 	}
 	
 	/**
-	 * this methods removes all ingredients from the map and returns removed value  
+	 * this methods removes ingredient list on position of the key in the map and returns removed value  
 	 * input:- ingredientName 
 	 * output:- List<ingredient>
 	 * 
 	 */
+	
 	public List<Ingredient> removeAllIngredients(String ingredientName) {
 		return inventory.remove(ingredientName);
 	}
 	
 	/**
-	 * this methods puts specific ingredients in the map and returns updated list  
-	 * input:- ingredientName 
-	 * output:- List<ingredient>
-	 * 
+	 * this methods puts specific ingredients in the map, the new ingredient will be added at the end of linked list
+	 * input:- ingredientName , ingredient 
+	 * output:- boolean
 	 */
-	public List<Ingredient> putIngredient(String ingredientName,Ingredient i) {
-		inventory.get(ingredientName).add(i);
-	return inventory.get(ingredientName);
+	public boolean putIngredient(String ingredientName,Ingredient i) {
+		return this.inventory.get(ingredientName).add(i);
 	}
 	
 	/**
@@ -57,7 +64,7 @@ public class Inventory {
 	 * input:- ingredientName 
 	 * output:- List<ingredient>
 	 */
-	public List<Ingredient> addIngredient(String ingredientName,List<Ingredient> list){
+	public List<Ingredient> addIngredient(String ingredientName,LinkedList<Ingredient> list){
 		return inventory.putIfAbsent(ingredientName, list);
 	}
 	
