@@ -2,8 +2,6 @@ package frontend;
 import java.awt.Color;
 import java.awt.Component;
 
-import javax.swing.ButtonGroup;
-import javax.swing.ButtonModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -17,17 +15,14 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
-import java.util.ArrayList;
-import java.util.List;
+
 import javax.swing.SwingConstants;
 import javax.swing.JSpinner;
 import javax.swing.JScrollPane;
-import javax.swing.JCheckBox;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JComboBox;
 
 public class OrderSelectionPage extends JFrame {
 
@@ -51,6 +46,7 @@ public class OrderSelectionPage extends JFrame {
 	private static JButton chknBtn;
 	private static JButton beefBtn;
 	private static JButton mtballBtn;
+	
 	
 	
 	/**
@@ -256,6 +252,25 @@ public class OrderSelectionPage extends JFrame {
 		
 		
 		/*
+		 * Place Order Button
+		 * */
+		JButton placeOrderBtn = new JButton("Place Order");
+		placeOrderBtn.setForeground(Color.WHITE);
+		placeOrderBtn.setFont(new Font("Teko SemiBold", Font.PLAIN, 19));
+		placeOrderBtn.setBorderPainted(false);
+		placeOrderBtn.setBackground(new Color(0, 0, 0));
+		placeOrderBtn.setBounds(67, 382, 140, 35);
+		panel.add(placeOrderBtn);
+		placeOrderBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				new ReceiptGenerator();
+				dispose();
+					
+			}
+		});
+		
+		/*
 		 * Go back to previous page - in this case the APP HOME PAGE
 		 * */
 		
@@ -278,7 +293,8 @@ public class OrderSelectionPage extends JFrame {
 		
 		//Defaulting position to center
 		setLocationRelativeTo(null);
-	}
+		}
+	
 	
 	
 	/*

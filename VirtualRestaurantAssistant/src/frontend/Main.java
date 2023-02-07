@@ -9,6 +9,7 @@ public class Main {
 
 		HomePage home = new HomePage();
 		home.setVisible(true);
+		
 	}
 
 }
