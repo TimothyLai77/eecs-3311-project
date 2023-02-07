@@ -55,7 +55,7 @@ public class OrderSelectionPage extends JFrame {
 	public OrderSelectionPage() {
 		
 		// Frame template setup
-		
+		itemNum = 1;
 		setIconImage(ImageImports.frameLogo);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setUndecorated(true);
@@ -183,6 +183,15 @@ public class OrderSelectionPage extends JFrame {
 		orderQuantity.setBounds(108, 269, 46, 35);
 		ingredientsPanel.add(orderQuantity);
 	
+		// DISPLAY ERROR MESSGAE BACK TO USER --- NOT TECHINCAL ERROR.
+		
+		JLabel errorMessageLbl = new JLabel("");
+		errorMessageLbl.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		errorMessageLbl.setHorizontalAlignment(SwingConstants.CENTER);
+		errorMessageLbl.setForeground(new Color(255, 0, 0));
+		errorMessageLbl.setBounds(116, 222, 201, 14);
+		ingredientsPanel.add(errorMessageLbl);
+				
 		/*
 		  Sandwich Button components
 		 * */
@@ -210,22 +219,34 @@ public class OrderSelectionPage extends JFrame {
 		chknBtn.addActionListener(new ActionListener() {
 		      @Override
 		      public void actionPerformed(ActionEvent e) {
+		    	  errorMessageLbl.setText("");
 		    	  setChicken();
 		      }
-		    });
+		});
 		beefBtn.addActionListener(new ActionListener() {
 		      @Override
 		      public void actionPerformed(ActionEvent e) {
+		    	  errorMessageLbl.setText("");
 		    	  setBeef();
 		      }
-		    });
+		});
 		mtballBtn.addActionListener(new ActionListener() {
 		      @Override
 		      public void actionPerformed(ActionEvent e) {
+		    	  errorMessageLbl.setText("");
 		    	  setMeatball();
 		      }
-		    });
+		});
+	
 		
+		
+		/*
+		 * 
+		 * Cart system to house temporary entities 
+		 * of the sandwiches being added, for the front-end.
+		 * */
+		
+		Cart cart = new Cart();
 		
 		//Place Order Button- ADDING TO CART AND QUANTITY
 		JButton addToCartBtn = new JButton("Add to Cart");
@@ -234,16 +255,36 @@ public class OrderSelectionPage extends JFrame {
 		addToCartBtn.setBackground(Color.ORANGE);
 		addToCartBtn.setBounds(177, 268, 140, 35);
 		ingredientsPanel.add(addToCartBtn);
+		
 		addToCartBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
+				if(getSelection() == null) {
+					errorMessageLbl.setText("Please select an item !");
+					return;
+				}
 				/*
 				 * EDIT ONCE SANDWICH BUILDER IS READY TO RECIEVE INFORMATION
 				 * 
 				*/
 				
+				/**
+				 * Hard coded price -------- this random price will be replaced with the sandwich cost 
+				 * 							 fetched dynamically at run time.
+				 */
+				
+				double min = 10;  // MIN PRICE
+				double max = 15;  // MAX PRICE
+				double randPrice = min + (max - min) * Math.random(); // GENERATES A RANDOM IN BETWEEN
+
+				// Create an item entity --- the price should be fetched (for now this is hardcoded)
+				Item newItem = new Item(getSelection(), randPrice, (int)orderQuantity.getValue());
+				
+				//Adding this temp to the cart
+				cart.add(newItem);
+				
 				//Dynamic rendering of the label into the cart
-				addLabelToCart();
+				addLabelToCart(newItem);
 				
 				//Reset all selections, ready for the next item
 		        clearAllSelections();
@@ -263,15 +304,17 @@ public class OrderSelectionPage extends JFrame {
 		panel.add(placeOrderBtn);
 		placeOrderBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
-//				new ReceiptGenerator();
-				
-				/*
-				 * 
-				 * AWAITING BACKEND IMPLEMENTATION TO SEND ORDER
-				 * 
-				 * */
-				dispose();
+				if(cart.getSize() > 0) {
+					new ReceiptGenerator(cart.getCartContent());
+					/*
+					 * 
+					 * AWAITING BACKEND IMPLEMENTATION TO SEND ORDER
+					 * 
+					 * */
+					dispose();
+				} else {
+					errorMessageLbl.setText("Cart is empty");
+				}
 					
 			}
 		});
@@ -332,7 +375,7 @@ public class OrderSelectionPage extends JFrame {
 	  	chknBtn.setBackground(Color.orange);
 	  	beefBtn.setBackground(Color.WHITE);
 	  	mtballBtn.setBackground(Color.WHITE);
-
+	  	
 	  	chknBtn.setEnabled(false);
 	  	beefBtn.setEnabled(true);
 	  	mtballBtn.setEnabled(true);
@@ -380,7 +423,7 @@ public class OrderSelectionPage extends JFrame {
 	}
 	
 	/*
-	 *	Generate temp sandwich specification to send to the backend
+	 *	Generate temp sandwich specification to send to the backend  -------- TO IMPLEMENT ONCE BACKEND IS COMPLETE
 	 * */
 	private void generateSandwichSpec() {
 		
@@ -389,10 +432,10 @@ public class OrderSelectionPage extends JFrame {
 	/*
 	 * Method to add the current item into the cart.
 	 * */
-	private void addLabelToCart(){
+	private void addLabelToCart(Item item){
 		
 		JLabel newItem = new JLabel("");
-        newItem.setText("<html><body>Order item: " + itemNum++ + "&emsp;&emsp; Qty: " + orderQuantity.getValue() + "<br>" + getSelection() + "<br>Item options</body></html>");
+        newItem.setText("<html><body>Order item: " + itemNum++ + "&emsp;&emsp; Qty: " + item.getQuantity() + "<br>" + item.getName() + "<br></body></html>");
         newItem.setAlignmentX(Component.CENTER_ALIGNMENT);
         
         newItem.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
