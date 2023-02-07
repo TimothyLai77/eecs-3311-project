@@ -31,7 +31,6 @@ public class HomePage extends JFrame{
 
 	//Frame feature variables (Dragging, Closing Etc...)
 	private int mouseX, mouseY;
-	private static HomePage frame ;
 	
 	
 	/**
@@ -57,10 +56,9 @@ public class HomePage extends JFrame{
 		dragBar.addMouseMotionListener(new MouseMotionAdapter() {
 			@Override
 			public void mouseDragged(MouseEvent e) {
-				frame.setLocation(frame.getX()+ e.getX() - mouseX, frame.getY() + e.getY() - mouseY);
-			}
+				setLocation(getX()+ e.getX() - mouseX, getY() + e.getY() - mouseY);
+				}
 		});
-
 		dragBar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
@@ -151,7 +149,7 @@ public class HomePage extends JFrame{
 		customerSelection.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
-				new OrderingPage().setVisible(true);  
+				new OrderSelectionPage().setVisible(true);  
 			}
 		});
 		customerSelection.setBounds(266, 154, 146, 60);
@@ -172,23 +170,3 @@ public class HomePage extends JFrame{
 }
 
 
-
-// BACKUP RUNNABLE 
-//public static void main(String[] args) {
-//	EventQueue.invokeLater(new Runnable() {
-//		public void run() {
-//			try {
-//				HomePage frame = new HomePage();
-//				frame.setIconImage(frameLogo);
-//				frame.setVisible(true);
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//		}
-//	});
-//}
-
-// for later iterations we can incorporate component based rendering, far smoother and efficient. (But time consuming to implement)
-//customToolbar ct = new customToolbar(frame);
-//ct.setBounds(0,0, 600, 20);
-//contentPane.add(ct);

@@ -1,6 +1,11 @@
 package backend;
 
-public class Sandwich {
-//Push Check Muhammad
-	//push check by aum patel
+import java.util.List;
+
+public interface Sandwich {
+	public String generateReceipt();
+	public double getCost();
+	public List<Ingredient> getIngredientList();
+	public String getName();
+	public String getDescription();
 }
