@@ -31,7 +31,6 @@ public class HomePage extends JFrame{
 
 	//Frame feature variables (Dragging, Closing Etc...)
 	private int mouseX, mouseY;
-	private static HomePage frame ;
 	
 	
 	/**
@@ -57,10 +56,9 @@ public class HomePage extends JFrame{
 		dragBar.addMouseMotionListener(new MouseMotionAdapter() {
 			@Override
 			public void mouseDragged(MouseEvent e) {
-				frame.setLocation(frame.getX()+ e.getX() - mouseX, frame.getY() + e.getY() - mouseY);
-			}
+				setLocation(getX()+ e.getX() - mouseX, getY() + e.getY() - mouseY);
+				}
 		});
-
 		dragBar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
