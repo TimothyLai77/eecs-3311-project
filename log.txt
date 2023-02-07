@@ -29,6 +29,13 @@ Meeting Feb 4:
 * Troubleshoot eclipse issues with github cloning
 * Work on finalizing inventory and ingredient classes.
 
+Feb 5:
+* Due to time constraints and longer than expected time planning and desiging the core of our app.
+We decided to cut story where the user could view and select ingredients, and move it to iteration 2.
+In place of it, we have opted to let the customer select a basic sandwich type and checkout with that. 
+For iteration 2 we would then let the user add their own toppings. 
+
+
 Meeting Feb 6:
 * Tim-UML diagram and rudimentary architecture sketch for updated design
 * Ticket Assignment to members: 
