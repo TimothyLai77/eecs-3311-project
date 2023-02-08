@@ -16,7 +16,7 @@ public class Inventory {
 	 * Gets an instance of the inventory system. 
 	 * @return the Inventory instance
 	 */
-	public static Inventory getIntsance() {
+	public static Inventory getInstance() {
 		if(Inventory.instance == null) {
 			Inventory.instance = new Inventory();
 		}
