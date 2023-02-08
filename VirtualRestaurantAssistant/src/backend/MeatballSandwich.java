@@ -1,5 +1,6 @@
 package backend;
 
+import java.util.List;
 
 public class MeatballSandwich implements Sandwich {
 
@@ -7,10 +8,10 @@ public class MeatballSandwich implements Sandwich {
     private String sandwichName;
     private String description;
 
-    public MeatballSandwich(List<Ingredient> ingredientList, String sandwichName, String description) {
+    public MeatballSandwich(List<Ingredient> ingredientList) {
         this.ingredientList = ingredientList;
-        this.sandwichName = sandwichName;
-        this.description = description;
+        this.sandwichName = "Meatball";
+        this.description = "";
     }
 
     @Override
@@ -18,7 +19,7 @@ public class MeatballSandwich implements Sandwich {
         String receipt = "Receipt for " + sandwichName + "\n";
         receipt += "Ingredients:\n";
         for (Ingredient ingredient : ingredientList) {
-            receipt += ingredient.getName() + " - " + ingredient.getCost() + "\n";
+            receipt += ingredient.getName() + " - " + ingredient.getPrice() + "\n";
         }
         receipt += "Total Cost: " + getCost();
         return receipt;
@@ -28,7 +29,7 @@ public class MeatballSandwich implements Sandwich {
     public double getCost() {
         double cost = 0;
         for (Ingredient ingredient : ingredientList) {
-            cost += ingredient.getCost();
+            cost += ingredient.getPrice();
         }
         return cost;
     }
