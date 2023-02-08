@@ -47,7 +47,7 @@ Meeting Feb 6:
 
 
 Feb 6-8:
-* UI finished by Ali
+* Frontend finished by Ali
 * Factories finished by Tim
 * Inventory finished by Aum
 * UIController + Ingredeients finished by Quang
