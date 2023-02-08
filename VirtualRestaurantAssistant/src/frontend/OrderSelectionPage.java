@@ -139,9 +139,9 @@ public class OrderSelectionPage extends JFrame {
 		//Screen title "customization corner"
 		
 		JLabel customizationCornerLbl = new JLabel("Sandwich Selection");
-		customizationCornerLbl.setBounds(104, 25, 258, 33);
+		customizationCornerLbl.setBounds(104, 25, 265, 33);
 		customizationCornerLbl.setHorizontalAlignment(SwingConstants.CENTER);
-		customizationCornerLbl.setFont(new Font("Teko SemiBold", Font.BOLD, 30));
+		customizationCornerLbl.setFont(new Font("Serif", Font.BOLD, 27));
 		customizationCornerLbl.setForeground(Color.ORANGE);
 		contentPane.add(customizationCornerLbl);
 		
@@ -149,10 +149,10 @@ public class OrderSelectionPage extends JFrame {
 		//Sub-title / Catchphrase
 	
 		JLabel makerTitle_1 = new JLabel("Ordering made simple");
-		makerTitle_1.setBounds(248, 400, 207, 33);
+		makerTitle_1.setBounds(220, 400, 250, 33);
 		makerTitle_1.setHorizontalAlignment(SwingConstants.CENTER);
 		makerTitle_1.setForeground(Color.ORANGE);
-		makerTitle_1.setFont(new Font("Teko SemiBold", Font.ITALIC, 23));
+		makerTitle_1.setFont(new Font("Serif", Font.ITALIC, 23));
 		contentPane.add(makerTitle_1);
 		
 		
@@ -250,7 +250,7 @@ public class OrderSelectionPage extends JFrame {
 		
 		//Place Order Button- ADDING TO CART AND QUANTITY
 		JButton addToCartBtn = new JButton("Add to Cart");
-		addToCartBtn.setFont(new Font("Teko SemiBold", Font.PLAIN, 19));
+		addToCartBtn.setFont(new Font("Serif", Font.PLAIN, 19));
 		addToCartBtn.setBorderPainted(false);
 		addToCartBtn.setBackground(Color.ORANGE);
 		addToCartBtn.setBounds(177, 268, 140, 35);
@@ -295,7 +295,7 @@ public class OrderSelectionPage extends JFrame {
 		 * */
 		JButton placeOrderBtn = new JButton("Place Order");
 		placeOrderBtn.setForeground(Color.WHITE);
-		placeOrderBtn.setFont(new Font("Teko SemiBold", Font.PLAIN, 19));
+		placeOrderBtn.setFont(new Font("Serif", Font.PLAIN, 19));
 		placeOrderBtn.setBorderPainted(false);
 		placeOrderBtn.setBackground(new Color(0, 0, 0));
 		placeOrderBtn.setBounds(67, 382, 140, 35);
@@ -330,7 +330,7 @@ public class OrderSelectionPage extends JFrame {
 		 * */
 		
 		JButton backBtn = new JButton("");
-		backBtn.setFont(new Font("Teko SemiBold", Font.PLAIN, 19));
+		backBtn.setFont(new Font("Serif", Font.PLAIN, 19));
 		backBtn.setBorderPainted(false);
 		backBtn.setBackground(new Color(255, 255, 255));
 		backBtn.setBounds(14, 395, 80, 40);
