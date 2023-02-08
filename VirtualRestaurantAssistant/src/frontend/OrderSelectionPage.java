@@ -260,25 +260,23 @@ public class OrderSelectionPage extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				
 				if(getSelection() == null) {
-					errorMessageLbl.setText("Please select an item !");
+					errorMessageLbl.setText("Please select an Item !");
 					return;
 				}
 				/*
-				 * EDIT ONCE SANDWICH BUILDER IS READY TO RECIEVE INFORMATION
+				 * ONCE SANDWICH BUILDER BACKEND IS READY
+				 * THIS WILL BE EDITED TO GENERATE A CONCRETE
+				 * SANDWICH INSTANCE via OrderUIController AND 
+				 * USE THAT TO CONFIGURE THE CartItem TO BE ADDED.
 				 * 
 				*/
 				
-				/**
-				 * Hard coded price -------- this random price will be replaced with the sandwich cost 
-				 * 							 fetched dynamically at run time.
-				 */
-				
 				double min = 10;  // MIN PRICE
 				double max = 15;  // MAX PRICE
-				double randPrice = min + (max - min) * Math.random(); // GENERATES A RANDOM IN BETWEEN
+				double randPrice = min + (max - min) * Math.random(); // GENERATES A RANDOM IN BETWEEN MIN MAX
 
-				// Create an item entity --- the price should be fetched (for now this is hardcoded)
-				Item newItem = new Item(getSelection(), randPrice, (int)orderQuantity.getValue());
+				// Create an CartItem entity -- temporary entity to store items into the cart, then eventually taken to generate the sandwiches.
+				CartItem newItem = new CartItem(getSelection(), randPrice, (int)orderQuantity.getValue());
 				
 				//Adding this temp to the cart
 				cart.add(newItem);
@@ -286,7 +284,7 @@ public class OrderSelectionPage extends JFrame {
 				//Dynamic rendering of the label into the cart
 				addLabelToCart(newItem);
 				
-				//Reset all selections, ready for the next item
+				//Reset all selections, ready for the next CartItem
 		        clearAllSelections();
 			}
 		});
@@ -306,6 +304,12 @@ public class OrderSelectionPage extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				if(cart.getSize() > 0) {
 					
+					/*
+					 * 
+					 * AWAITING BACKEND IMPLEMENTATION TO SEND ORDER
+					 * 
+					 * */
+					
 					int confirmed = JOptionPane.showConfirmDialog(null,"Would you like a receipt?", "Receipt", JOptionPane.YES_NO_OPTION);
 					if(confirmed == JOptionPane.YES_OPTION){
 						new ReceiptGenerator(cart.getCartContent());
@@ -313,11 +317,6 @@ public class OrderSelectionPage extends JFrame {
 						new HomePage().setVisible(true);
 					}
 					
-					/*
-					 * 
-					 * AWAITING BACKEND IMPLEMENTATION TO SEND ORDER
-					 * 
-					 * */
 					dispose();
 				} else {
 					errorMessageLbl.setText("Cart is empty");
@@ -429,20 +428,15 @@ public class OrderSelectionPage extends JFrame {
 	        }
 	}
 	
-	/*
-	 *	Generate temp sandwich specification to send to the backend  -------- TO IMPLEMENT ONCE BACKEND IS COMPLETE
-	 * */
-	private void generateSandwichSpec() {
-		
-	}
+	
 	
 	/*
-	 * Method to add the current item into the cart.
+	 * Method to add the current CartItem into the cart.
 	 * */
-	private void addLabelToCart(Item item){
+	private void addLabelToCart(CartItem CartItem){
 		
 		JLabel newItem = new JLabel("");
-        newItem.setText("<html><body>Order item: " + itemNum++ + "&emsp;&emsp; Qty: " + item.getQuantity() + "<br>" + item.getName() + "<br></body></html>");
+        newItem.setText("<html><body>Order Item: " + itemNum++ + "&emsp;&emsp; Qty: " + CartItem.getQuantity() + "<br>" + CartItem.getName() + "<br></body></html>");
         newItem.setAlignmentX(Component.CENTER_ALIGNMENT);
         newItem.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
         newItem.setBackground(Color.WHITE);

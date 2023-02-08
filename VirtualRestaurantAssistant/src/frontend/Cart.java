@@ -10,7 +10,7 @@ import java.util.LinkedList;
  * */
 public class Cart {
 
-	private LinkedList<Item> itemList;
+	private LinkedList<CartItem> itemList;
 	
 	/*
 	 * Cart constructor initializes a LinkedList
@@ -21,31 +21,31 @@ public class Cart {
 	}
 	
 	/*
-	 * Adds the item instance to the Cart, 
+	 * Adds the CartItem instance to the Cart, 
 	 * but checks for its presence before adding.
-	 * If item is present then it simply adds to 
-	 * the existing item's quantity with the newly
+	 * If CartItem is present then it simply adds to 
+	 * the existing CartItem's quantity with the newly
 	 * added quantity.
 	 * */ 
-	void add(Item item) {
+	void add(CartItem CartItem) {
 		
 		if(this.getSize() > 0) {
-			for(Item i : itemList) {
-				if(i.getName().equals(item.getName())) {
-					i.setQuantity(item.getQuantity() + i.getQuantity());
+			for(CartItem i : itemList) {
+				if(i.getName().equals(CartItem.getName())) {
+					i.setQuantity(CartItem.getQuantity() + i.getQuantity());
 					return;
 				}
 			}
-			itemList.add(item);
+			itemList.add(CartItem);
 		} else {
-			itemList.add(item);
+			itemList.add(CartItem);
 		}
 	}
 	
 	/*
 	 * Return the Cart LinkedList.
 	 * */
-	LinkedList<Item> getCartContent(){
+	LinkedList<CartItem> getCartContent(){
 		return this.itemList;
 	}
 	
@@ -56,20 +56,20 @@ public class Cart {
 }
 
 /*
- * Item class to represent the temporary entity
+ * CartItem class to represent the temporary entity
  * of the items existing in the cart, NOT TO BE 
  * CONFUSED with the Sandwich object itself. This
  * is a temporary instance to handle within the 
  * FrontEnd, to decrease coupling with the backend.
  * 
  * */
-class Item {
+class CartItem {
 	
 	private String name; 
 	private double price; 
 	private int quantity;
 	
-	Item(String name, double price, int quantity){
+	CartItem(String name, double price, int quantity){
 		this.name = name;
 		this.price = price;
 		this.quantity = quantity;
@@ -87,7 +87,7 @@ class Item {
 	
 	/*
 	 * Helper method for the Cart to update existing quantity 
-	 * rather than adding a duplicate item to the receipt.
+	 * rather than adding a duplicate CartItem to the receipt.
 	 * */
 	protected void setQuantity(int qty) {
 		this.quantity = qty;
