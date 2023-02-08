@@ -148,8 +148,8 @@ public class OrderSelectionPage extends JFrame {
 		
 		//Sub-title / Catchphrase
 	
-		JLabel makerTitle_1 = new JLabel("Subway needs to keep up - Lebron James");
-		makerTitle_1.setBounds(104, 400, 351, 33);
+		JLabel makerTitle_1 = new JLabel("Ordering made simple");
+		makerTitle_1.setBounds(248, 400, 207, 33);
 		makerTitle_1.setHorizontalAlignment(SwingConstants.CENTER);
 		makerTitle_1.setForeground(Color.ORANGE);
 		makerTitle_1.setFont(new Font("Teko SemiBold", Font.ITALIC, 23));
@@ -186,10 +186,10 @@ public class OrderSelectionPage extends JFrame {
 		// DISPLAY ERROR MESSGAE BACK TO USER --- NOT TECHINCAL ERROR.
 		
 		JLabel errorMessageLbl = new JLabel("");
-		errorMessageLbl.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		errorMessageLbl.setFont(new Font("Tahoma", Font.BOLD, 14));
 		errorMessageLbl.setHorizontalAlignment(SwingConstants.CENTER);
 		errorMessageLbl.setForeground(new Color(255, 0, 0));
-		errorMessageLbl.setBounds(116, 222, 201, 14);
+		errorMessageLbl.setBounds(116, 222, 201, 20);
 		ingredientsPanel.add(errorMessageLbl);
 				
 		/*
@@ -305,7 +305,14 @@ public class OrderSelectionPage extends JFrame {
 		placeOrderBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(cart.getSize() > 0) {
-					new ReceiptGenerator(cart.getCartContent());
+					
+					int confirmed = JOptionPane.showConfirmDialog(null,"Would you like a receipt?", "Receipt", JOptionPane.YES_NO_OPTION);
+					if(confirmed == JOptionPane.YES_OPTION){
+						new ReceiptGenerator(cart.getCartContent());
+					} else {
+						new HomePage().setVisible(true);
+					}
+					
 					/*
 					 * 
 					 * AWAITING BACKEND IMPLEMENTATION TO SEND ORDER
@@ -437,7 +444,6 @@ public class OrderSelectionPage extends JFrame {
 		JLabel newItem = new JLabel("");
         newItem.setText("<html><body>Order item: " + itemNum++ + "&emsp;&emsp; Qty: " + item.getQuantity() + "<br>" + item.getName() + "<br></body></html>");
         newItem.setAlignmentX(Component.CENTER_ALIGNMENT);
-        
         newItem.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
         newItem.setBackground(Color.WHITE);
         newItem.setOpaque(true);
