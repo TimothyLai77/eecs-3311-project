@@ -1,23 +1,29 @@
 package frontend;
 import backend.*;
-
-import backend.SandwichCreator;
+import java.util.List;
+import java.util.ArrayList;
 
 public class OrderUIController {
 	
-	private static SandwichCreator selectSandwichCreator(String base) {
+	private static double selectSandwichCreator(String base) {
 		if(base.equals("Chicken")) {
-			return new ChickenSandwichCreator();
+			return new ChickenSandwichCreator().createSandwich().getCost();
 		}
 		else if(base.equals("Beef")) {
-			return new BeefSandwichCreator();
+			return new BeefSandwichCreator().createSandwich().getCost();
 		}
 		else {
-			return new MeatballSandwichCreator();
+			return new MeatballSandwichCreator().createSandwich().getCost();
 		}
 	}
 	
-	public static String getSandwichOrder(String base) {
-		return selectSandwichCreator(base).generateReceipt(); // generateReceipt() method returns String
+	public static List<Double> getSandwichOrder(List<CartItem> cartList) {
+		List<Double> itemCosts = new ArrayList<>();
+		for(CartItem ct : cartList) {
+			double tempPrice = selectSandwichCreator(ct.getName());
+			itemCosts.add(tempPrice);
+		}
+		
+		return itemCosts;
 	}
 }
