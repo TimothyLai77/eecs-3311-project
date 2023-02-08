@@ -1,7 +1,12 @@
 package backend;
+import java.util.List;
+
 
 public abstract class SandwichCreator {
-	public Sandwich createSandwich() {
-		return null;
-	}
+
+	protected List<String> recipe; 
+	protected List<Ingredient> prepStation;
+	public abstract Sandwich createSandwich();
+	
+	
 }
