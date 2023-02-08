@@ -24,7 +24,7 @@ public class Main {
 		for(int i = 0 ; i < 6 ; i++) {
 			beefs.add(new Beef("Beef", 10.0, "Meat"));
 			breads.add(new Bread("Bread", 5.0, "Bread"));
-			meatball.add(new Bread("Meatball", 12.0, "Meatball"));
+			meatball.add(new Bread("Meatball", 2.0, "Meatball"));
 		}
 
 		inventory.addIngredient("Bread", breads);
