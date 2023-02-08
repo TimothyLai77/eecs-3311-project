@@ -5,11 +5,23 @@ import java.util.*;
 
 public class Inventory {
 	HashMap<String,LinkedList<Ingredient>> inventory ;
+	private static Inventory instance;
 	
-	public Inventory() {
+	private Inventory() {
 	inventory =  new HashMap<String,LinkedList<Ingredient>>();
 	}
 	
+	
+	/**
+	 * Gets an instance of the inventory system. 
+	 * @return the Inventory instance
+	 */
+	public static Inventory getIntsance() {
+		if(Inventory.instance == null) {
+			Inventory.instance = new Inventory();
+		}
+		return Inventory.instance ;
+	}
 
 	/**
 	 * By this way we use the key to get the linked list containing the ingredient 
@@ -68,4 +80,5 @@ public class Inventory {
 		return inventory.putIfAbsent(ingredientName, list);
 	}
 	
+
 }
