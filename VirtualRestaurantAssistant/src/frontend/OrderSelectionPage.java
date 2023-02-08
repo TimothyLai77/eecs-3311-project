@@ -7,6 +7,9 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import backend.Inventory;
+
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import java.awt.Font;
@@ -15,6 +18,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.util.List;
 
 import javax.swing.SwingConstants;
 import javax.swing.JSpinner;
@@ -53,7 +57,8 @@ public class OrderSelectionPage extends JFrame {
 	 * Page constructor for the Order selection.
 	 */
 	public OrderSelectionPage() {
-		
+		Inventory i = Inventory.getInstance();
+		System.out.println("INVENTORY CHECK: Bread " + i.searchIngredient("Bread"));
 		// Frame template setup
 		itemNum = 1;
 		setIconImage(ImageImports.frameLogo);
@@ -196,21 +201,21 @@ public class OrderSelectionPage extends JFrame {
 		  Sandwich Button components
 		 * */
 		chknBtn = new JButton("Chicken ");
-		chknBtn.setName("Chicken Sandwich");
+		chknBtn.setName("Chicken");
 		chknBtn.setBounds(116, 50, 201, 35);
 	  	chknBtn.setBackground(Color.WHITE);
 	  	chknBtn.setBorder(null);
 		ingredientsPanel.add(chknBtn);
 		
 		beefBtn = new JButton("Beef ");
-		beefBtn.setName("Beef Sandwich");
+		beefBtn.setName("Beef");
 	  	beefBtn.setBackground(Color.WHITE);
 		beefBtn.setBounds(116, 107, 201, 35);
 		beefBtn.setBorder(null);
 		ingredientsPanel.add(beefBtn);
 		
 		mtballBtn = new JButton("Meatball");
-		mtballBtn.setName("Meatball Sandwich");
+		mtballBtn.setName("Meatball");
 	  	mtballBtn.setBackground(Color.WHITE);
 		mtballBtn.setBounds(116, 164, 201, 35);
 		mtballBtn.setBorder(null);
@@ -276,7 +281,7 @@ public class OrderSelectionPage extends JFrame {
 				double randPrice = min + (max - min) * Math.random(); // GENERATES A RANDOM IN BETWEEN MIN MAX
 
 				// Create an CartItem entity -- temporary entity to store items into the cart, then eventually taken to generate the sandwiches.
-				CartItem newItem = new CartItem(getSelection(), randPrice, (int)orderQuantity.getValue());
+				CartItem newItem = new CartItem(getSelection(), (int)orderQuantity.getValue());
 				
 				//Adding this temp to the cart
 				cart.add(newItem);
@@ -309,10 +314,11 @@ public class OrderSelectionPage extends JFrame {
 					 * AWAITING BACKEND IMPLEMENTATION TO SEND ORDER
 					 * 
 					 * */
+					List<Double> costs = OrderUIController.getSandwichOrder(cart.getCartContent());
 					
 					int confirmed = JOptionPane.showConfirmDialog(null,"Would you like a receipt?", "Receipt", JOptionPane.YES_NO_OPTION);
 					if(confirmed == JOptionPane.YES_OPTION){
-						new ReceiptGenerator(cart.getCartContent());
+						new ReceiptGenerator(cart.getCartContent(), costs);
 					} else {
 						new HomePage().setVisible(true);
 					}
@@ -436,7 +442,7 @@ public class OrderSelectionPage extends JFrame {
 	private void addLabelToCart(CartItem CartItem){
 		
 		JLabel newItem = new JLabel("");
-        newItem.setText("<html><body>Order Item: " + itemNum++ + "&emsp;&emsp; Qty: " + CartItem.getQuantity() + "<br>" + CartItem.getName() + "<br></body></html>");
+        newItem.setText("<html><body>Order Item: " + itemNum++ + "&emsp;&emsp; Qty: " + CartItem.getQuantity() + "<br>" + CartItem.getName() + " Sandwich<br></body></html>");
         newItem.setAlignmentX(Component.CENTER_ALIGNMENT);
         newItem.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
         newItem.setBackground(Color.WHITE);

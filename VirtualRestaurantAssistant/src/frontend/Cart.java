@@ -66,20 +66,15 @@ public class Cart {
 class CartItem {
 	
 	private String name; 
-	private double price; 
 	private int quantity;
 	
-	CartItem(String name, double price, int quantity){
+	CartItem(String name, int quantity){
 		this.name = name;
-		this.price = price;
 		this.quantity = quantity;
 	}
 	// Self Explanatory Getter methods
 	String getName() {
 		return this.name;
-	}
-	double getPrice() {
-		return this.price;
 	}
 	int getQuantity() {
 		return this.quantity;
