@@ -83,7 +83,7 @@ public class HomePage extends JFrame{
 		JButton employeeSelection = new JButton("Employee Login");
 		employeeSelection.setBorderPainted(false);
 		employeeSelection.setForeground(Color.WHITE);
-		employeeSelection.setFont(new Font("Teko SemiBold", Font.PLAIN, 18));
+		employeeSelection.setFont(new Font("Serif", Font.PLAIN, 12));
 		employeeSelection.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 		employeeSelection.setBackground(Color.DARK_GRAY);
 		employeeSelection.setBounds(111, 343, 120, 20);
@@ -145,7 +145,7 @@ public class HomePage extends JFrame{
 		JButton customerSelection = new JButton("Order Now!");
 		customerSelection.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 		customerSelection.setBackground(Color.WHITE);
-		customerSelection.setFont(new Font("Teko SemiBold", Font.PLAIN, 27));
+		customerSelection.setFont(new Font("Serif", Font.PLAIN, 20));
 		customerSelection.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
@@ -157,7 +157,7 @@ public class HomePage extends JFrame{
 		
 		JLabel hungryLbl = new JLabel("Hungry?");
 		hungryLbl.setForeground(Color.ORANGE);
-		hungryLbl.setFont(new Font("Teko SemiBold", Font.PLAIN, 43));
+		hungryLbl.setFont(new Font("Serif", Font.PLAIN, 40));
 		hungryLbl.setHorizontalTextPosition(SwingConstants.CENTER);
 		hungryLbl.setHorizontalAlignment(SwingConstants.CENTER);
 		hungryLbl.setBounds(272, 103, 140, 53);
