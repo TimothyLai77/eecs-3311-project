@@ -40,7 +40,15 @@ Meeting Feb 6:
 * Tim-UML diagram and rudimentary architecture sketch for updated design
 * Ticket Assignment to members: 
 	Muhammad- Sandiwch Interface
-	Aum-Inventory Class
+	Aum Inventory Class
 	Ali - Frontend
-	Toki-Ingredient Interface
-	Tim-SandwichFactory
+	Quang Ingredient Interface
+	Tim SandwichFactory
+
+
+Feb 6-8:
+* UI finished by Ali
+* Factories finished by Tim
+* Inventory finished by Aum
+* UIController + Ingredeients finished by Quang
+* Sandwich related classes worked on by Muhammad, but wasn't feeling well
