@@ -1,12 +1,12 @@
 package frontend;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 
 import backend.Beef;
 import backend.Bread;
 import backend.Ingredient;
 import backend.Inventory;
+import backend.MapInventory;
 
 public class Main {
 
@@ -16,7 +16,7 @@ public class Main {
 	public static void main(String[] args) {
 
 		
-		Inventory inventory = Inventory.getInstance();
+		Inventory inventory = MapInventory.getInstance();
 		LinkedList<Ingredient> beefs = new LinkedList<>();
 		LinkedList<Ingredient> breads = new LinkedList<>();
 		LinkedList<Ingredient> meatball = new LinkedList<>();

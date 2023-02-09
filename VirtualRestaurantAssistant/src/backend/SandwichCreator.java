@@ -14,7 +14,7 @@ public abstract class SandwichCreator {
 	 */
 	protected List<Ingredient> gatherIngredients(){
 		prepStation = new ArrayList<Ingredient>();
-		Inventory inventory = Inventory.getInstance();
+		Inventory inventory = MapInventory.getInstance();
 		for(String s : recipe){
 			if(!inventory.searchIngredient(s)){
 				refundIngredients();
@@ -30,7 +30,7 @@ public abstract class SandwichCreator {
 	 * Helper function to return ingredients back to inventory.
 	 */
 	protected void refundIngredients(){
-		Inventory inventory = Inventory.getInstance();
+		Inventory inventory = MapInventory.getInstance();
 		for(Ingredient i : prepStation) {
 			inventory.putIngredient(i.getName(), i);
 		}

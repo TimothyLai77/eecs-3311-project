@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import backend.Inventory;
+import backend.MapInventory;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -58,7 +59,7 @@ public class OrderSelectionPage extends JFrame {
 	 */
 	public OrderSelectionPage() {
 		
-		Inventory i = Inventory.getInstance();
+		Inventory i = MapInventory.getInstance();
 		System.out.println("INVENTORY CHECK");
 		System.out.println("-\tBread Present " + i.searchIngredient("Bread"));
 		System.out.println("-\tChicken Present " + i.searchIngredient("Chicken"));
