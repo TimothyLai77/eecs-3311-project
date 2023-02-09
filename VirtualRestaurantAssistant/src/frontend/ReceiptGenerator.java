@@ -301,7 +301,7 @@ public class ReceiptGenerator {
 				writer.println("----------------------------------------------------");
 				int index = 0;
 				for(CartItem i: cartContent) {
-					writer.println("CartItem " + itemNum++ + ":\n\tQty: " + i.getQuantity() + "\t" + i.getName() + "\t Cost: " + currencyFormat(costs.get(index)) );
+					writer.println("Item " + itemNum++ + ":\n\tQty: " + i.getQuantity() + "\t" + i.getName() + "\t Cost: " + currencyFormat(costs.get(index)) );
 					writer.println("");
 					total += (costs.get(index++)*i.getQuantity());
 				}
@@ -334,7 +334,7 @@ public class ReceiptGenerator {
 	private static JLabel generateReceiptLabel(CartItem CartItem, int itemNum, double cost) {
 		
 		JLabel newItem = new JLabel("");
-        newItem.setText("<html><body>Order CartItem: " + itemNum + "&emsp;&emsp; Qty: " + CartItem.getQuantity() + "&emsp;&emsp;per " + currencyFormat(cost) + "<br>" + CartItem.getName() + "&emsp; &emsp; &emsp;Cost: "+ currencyFormat(cost*CartItem.getQuantity()) + " <br></body></html>");
+        newItem.setText("<html><body>Order Item: " + itemNum + "&emsp;&emsp; Qty: " + CartItem.getQuantity() + "&emsp;&emsp;per " + currencyFormat(cost) + "<br>" + CartItem.getName() + "&emsp; &emsp; &emsp;Cost: "+ currencyFormat(cost*CartItem.getQuantity()) + " <br></body></html>");
         newItem.setAlignmentX(Component.CENTER_ALIGNMENT);
         
         newItem.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
