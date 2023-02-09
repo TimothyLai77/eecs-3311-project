@@ -37,7 +37,7 @@ public class HomePage extends JFrame{
 	 */
 	public HomePage() {
 		
-		//Design Panels and Components
+		
 		setIconImage(ImageImports.frameLogo);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setUndecorated(true);
@@ -78,21 +78,6 @@ public class HomePage extends JFrame{
 		contentPane.add(panel);
 		panel.setLayout(null);
 		
-		//Employee Selected button click
-		JButton employeeSelection = new JButton("Employee Login");
-		employeeSelection.setBorderPainted(false);
-		employeeSelection.setForeground(Color.WHITE);
-		employeeSelection.setFont(new Font("Serif", Font.PLAIN, 12));
-		employeeSelection.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
-		employeeSelection.setBackground(Color.DARK_GRAY);
-		employeeSelection.setBounds(111, 343, 120, 20);
-		employeeSelection.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				dispose();
-				new EmployeeLogin().setVisible(true);
-			}
-		});
-		panel.add(employeeSelection);
 		
 		JLabel eatingLabel = new JLabel("");
 		eatingLabel.setBounds(0, 90, 260, 240);
