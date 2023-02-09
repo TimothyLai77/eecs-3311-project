@@ -77,6 +77,10 @@ public class MapInventory implements Inventory{
 		return inventory.putIfAbsent(ingredientName, list);
 	}
 	
+	public int checkQuantity(String name) {
+		return inventory.get(name).size();
+	}
+	
 
 	
 }

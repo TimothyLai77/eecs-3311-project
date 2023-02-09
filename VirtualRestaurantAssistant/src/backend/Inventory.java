@@ -48,6 +48,6 @@ public interface Inventory {
 	 * output:- List<ingredient>
 	 */
 	public abstract List<Ingredient> addIngredient(String ingredientName,LinkedList<Ingredient> list);
-	
+	public abstract int checkQuantity(String name);
 
 }
