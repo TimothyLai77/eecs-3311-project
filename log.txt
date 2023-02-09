@@ -52,3 +52,6 @@ Feb 6-8:
 * Inventory finished by Aum
 * UIController + Ingredeients finished by Quang
 * Sandwich related classes worked on by Muhammad, but wasn't feeling well
+
+Feb 9:
+* Muhammad finished sandwich related classes
