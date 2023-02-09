@@ -5,8 +5,8 @@ import java.awt.Image;
 import javax.swing.ImageIcon;
 
 /*
- * This class provides sttatic references to any images used within 
- * the front end package. This prevents repetitive "new ImageIcon" 
+ * This class provides static references to any images used within 
+ * the front-end package. This prevents repetitive "new ImageIcon" 
  * constructors.
  * */
 public class ImageImports {

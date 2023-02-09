@@ -30,7 +30,7 @@ public class HomePage extends JFrame{
 	//General Content pane to house all elements of HomePage.
 	private JPanel contentPane;
 
-	//Frame feature variables (Dragging, Closing Etc...)
+	//Frame coordinates, fetched at runtime.
 	private int mouseX, mouseY;
 	
 	
@@ -98,13 +98,22 @@ public class HomePage extends JFrame{
 		closeBtn.setBounds(179, 0, 62, 20);
 		panel.add(closeBtn);
 		closeBtn.addActionListener(new ActionListener() {
+			
+			// This event trigger closes the Application.
 			public void actionPerformed(ActionEvent e) {
+				
+				//Confirms the User to close the App.
 				int confirmed = JOptionPane.showConfirmDialog(null,"Are you sure you want to exit the program?", "Exit Program", JOptionPane.YES_NO_OPTION);
+				
+				// If Confirmed then it will close the App, if not
+				// it will close the dialogue.
 				if(confirmed == JOptionPane.YES_OPTION){
 					dispose();
 				}
 			}
 		});
+		
+		//Close button styling
 		closeBtn.setBorder(null);
 		closeBtn.setForeground(Color.WHITE);
 		closeBtn.setBackground(Color.BLACK);
@@ -114,10 +123,15 @@ public class HomePage extends JFrame{
 		minBtn.setBounds(134, 0, 46, 20);
 		panel.add(minBtn);
 		minBtn.addActionListener(new ActionListener() {
+			
+			// Trigger to minimize the application
 			public void actionPerformed(ActionEvent e) {
 				setState(JFrame.ICONIFIED);
 			}
 		});
+		
+		
+		//Minimizing button customization
 		minBtn.setForeground(Color.WHITE);
 		minBtn.setBorder(null);
 		minBtn.setBackground(Color.BLACK);
