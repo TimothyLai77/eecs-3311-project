@@ -2,40 +2,13 @@ package backend;
 
 import java.util.List;
 
-public class BeefSandwich implements Sandwich {
+public class BeefSandwich extends Sandwich {
 
-    private List<Ingredient> ingredientList;
-    private String sandwichName;
-    private String description;
 
     public BeefSandwich(List<Ingredient> ingredientList) {
         this.ingredientList = ingredientList;
         this.sandwichName = "Beef";
-        this.description = "";
+        this.description = "A5 wagyu Beef Sandiwch";
     }
 
-  
-    @Override
-    public double getCost() {
-        double cost = 0;
-        for (Ingredient ingredient : ingredientList) {
-            cost += ingredient.getPrice();
-        }
-        return cost;
-    }
-
-    @Override
-    public List<Ingredient> getIngredientList() {
-        return ingredientList;
-    }
-
-    @Override
-    public String getName() {
-        return sandwichName;
-    }
-
-    @Override
-    public String getDescription() {
-        return description;
-    }
 }
