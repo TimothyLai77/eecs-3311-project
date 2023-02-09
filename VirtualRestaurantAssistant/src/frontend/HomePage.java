@@ -24,8 +24,10 @@ import java.awt.event.MouseMotionAdapter;
 
 public class HomePage extends JFrame{
 
+	// UID for HomePage
 	private static final long serialVersionUID = 1L;
 
+	//General Content pane to house all elements of HomePage.
 	private JPanel contentPane;
 
 	//Frame feature variables (Dragging, Closing Etc...)
@@ -37,11 +39,13 @@ public class HomePage extends JFrame{
 	 */
 	public HomePage() {
 		
-		
+		// Setting frame details.
 		setIconImage(ImageImports.frameLogo);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setUndecorated(true);
 		setBounds(100, 100, 707, 374);
+		
+		//Initalizing Panel details
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.DARK_GRAY);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -53,12 +57,16 @@ public class HomePage extends JFrame{
 		// Custom Draggable Toolbar
 		JPanel dragBar = new JPanel();
 		dragBar.addMouseMotionListener(new MouseMotionAdapter() {
+			
+			// Changes the frame location
 			@Override
 			public void mouseDragged(MouseEvent e) {
 				setLocation(getX()+ e.getX() - mouseX, getY() + e.getY() - mouseY);
 				}
 		});
 		dragBar.addMouseListener(new MouseAdapter() {
+			
+			// Gets current X,Y Coordinates of the Frame
 			@Override
 			public void mousePressed(MouseEvent e) {
 				mouseX = e.getX();
@@ -66,25 +74,26 @@ public class HomePage extends JFrame{
 			}
 		});
 		
+		// Drag toolbar customization
 		dragBar.setBackground(Color.BLACK);
 		dragBar.setBorder(null);
 		dragBar.setBounds(0, 0, 601, 20);
 		contentPane.add(dragBar);
 		
-		
+		// Orange Panel for styling
 		JPanel panel = new JPanel();
 		panel.setBackground(Color.ORANGE);
 		panel.setBounds(466, 0, 241, 374);
 		contentPane.add(panel);
 		panel.setLayout(null);
 		
-		
+		// Panel Image 1
 		JLabel eatingLabel = new JLabel("");
 		eatingLabel.setBounds(0, 90, 260, 240);
 		panel.add(eatingLabel);
 		eatingLabel.setIcon(new ImageIcon(ImageImports.imgEating));
 		
-		//Custom Close Button
+		// Custom Close Button
 		JButton closeBtn = new JButton("E X I T");
 		closeBtn.setBounds(179, 0, 62, 20);
 		panel.add(closeBtn);
@@ -113,6 +122,7 @@ public class HomePage extends JFrame{
 		minBtn.setBorder(null);
 		minBtn.setBackground(Color.BLACK);
 		
+		// LABEL FOR APP TITLE
 		JLabel appTitleLbl = new JLabel("");
 		appTitleLbl.setBounds(25, 103, 170, 205);
 		appTitleLbl.setIcon(new ImageIcon(ImageImports.imgTitle));
@@ -125,20 +135,23 @@ public class HomePage extends JFrame{
 		customerImgLabel.setIcon(new ImageIcon(ImageImports.img_customer));
 		contentPane.add(customerImgLabel);
 		
-		
+		// Order NOW Button
 		JButton customerSelection = new JButton("Order Now!");
 		customerSelection.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 		customerSelection.setBackground(Color.WHITE);
 		customerSelection.setFont(new Font("Serif", Font.PLAIN, 20));
 		customerSelection.addActionListener(new ActionListener() {
+			
+			// This event listener triggers a method to move to Order Selection Page.
 			public void actionPerformed(ActionEvent e) {
 				dispose();
-				new OrderSelectionPage();  
+				new OrderSelectionPage().setVisible(true);;  
 			}
 		});
 		customerSelection.setBounds(266, 154, 146, 60);
 		contentPane.add(customerSelection);
 		
+		// Hungry LABEL
 		JLabel hungryLbl = new JLabel("Hungry?");
 		hungryLbl.setForeground(Color.ORANGE);
 		hungryLbl.setFont(new Font("Serif", Font.PLAIN, 40));
@@ -149,7 +162,6 @@ public class HomePage extends JFrame{
 		
 		
 		//Deafulting Positioning to the Center
-		setVisible(true);
 		setLocationRelativeTo(null);
 	}
 }

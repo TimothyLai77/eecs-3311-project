@@ -342,7 +342,6 @@ public class OrderSelectionPage extends JFrame {
 
 		// Defaulting position to center
 		setLocationRelativeTo(null);
-		setVisible(true);
 	}
 
 	/*

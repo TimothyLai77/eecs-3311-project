@@ -36,7 +36,7 @@ public class Main {
 		inventory.addIngredient("Chicken", chicken);
 		
 		HomePage home = new HomePage();
-//		home.setVisible(true);
+		home.setVisible(true);
 		
 	}
 
