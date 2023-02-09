@@ -5,25 +5,38 @@ import java.util.ArrayList;
 
 public class OrderUIController {
 	
-	private static double selectSandwichCreator(String base) {
-		if(base.equals("Chicken")) {
-			return new ChickenSandwichCreator().createSandwich().getCost();
+	private static SandwichCreator setSandwichCreator(String name) {
+		if(name.equals("Chicken")) {
+			return new ChickenSandwichCreator();
 		}
-		else if(base.equals("Beef")) {
-			return new BeefSandwichCreator().createSandwich().getCost();
+		else if(name.equals("Beef")) {
+			return new BeefSandwichCreator();
 		}
 		else {
-			return new MeatballSandwichCreator().createSandwich().getCost();
+			return new MeatballSandwichCreator();
 		}
 	}
 	
 	public static List<Double> getSandwichOrder(List<CartItem> cartList) {
-		List<Double> itemCosts = new ArrayList<>();
-		for(CartItem ct : cartList) {
-			double tempPrice = selectSandwichCreator(ct.getName());
-			itemCosts.add(tempPrice);
+		List<Sandwich> orderBag = new ArrayList<>();
+		for(CartItem item : cartList) {
+			SandwichCreator sandwichCreator = setSandwichCreator(item.getName());
+			Sandwich sandwich = sandwichCreator.createSandwich();
+			// check if factory actually made a sandwich, and don't add the null return value
+			if(sandwich != null) {
+				orderBag.add(sandwich);
+			}
 		}
 		
-		return itemCosts;
+		List<Double> costs = new ArrayList<>();
+		
+		for(Sandwich sandwich : orderBag) {
+			costs.add(sandwich.getCost());
+		}
+
+		
+		return costs;
 	}
+	
+
 }
