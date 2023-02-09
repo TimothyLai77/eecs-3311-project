@@ -57,8 +57,14 @@ public class OrderSelectionPage extends JFrame {
 	 * Page constructor for the Order selection.
 	 */
 	public OrderSelectionPage() {
+		
 		Inventory i = Inventory.getInstance();
-		System.out.println("INVENTORY CHECK: Bread " + i.searchIngredient("Bread"));
+		System.out.println("INVENTORY CHECK");
+		System.out.println("-\tBread Present " + i.searchIngredient("Bread"));
+		System.out.println("-\tChicken Present " + i.searchIngredient("Chicken"));
+		System.out.println("-\tBeef Present " + i.searchIngredient("Beef"));
+		System.out.println("-\tMeatball Present " + i.searchIngredient("Meatball"));
+		
 		// Frame template setup
 		itemNum = 1;
 		setIconImage(ImageImports.frameLogo);
