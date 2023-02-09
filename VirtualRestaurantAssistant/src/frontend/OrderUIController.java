@@ -17,16 +17,24 @@ public class OrderUIController {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param cartList
+	 * @return
+	 */
 	public static List<Double> getSandwichOrder(List<CartItem> cartList) {
 		List<Sandwich> orderBag = new ArrayList<>();
 		for(CartItem item : cartList) {
 			SandwichCreator sandwichCreator = setSandwichCreator(item.getName());
-			Sandwich sandwich = sandwichCreator.createSandwich();
-			// check if factory actually made a sandwich, and don't add the null return value
-			if(sandwich != null) {
-				orderBag.add(sandwich);
+			for(int i = 0; i < item.getQuantity(); i++) {
+				Sandwich sandwich = sandwichCreator.createSandwich();
+				if(sandwich != null) {
+					orderBag.add(sandwich);
+				} // check if factory actually made a sandwich, and don't add the null return value
 			}
 		}
+		
+		System.out.println("Orderbag: " + orderBag.size());
 		
 		List<Double> costs = new ArrayList<>();
 		

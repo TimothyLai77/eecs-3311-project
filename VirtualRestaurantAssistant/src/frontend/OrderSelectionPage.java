@@ -311,9 +311,17 @@ public class OrderSelectionPage extends JFrame {
 					 * AWAITING BACKEND IMPLEMENTATION TO SEND ORDER
 					 * 
 					 */
-					List<Double> costs = OrderUIController.getSandwichOrder(cart.getCartContent());
-
-					if (costs.size() != cart.getSize()) {
+					List<CartItem> order = cart.getCartContent(); 
+					
+					List<Double> costs = OrderUIController.getSandwichOrder(order);
+					
+					int numberOfSandwiches = 0;
+					
+					for(CartItem item : order) {
+						numberOfSandwiches += item.getQuantity();
+					}
+					
+					if (costs.size() != numberOfSandwiches) {
 						errorMessageLbl.setText("Out of Ingredients");
 						return; // PROMPT USER ORDER COULD NOT BE MADE
 					}
