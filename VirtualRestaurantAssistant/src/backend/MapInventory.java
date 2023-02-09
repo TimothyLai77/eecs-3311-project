@@ -8,10 +8,19 @@ public class MapInventory implements Inventory{
 	private HashMap<String,LinkedList<Ingredient>> inventory;
 	private static MapInventory instance;
 	
+	/**
+	 * Creates a new inventory hashMap which has ingredient name as key and for value it will have 
+	 * objects of ingredients stored in the linked list .
+	 */
 	private MapInventory() {
 		inventory =  new HashMap<String,LinkedList<Ingredient>>();
 	}
 	
+	/**
+	 * 
+	 * @return This methods returns the reference to the only object of the class
+	 * if it is null then create a new instance 
+	 */
 	public static MapInventory getInstance() {
 		if(MapInventory.instance == null) {
 			MapInventory.instance = new MapInventory();
