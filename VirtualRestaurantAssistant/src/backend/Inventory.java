@@ -9,45 +9,72 @@ public interface Inventory {
 	/**
 	 * By this way we use the key to get the linked list containing the ingredient 
 	 * and then we poll the ingredient in front of the list ie: head element
-	 * input:- ingredientName 
-	 * output:- List<ingredient>
 	 * 
-	 * return the first item of list in the map and also remove it.
+	 * @param :- ingredientName
+	 * ingredientName is a key. 
+	 * 
+	 * @return :- Ingredient 
+	 * return the first item of list in the map associated with the key ingredientName and also remove it.
 	 */
 	public abstract Ingredient getIngredient(String ingredientName);
 	
 	/**
-	 * this function checks whether a ingredient is in the inventory.
-	 * input:- ingredientName 
-	 * output:- boolean value accordingly
+	 * This function checks whether a ingredient is in the inventory. checks if the list is populated 
 	 * 
-	 * checks if the list is populated 
+	 * @param :- ingredientName
+	 * ingredientName is a key.
+	 * 
+	 *@return :- boolean value
+	 *returns a boolean value accordingly ie: if the ingredient is in the map 
 	 */
 	
 	public abstract boolean searchIngredient(String ingredientName);
 	
+	
 	/**
-	 * this methods removes ingredient list on position of the key in the map and returns removed value  
-	 * input:- ingredientName 
-	 * output:- List<ingredient>
+	 * This methods removes ingredient list on position of the key in the map and returns removed value  
+	 * @param :- ingredientName
+	 * ingredientName is a key.
+	 * 
+	 * @return:- List<Ingredient>
+	 * a list of ingredients that is removed from the map
 	 * 
 	 */
 	
 	public abstract List<Ingredient> removeAllIngredients(String ingredientName);
 	
+	
 	/**
-	 * this methods puts specific ingredients in the map, the new ingredient will be added at the end of linked list
-	 * input:- ingredientName , ingredient 
-	 * output:- boolean
-	 */
+	 * This methods puts specific ingredients in the map, the new ingredient will be added at the end of linked list
+	 * @param:- ingredientName
+	 *  ingredientName is a key.
+	 *  
+	 * @param:- Ingredient i
+	 * i is a ingredient to be added 
+	 *
+	 * @return:- boolean value
+	 * returns a boolean value accordingly ie: on successful addition of the ingredient it returns true else it returns false
+	*/
 	public abstract boolean putIngredient(String ingredientName,Ingredient i);
 	
 	/**
-	 * this method adds new ingredient in the map
-	 * input:- ingredientName 
-	 * output:- List<ingredient>
+	 * This method adds new type of ingredient in the map
+	 * @param:- ingredientName 
+	 * ingredientName is a key.
+	 * 
+	 * @return:- List<ingredient>
+	 * returns new list added in the map
 	 */
 	public abstract List<Ingredient> addIngredient(String ingredientName,LinkedList<Ingredient> list);
-	public abstract int checkQuantity(String name);
+	
+	/**
+	 * 
+	 * @param:- ingredientName
+	 * ingredientName is a key.
+	 * 
+	 * @return:- quantity 
+	 * returns available quantity of the ingredient 
+	 */
+	public abstract int checkQuantity(String ingredientName);
 
 }
