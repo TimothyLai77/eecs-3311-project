@@ -16,21 +16,13 @@ public class ChickenSandwich implements Sandwich {
     }
     
 
-    @Override
-    public String generateReceipt() {
-        String receipt = "Receipt for " + sandwichName + "\n";
-        receipt += "Ingredients:\n";
-        for (Ingredient ingredient : ingredientList) {
-            receipt += ingredient.getName() + " - " + ingredient.getPrice() + "\n";
-        }
-        receipt += "Total Cost: " + getCost();
-        return receipt;
-    }
+
 
     @Override
     public double getCost() {
         double cost = 0;
         for (Ingredient ingredient : ingredientList) {
+        	cost += ingredient.getPrice();
         }
         return cost;
     }

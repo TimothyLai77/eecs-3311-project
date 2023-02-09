@@ -14,17 +14,7 @@ public class BeefSandwich implements Sandwich {
         this.description = "";
     }
 
-    @Override
-    public String generateReceipt() {
-        String receipt = "Receipt for " + sandwichName + "\n";
-        receipt += "Ingredients:\n";
-        for (Ingredient ingredient : ingredientList) {
-            receipt += ingredient.getName() + " - " + ingredient.getPrice() + "\n";
-        }
-        receipt += "Total Cost: " + getCost();
-        return receipt;
-    }
-
+  
     @Override
     public double getCost() {
         double cost = 0;
