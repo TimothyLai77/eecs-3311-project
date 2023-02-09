@@ -20,12 +20,14 @@ public class Cart {
 		itemList = new LinkedList<>();
 	}
 	
-	/*
+	/**
 	 * Adds the CartItem instance to the Cart, 
 	 * but checks for its presence before adding.
 	 * If CartItem is present then it simply adds to 
 	 * the existing CartItem's quantity with the newly
 	 * added quantity.
+	 * 
+	 * @param A CartItem Object
 	 * */ 
 	void add(CartItem CartItem) {
 		
@@ -42,14 +44,18 @@ public class Cart {
 		}
 	}
 	
-	/*
+	/**
 	 * Return the Cart LinkedList.
+	 * @return LinkedList<CartItem> - The Contents of the cart as a LinkedList
 	 * */
 	LinkedList<CartItem> getCartContent(){
 		return this.itemList;
 	}
 	
-	// Returns the Size of the Cart.
+	/**
+	 * Returns the size of the cart.
+	 * @return int - size of the list
+	 * */
 	int getSize() {
 		return this.itemList.size();
 	}
@@ -68,21 +74,36 @@ class CartItem {
 	private String name; 
 	private int quantity;
 	
+	/**
+	 * Constructor to create a Cart Item.
+	 * @param String - name, int - quantity
+	 * */
 	CartItem(String name, int quantity){
 		this.name = name;
 		this.quantity = quantity;
 	}
-	// Self Explanatory Getter methods
+	
+	/**
+	 * Gets the name of the Cart Item instance
+	 * @return String - Name of the Cart Item
+	 * */
 	String getName() {
 		return this.name;
 	}
+	
+	/**
+	 * Gets the name of the Cart Item instance
+	 * @return int - Quantity of the Cart Item
+	 * */
 	int getQuantity() {
 		return this.quantity;
 	}
 	
-	/*
+	/**
 	 * Helper method for the Cart to update existing quantity 
 	 * rather than adding a duplicate CartItem to the receipt.
+	 * 
+	 * @param int qty - set the quantity of the cart item
 	 * */
 	protected void setQuantity(int qty) {
 		this.quantity = qty;
