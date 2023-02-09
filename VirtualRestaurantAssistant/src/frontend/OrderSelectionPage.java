@@ -266,17 +266,7 @@ public class OrderSelectionPage extends JFrame {
 					errorMessageLbl.setText("Please select an Item !");
 					return;
 				}
-				/*
-				 * ONCE SANDWICH BUILDER BACKEND IS READY THIS WILL BE EDITED TO GENERATE A
-				 * CONCRETE SANDWICH INSTANCE via OrderUIController AND USE THAT TO CONFIGURE
-				 * THE CartItem TO BE ADDED.
-				 * 
-				 */
-
-				double min = 10; // MIN PRICE
-				double max = 15; // MAX PRICE
-				double randPrice = min + (max - min) * Math.random(); // GENERATES A RANDOM IN BETWEEN MIN MAX
-
+				
 				// Create an CartItem entity -- temporary entity to store items into the cart,
 				// then eventually taken to generate the sandwiches.
 				CartItem newItem = new CartItem(getSelection(), (int) orderQuantity.getValue());
@@ -430,10 +420,10 @@ public class OrderSelectionPage extends JFrame {
 
 	}
 
-	/*
+	/**
 	 * 
 	 * Method to retrieve current choice
-	 * 
+	 * @return String - Name of the current selection.
 	 */
 	private String getSelection() {
 		if (!chknBtn.isEnabled()) {
@@ -447,8 +437,9 @@ public class OrderSelectionPage extends JFrame {
 		}
 	}
 
-	/*
+	/**
 	 * Method to add the current CartItem into the cart.
+	 * @param CartItem instance to generate a dynamic label.
 	 */
 	private void addLabelToCart(CartItem CartItem) {
 

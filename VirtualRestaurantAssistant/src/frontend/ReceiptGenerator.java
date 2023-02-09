@@ -54,8 +54,10 @@ public class ReceiptGenerator {
 	static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 	
 	
-	/*
+	/**
 	 * Constructor generates the RECEIPT TEMPLATE
+	 * @param LinkedList<CartItem> cartContent
+	 * @param List<Double> costs
 	 * */
 	public ReceiptGenerator(LinkedList<CartItem> cartContent, List<Double> costs) {
 		
@@ -269,9 +271,10 @@ public class ReceiptGenerator {
 	}
   
 	
-	/*
+	/**
 	 * 	Generates the RECEIPT as a txt file for the USER
 	 *  save in a destination of their choosing.
+	 *  @param LinkedList<CartItem> cartContent, List<Double> costs
 	 * */
 	private static void generate(LinkedList<CartItem> cartContent, List<Double> costs) {
 		
@@ -328,8 +331,11 @@ public class ReceiptGenerator {
 			}
 	}
 	
-	/*
+	/**
 	 * GENERATE RECEIPT LABEL
+	 * @param CartItem CartItem - cartItem instance
+	 * @param int itemNum - current Item number
+	 * @param double cost - cost of the sandwich
 	 * */
 	private static JLabel generateReceiptLabel(CartItem CartItem, int itemNum, double cost) {
 		
@@ -345,8 +351,10 @@ public class ReceiptGenerator {
         return newItem;
 	}
 
-	/*
+	/**
 	 * CONVERT double INPUT TO CURRENCY 2dp FORMAT
+	 * @param double input
+	 * @return String - price formatted to currency (2dp)
 	 * */
 	private static String currencyFormat(double input) {
 		return new DecimalFormat("$#,##0.00").format(input);
