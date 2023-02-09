@@ -164,6 +164,7 @@ public class HomePage extends JFrame{
 		
 		
 		//Deafulting Positioning to the Center
+		setVisible(true);
 		setLocationRelativeTo(null);
 	}
 }
