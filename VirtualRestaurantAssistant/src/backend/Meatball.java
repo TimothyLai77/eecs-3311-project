@@ -18,7 +18,7 @@ public class Meatball implements Ingredient {
 	}
 	
 	/**
-	 * @return:- this method returns the price of meat ball objects
+	 * @return:- This method returns the price of meat ball objects
 	 */
 	public double getPrice() {
 		return this.price;
