@@ -34,7 +34,6 @@ public class OrderUIController {
 			}
 		}
 		
-		System.out.println("Orderbag: " + orderBag.size());
 		
 		List<Double> costs = new ArrayList<>();
 		
