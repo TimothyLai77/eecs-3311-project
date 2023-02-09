@@ -4,6 +4,11 @@ import java.awt.Image;
 
 import javax.swing.ImageIcon;
 
+/*
+ * This class provides sttatic references to any images used within 
+ * the front end package. This prevents repetitive "new ImageIcon" 
+ * constructors.
+ * */
 public class ImageImports {
 	
 	//Home Page Images
@@ -24,7 +29,7 @@ public class ImageImports {
 	protected static Image img_key = new ImageIcon(HomePage.class.getResource("/res/key.png")).getImage().getScaledInstance(35,35, Image.SCALE_SMOOTH);
 	protected static Image img_user = new ImageIcon(HomePage.class.getResource("/res/person.png")).getImage().getScaledInstance(35,  35,  Image.SCALE_SMOOTH);
 		
-	// MESC
+	// MESC image imports
 	protected static Image imgBack = new ImageIcon(HomePage.class.getResource("/res/backIcon.png")).getImage();
 
 }
