@@ -9,9 +9,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import backend.Inventory;
-import backend.MapInventory;
-
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import java.awt.Font;
@@ -56,13 +53,6 @@ public class OrderSelectionPage extends JFrame {
 	 * Page constructor for the Order selection.
 	 */
 	public OrderSelectionPage() {
-
-		Inventory i = MapInventory.getInstance();
-		System.out.println("INVENTORY CHECK");
-		System.out.println("-\tBread : " + i.checkQuantity("Bread"));
-		System.out.println("-\tChicken : " + i.checkQuantity("Chicken"));
-		System.out.println("-\tBeef : " + i.checkQuantity("Beef"));
-		System.out.println("-\tMeatball : " + i.checkQuantity("Meatball"));
 
 		// Frame template setup
 		itemNum = 1;
@@ -296,11 +286,6 @@ public class OrderSelectionPage extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				if (cart.getSize() > 0) {
 
-					/*
-					 * 
-					 * AWAITING BACKEND IMPLEMENTATION TO SEND ORDER
-					 * 
-					 */
 					List<CartItem> order = cart.getCartContent(); 
 					
 					List<Double> costs = OrderUIController.getSandwichOrder(order);
