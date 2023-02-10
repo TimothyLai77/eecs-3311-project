@@ -2,6 +2,8 @@ package frontend;
 
 import java.util.LinkedList;
 
+import javax.swing.UIManager;
+
 import backend.Beef;
 import backend.Bread;
 import backend.Chicken;
@@ -14,8 +16,15 @@ public class Main {
 	/**
 	 * Launch the application.
 	 */
+	
 	public static void main(String[] args) {
 
+		// look and feel setting for javaq swing.
+		try {
+		    UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+		} catch (Exception e) {
+		    e.printStackTrace();
+		}
 		// Gets the current inventory instance --- FROM SINGLETON CLASS
 		Inventory inventory = MapInventory.getInstance();
 		
