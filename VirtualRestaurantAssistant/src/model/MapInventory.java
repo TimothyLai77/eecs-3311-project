@@ -1,4 +1,4 @@
-package backend;
+package model;
 
 import java.util.HashMap;
 import java.util.LinkedList;

@@ -1,15 +1,16 @@
-package frontend;
+package controller;
 
 import java.util.LinkedList;
 
 import javax.swing.UIManager;
 
-import backend.Beef;
-import backend.Bread;
-import backend.Chicken;
-import backend.Ingredient;
-import backend.Inventory;
-import backend.MapInventory;
+import model.Beef;
+import model.Bread;
+import model.Chicken;
+import model.Ingredient;
+import model.Inventory;
+import model.MapInventory;
+import view.HomePage;
 
 public class Main {
 

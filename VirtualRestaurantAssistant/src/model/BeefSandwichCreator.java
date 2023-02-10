@@ -1,28 +1,28 @@
-package backend;
+package model;
 import java.util.ArrayList;
 import java.util.List;
-public class ChickenSandwichCreator extends SandwichCreator {
-	
+public class BeefSandwichCreator extends SandwichCreator {
+
 	/*
-	 * Constructor for the Chicken Sandwich creator/factory
+	 * Constructor for the Beef creator/factory
 	 */
-	public ChickenSandwichCreator() {
+	public BeefSandwichCreator() {
 		super.recipe = new ArrayList<String>();
 		recipe.add("Bread");
-		recipe.add("Chicken");
+		recipe.add("Beef");
 		prepStation = new ArrayList<Ingredient>();
 	}
 	
 	
 	/*
-	 * Creation method for a chicken sandwich. 
+	 * Creation method for a beef sandwich. 
 	 */
 	public Sandwich createSandwich() {
 		List<Ingredient> gatheredIngredients = super.gatherIngredients();
 		if(gatheredIngredients == null){
 			return null;
 		}
-		ChickenSandwich sandwich = new ChickenSandwich(gatheredIngredients);
+		BeefSandwich sandwich = new BeefSandwich(gatheredIngredients);
 		return sandwich;
 	}
 

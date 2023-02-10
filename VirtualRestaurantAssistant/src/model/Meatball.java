@@ -1,4 +1,4 @@
-package backend;
+package model;
 
 public class Meatball implements Ingredient {
 	private String name;

@@ -1,4 +1,4 @@
-package backend;
+package model;
 
 public interface Ingredient {
 	public double getPrice();

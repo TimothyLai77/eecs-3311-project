@@ -1,4 +1,4 @@
-package frontend;
+package view;
 
 import java.awt.Image;
 

@@ -1,24 +1,25 @@
-package backend;
+package model;
 
-public class Chicken implements Ingredient {
+public class Bread implements Ingredient {
+	
 	private String name;
 	private double price;
 	private String type;
 	
 	/**
-	 * Instantiates chicken object with the given parameters 
+	 * Instantiates bread object with the given parameters 
 	 * @param name
 	 * @param price
 	 * @param type
 	 */
-	public Chicken(String name, double price, String type) {
+	public Bread(String name, double price, String type) {
 		this.name = name;
 		this.price = price;
 		this.type = type;
 	}
 	
 	/**
-	 * @return:- This method returns the price of chicken objects
+	 * @return:- This method returns the price of bread objects
 	 */
 	public double getPrice() {
 		return this.price;
@@ -37,4 +38,5 @@ public class Chicken implements Ingredient {
 	public String getType() {
 		return this.type;
 	}
+
 }
