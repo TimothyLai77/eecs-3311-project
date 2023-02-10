@@ -1,8 +1,11 @@
-package backend;
+package model;
 import java.util.ArrayList;
 import java.util.List;
 public class ChickenSandwichCreator extends SandwichCreator {
-
+	
+	/*
+	 * Constructor for the Chicken Sandwich creator/factory
+	 */
 	public ChickenSandwichCreator() {
 		super.recipe = new ArrayList<String>();
 		recipe.add("Bread");
@@ -11,6 +14,9 @@ public class ChickenSandwichCreator extends SandwichCreator {
 	}
 	
 	
+	/*
+	 * Creation method for a chicken sandwich. 
+	 */
 	public Sandwich createSandwich() {
 		List<Ingredient> gatheredIngredients = super.gatherIngredients();
 		if(gatheredIngredients == null){

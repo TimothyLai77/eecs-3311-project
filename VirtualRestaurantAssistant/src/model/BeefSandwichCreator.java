@@ -1,8 +1,11 @@
-package backend;
+package model;
 import java.util.ArrayList;
 import java.util.List;
 public class BeefSandwichCreator extends SandwichCreator {
 
+	/*
+	 * Constructor for the Beef creator/factory
+	 */
 	public BeefSandwichCreator() {
 		super.recipe = new ArrayList<String>();
 		recipe.add("Bread");
@@ -11,6 +14,9 @@ public class BeefSandwichCreator extends SandwichCreator {
 	}
 	
 	
+	/*
+	 * Creation method for a beef sandwich. 
+	 */
 	public Sandwich createSandwich() {
 		List<Ingredient> gatheredIngredients = super.gatherIngredients();
 		if(gatheredIngredients == null){
