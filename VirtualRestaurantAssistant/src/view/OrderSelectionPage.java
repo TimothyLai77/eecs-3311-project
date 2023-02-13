@@ -157,7 +157,7 @@ public class OrderSelectionPage extends JFrame {
 		
 		// The panel above is added to this to scroll when overflowing.
 		JScrollPane scrollPane = new JScrollPane(orderDetailPanel);
-		scrollPane.setBounds(20, 50, 230, 300);
+		scrollPane.setBounds(20, 70, 230, 315);
 		panel.add(scrollPane);
 
 		// Screen title "customization corner"
@@ -282,6 +282,13 @@ public class OrderSelectionPage extends JFrame {
 		addToCartBtn.setBackground(Color.ORANGE);
 		addToCartBtn.setBounds(177, 268, 140, 35);
 		ingredientsPanel.add(addToCartBtn);
+		
+		JLabel qtyLabel = new JLabel("Qty :");
+		qtyLabel.setFont(new Font("Times New Roman", Font.PLAIN, 13));
+		qtyLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		qtyLabel.setForeground(new Color(255, 255, 255));
+		qtyLabel.setBounds(52, 269, 50, 35);
+		ingredientsPanel.add(qtyLabel);
 
 		addToCartBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -315,8 +322,15 @@ public class OrderSelectionPage extends JFrame {
 		placeOrderBtn.setFont(new Font("Serif", Font.PLAIN, 19));
 		placeOrderBtn.setBorderPainted(false);
 		placeOrderBtn.setBackground(new Color(0, 0, 0));
-		placeOrderBtn.setBounds(67, 382, 140, 35);
+		placeOrderBtn.setBounds(67, 400, 140, 35);
 		panel.add(placeOrderBtn);
+		
+		JLabel cartLabek = new JLabel("Cart");
+		cartLabek.setHorizontalAlignment(SwingConstants.CENTER);
+		cartLabek.setForeground(new Color(0, 0, 0));
+		cartLabek.setFont(new Font("Serif", Font.BOLD, 27));
+		cartLabek.setBounds(4, 31, 265, 33);
+		panel.add(cartLabek);
 		
 		// Onclick handler for Placing order once User is ready to checkout.
 		placeOrderBtn.addActionListener(new ActionListener() {
