@@ -47,11 +47,14 @@ Meeting Feb 6:
 
 
 Feb 6-8:
-* Frontend finished by Ali
-* Factories finished by Tim
-* Inventory finished by Aum
-* UIController + Ingredeients finished by Quang
+* Frontend finished by Ali (4 + 3 + 1 days for all UI elements)
+	* CartClass finished by Ali (1 day)
+* Factories finished by Tim (3 days)
+	* Refactored UIController (2 days)
+* Inventory finished by Aum (4 days)
+* Initial UIController + Ingredeients finished by Quang (1 + 1 days)
 * Sandwich related classes worked on by Muhammad, but wasn't feeling well
 
 Feb 9:
-* Muhammad finished sandwich related classes
+* Muhammad finished sandwich related classes (2 days)
+* Tim finished the documentation
