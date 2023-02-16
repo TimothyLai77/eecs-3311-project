@@ -19,6 +19,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.SwingConstants;
@@ -50,16 +51,17 @@ public class OrderSelectionPage extends JFrame {
 	//Sandwich panel - holding all the buttons
 	private static JPanel sandwichPanel;
 	
-	// Sandwich Group Buttons
-	private static JButton chknBtn;
-	private static JButton beefBtn;
-	private static JButton mtballBtn;
-	private static JButton veggieBtn;
+	//Static list to hold sandwich types --- THIS IS TEMPORARY SINCE
+	//										 IT SHOULD EVENTUALLY BE 
+	// 										 FETCHED FROM THE DB.
+	private static String[] sandwichTypes;
+	
 	/**
 	 * Page constructor for the Order selection.
 	 */
 	public OrderSelectionPage() {
 
+		sandwichTypes = new String[]{"Chicken", "Beef", "Meatball", "Veggie", "Fish", "Cheese"};
 		//Reset the Current Order state
 		itemNum = 1;
 		
@@ -214,40 +216,10 @@ public class OrderSelectionPage extends JFrame {
 		sandwichPanel.add(errorMessageLbl);
 
 		/*
-		 * Sandwich Button components
+		 * Renders all the sandwich buttons using the:
+		 * base sandwich list.
 		 */
-		
-		// Chicken Sandwich button and its styling
-		chknBtn = new JButton("Chicken ");
-		chknBtn.setName("Chicken");
-		chknBtn.setBounds(116, 25, 201, 35);
-		chknBtn.setBackground(Color.WHITE);
-		chknBtn.setBorder(null);
-		sandwichPanel.add(chknBtn);
-
-		// Beef Sandwich button and its styling
-		beefBtn = new JButton("Beef ");
-		beefBtn.setName("Beef");
-		beefBtn.setBackground(Color.WHITE);
-		beefBtn.setBounds(116, 75, 201, 35);
-		beefBtn.setBorder(null);
-		sandwichPanel.add(beefBtn);
-
-		// Meatball Sandwich button and its styling
-		mtballBtn = new JButton("Meatball");
-		mtballBtn.setName("Meatball");
-		mtballBtn.setBackground(Color.WHITE);
-		mtballBtn.setBounds(116, 125, 201, 35);
-		mtballBtn.setBorder(null);
-		sandwichPanel.add(mtballBtn);
-
-		//Veggie Sandwich button and its styling
-		veggieBtn = new JButton("Veggie");
-		veggieBtn.setName("Veggie");
-		veggieBtn.setBorder(null);
-		veggieBtn.setBackground(Color.WHITE);
-		veggieBtn.setBounds(116, 175, 201, 35);
-		sandwichPanel.add(veggieBtn);
+		renderSandwichButtons();
 		
 		//Dynamic button action listener method - efficient button click tracking,
 		//and minimizes duplicate code.
@@ -436,6 +408,57 @@ public class OrderSelectionPage extends JFrame {
 		setLocationRelativeTo(null);
 	}
 
+	/**
+	 * This method renders all the sandwich buttons dynamically
+	 * using the list of base sandwiches provided. This also dynamically 
+	 * resizes them and sorts them to adjust to the quantity 
+	 * while keeping simplistic design.
+	 * */
+	private void renderSandwichButtons() {
+		
+		int yVal = -25; // Y value of the button to render
+		int xVal = 0; // X value of the button to render
+		int btnWidth = 0; //Width of the button to render
+		boolean secCol = false; // Checks if second column is required to avoid overflow
+		
+		//Checks if there are more buttons, for resizing to fit
+		//them in and to adjust the columns.
+		
+		if(sandwichTypes.length <= 4) { // If there are less buttons, render them center.
+			
+			xVal = (sandwichPanel.getWidth()/2) - 75; //Sets X
+			btnWidth = 200; // Sets width
+		
+		} else { // If there are more buttons, render them to 2 columns
+		
+			xVal = 30; // Sets X
+			btnWidth = 150; // Sets width
+		
+		}
+		
+		//Iterate over the base sandwich list, creating buttons from them
+		//with the dimensions decided above.
+		for(int i = 0 ; i < sandwichTypes.length; i++) {
+			if(yVal >= 175 && !secCol) {
+				secCol = true;
+				yVal = -25;
+				xVal = sandwichPanel.getWidth()-(btnWidth+30);
+			}
+			
+			// If already in the second column and Y is too large, dont render more.
+			else if (yVal >= 175 && secCol) { 
+				break;
+			}
+			//Create button flow.
+			JButton newBtn = new JButton(sandwichTypes[i]);
+			newBtn.setName(sandwichTypes[i]);
+			newBtn.setBounds(xVal, yVal+=50, btnWidth, 35);
+			newBtn.setBackground(Color.WHITE);
+			newBtn.setBorder(null);
+			sandwichPanel.add(newBtn);
+		}
+		
+	}
 	/*
 	 * 
 	 * Iteratively clears all selections, and resets the state of the Customization
@@ -447,14 +470,18 @@ public class OrderSelectionPage extends JFrame {
 	 */
 	public void clearAllSelections() {
 
+		// Iterates over all components inside the panel.
 		for (Component component : sandwichPanel.getComponents()) {
+			
+			//Sets to "DISABLED" state.
 	        if (component instanceof JButton) {
 	            JButton button = (JButton) component;
 	            button.setBackground(Color.white);
 	            button.setEnabled(true);
 	        }
 		}
-		orderQuantity.setValue(1);
+		
+		orderQuantity.setValue(1); // Resets counter
 	}
 
 	/*
