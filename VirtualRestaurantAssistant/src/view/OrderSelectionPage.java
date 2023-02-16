@@ -216,40 +216,10 @@ public class OrderSelectionPage extends JFrame {
 		sandwichPanel.add(errorMessageLbl);
 
 		/*
-		 * Sandwich Button components
+		 * Renders all the sandwich buttons using the:
+		 * base sandwich list.
 		 */
-		
-		//Generate buttons dynamically 
-		int yVal = -25;
-		int xVal = 0;
-		int btnWidth = 0;
-		
-		boolean secCol = false;
-		
-		if(sandwichTypes.length <= 4) {
-			xVal = (sandwichPanel.getWidth()/2) - 75;
-			btnWidth = 200;
-		} else {
-			xVal = 30;
-			btnWidth = 150;
-		}
-		for(int i = 0 ; i < sandwichTypes.length; i++) {
-			if(yVal >= 175 && !secCol) {
-				secCol = true;
-				yVal = -25;
-				xVal = sandwichPanel.getWidth()-(btnWidth+30);
-			}
-			else if (yVal >= 175 && secCol) {
-				break;
-			}
-			JButton newBtn = new JButton(sandwichTypes[i]);
-			newBtn.setName(sandwichTypes[i]);
-			newBtn.setBounds(xVal, yVal+=50, btnWidth, 35);
-			newBtn.setBackground(Color.WHITE);
-			newBtn.setBorder(null);
-			sandwichPanel.add(newBtn);
-		}
-	
+		renderSandwichButtons();
 		
 		//Dynamic button action listener method - efficient button click tracking,
 		//and minimizes duplicate code.
@@ -438,6 +408,57 @@ public class OrderSelectionPage extends JFrame {
 		setLocationRelativeTo(null);
 	}
 
+	/**
+	 * This method renders all the sandwich buttons dynamically
+	 * using the list of base sandwiches provided. This also dynamically 
+	 * resizes them and sorts them to adjust to the quantity 
+	 * while keeping simplistic design.
+	 * */
+	private void renderSandwichButtons() {
+		
+		int yVal = -25; // Y value of the button to render
+		int xVal = 0; // X value of the button to render
+		int btnWidth = 0; //Width of the button to render
+		boolean secCol = false; // Checks if second column is required to avoid overflow
+		
+		//Checks if there are more buttons, for resizing to fit
+		//them in and to adjust the columns.
+		
+		if(sandwichTypes.length <= 4) { // If there are less buttons, render them center.
+			
+			xVal = (sandwichPanel.getWidth()/2) - 75; //Sets X
+			btnWidth = 200; // Sets width
+		
+		} else { // If there are more buttons, render them to 2 columns
+		
+			xVal = 30; // Sets X
+			btnWidth = 150; // Sets width
+		
+		}
+		
+		//Iterate over the base sandwich list, creating buttons from them
+		//with the dimensions decided above.
+		for(int i = 0 ; i < sandwichTypes.length; i++) {
+			if(yVal >= 175 && !secCol) {
+				secCol = true;
+				yVal = -25;
+				xVal = sandwichPanel.getWidth()-(btnWidth+30);
+			}
+			
+			// If already in the second column and Y is too large, dont render more.
+			else if (yVal >= 175 && secCol) { 
+				break;
+			}
+			//Create button flow.
+			JButton newBtn = new JButton(sandwichTypes[i]);
+			newBtn.setName(sandwichTypes[i]);
+			newBtn.setBounds(xVal, yVal+=50, btnWidth, 35);
+			newBtn.setBackground(Color.WHITE);
+			newBtn.setBorder(null);
+			sandwichPanel.add(newBtn);
+		}
+		
+	}
 	/*
 	 * 
 	 * Iteratively clears all selections, and resets the state of the Customization
@@ -449,14 +470,18 @@ public class OrderSelectionPage extends JFrame {
 	 */
 	public void clearAllSelections() {
 
+		// Iterates over all components inside the panel.
 		for (Component component : sandwichPanel.getComponents()) {
+			
+			//Sets to "DISABLED" state.
 	        if (component instanceof JButton) {
 	            JButton button = (JButton) component;
 	            button.setBackground(Color.white);
 	            button.setEnabled(true);
 	        }
 		}
-		orderQuantity.setValue(1);
+		
+		orderQuantity.setValue(1); // Resets counter
 	}
 
 	/*
