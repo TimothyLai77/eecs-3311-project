@@ -19,6 +19,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.SwingConstants;
@@ -50,16 +51,17 @@ public class OrderSelectionPage extends JFrame {
 	//Sandwich panel - holding all the buttons
 	private static JPanel sandwichPanel;
 	
-	// Sandwich Group Buttons
-	private static JButton chknBtn;
-	private static JButton beefBtn;
-	private static JButton mtballBtn;
-	private static JButton veggieBtn;
+	//Static list to hold sandwich types --- THIS IS TEMPORARY SINCE
+	//										 IT SHOULD EVENTUALLY BE 
+	// 										 FETCHED FROM THE DB.
+	private static String[] sandwichTypes;
+	
 	/**
 	 * Page constructor for the Order selection.
 	 */
 	public OrderSelectionPage() {
 
+		sandwichTypes = new String[]{"Chicken", "Beef", "Meatball", "Veggie", "Fish", "Cheese"};
 		//Reset the Current Order state
 		itemNum = 1;
 		
@@ -217,37 +219,37 @@ public class OrderSelectionPage extends JFrame {
 		 * Sandwich Button components
 		 */
 		
-		// Chicken Sandwich button and its styling
-		chknBtn = new JButton("Chicken ");
-		chknBtn.setName("Chicken");
-		chknBtn.setBounds(116, 25, 201, 35);
-		chknBtn.setBackground(Color.WHITE);
-		chknBtn.setBorder(null);
-		sandwichPanel.add(chknBtn);
-
-		// Beef Sandwich button and its styling
-		beefBtn = new JButton("Beef ");
-		beefBtn.setName("Beef");
-		beefBtn.setBackground(Color.WHITE);
-		beefBtn.setBounds(116, 75, 201, 35);
-		beefBtn.setBorder(null);
-		sandwichPanel.add(beefBtn);
-
-		// Meatball Sandwich button and its styling
-		mtballBtn = new JButton("Meatball");
-		mtballBtn.setName("Meatball");
-		mtballBtn.setBackground(Color.WHITE);
-		mtballBtn.setBounds(116, 125, 201, 35);
-		mtballBtn.setBorder(null);
-		sandwichPanel.add(mtballBtn);
-
-		//Veggie Sandwich button and its styling
-		veggieBtn = new JButton("Veggie");
-		veggieBtn.setName("Veggie");
-		veggieBtn.setBorder(null);
-		veggieBtn.setBackground(Color.WHITE);
-		veggieBtn.setBounds(116, 175, 201, 35);
-		sandwichPanel.add(veggieBtn);
+		//Generate buttons dynamically 
+		int yVal = -25;
+		int xVal = 0;
+		int btnWidth = 0;
+		
+		boolean secCol = false;
+		
+		if(sandwichTypes.length <= 4) {
+			xVal = (sandwichPanel.getWidth()/2) - 75;
+			btnWidth = 200;
+		} else {
+			xVal = 30;
+			btnWidth = 150;
+		}
+		for(int i = 0 ; i < sandwichTypes.length; i++) {
+			if(yVal >= 175 && !secCol) {
+				secCol = true;
+				yVal = -25;
+				xVal = sandwichPanel.getWidth()-(btnWidth+30);
+			}
+			else if (yVal >= 175 && secCol) {
+				break;
+			}
+			JButton newBtn = new JButton(sandwichTypes[i]);
+			newBtn.setName(sandwichTypes[i]);
+			newBtn.setBounds(xVal, yVal+=50, btnWidth, 35);
+			newBtn.setBackground(Color.WHITE);
+			newBtn.setBorder(null);
+			sandwichPanel.add(newBtn);
+		}
+	
 		
 		//Dynamic button action listener method - efficient button click tracking,
 		//and minimizes duplicate code.
