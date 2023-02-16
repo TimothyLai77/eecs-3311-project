@@ -58,3 +58,11 @@ Feb 6-8:
 Feb 9:
 * Muhammad finished sandwich related classes (2 days)
 * Tim finished the documentation
+
+Feb 16; client meeting
+* Pitched clients our idea of a sandwich ordering kiosk
+* Showed client our app, went through ordering a sandwich
+* showed that it would error out when there's not enough ingredients
+* showed them stories for iteration 2
+* Clients suggested a feature where they could see the most popular sandwiches and a cusotmer could order those. 
+* Clarified that we would suggest a base sandwich and not a specific combination. 
