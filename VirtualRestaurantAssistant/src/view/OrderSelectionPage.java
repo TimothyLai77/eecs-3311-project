@@ -54,14 +54,16 @@ public class OrderSelectionPage extends JFrame {
 	//Static list to hold sandwich types --- THIS IS TEMPORARY SINCE
 	//										 IT SHOULD EVENTUALLY BE 
 	// 										 FETCHED FROM THE DB.
-	private static String[] sandwichTypes;
+	private static Object[] sandwichTypes;
 	
 	/**
 	 * Page constructor for the Order selection.
 	 */
 	public OrderSelectionPage() {
-
+		
+		//This should fetch arraylist of base sandwiches.
 		sandwichTypes = new String[]{"Chicken", "Beef", "Meatball", "Veggie"};
+		
 		//Reset the Current Order state
 		itemNum = 1;
 		
@@ -426,7 +428,7 @@ public class OrderSelectionPage extends JFrame {
 		
 		if(sandwichTypes.length <= 4) { // If there are less buttons, render them center.
 			
-			xVal = (sandwichPanel.getWidth()/2) - 75; //Sets X
+			xVal = (sandwichPanel.getWidth()/2) - 105; //Sets X
 			btnWidth = 200; // Sets width
 		
 		} else { // If there are more buttons, render them to 2 columns
@@ -450,8 +452,8 @@ public class OrderSelectionPage extends JFrame {
 				break;
 			}
 			//Create button flow.
-			JButton newBtn = new JButton(sandwichTypes[i]);
-			newBtn.setName(sandwichTypes[i]);
+			JButton newBtn = new JButton(""+ sandwichTypes[i]);
+			newBtn.setName(" "+ (sandwichTypes[i]));
 			newBtn.setBounds(xVal, yVal+=50, btnWidth, 35);
 			newBtn.setBackground(Color.WHITE);
 			newBtn.setBorder(null);
@@ -476,8 +478,10 @@ public class OrderSelectionPage extends JFrame {
 			//Sets to "DISABLED" state.
 	        if (component instanceof JButton) {
 	            JButton button = (JButton) component;
-	            button.setBackground(Color.white);
-	            button.setEnabled(true);
+	            if(!button.getName().equals("addToCart")) {
+		            button.setBackground(Color.white);
+		            button.setEnabled(true);	
+	            }
 	        }
 		}
 		
@@ -502,6 +506,7 @@ public class OrderSelectionPage extends JFrame {
 	                button.setBackground(selectedColor);
 	                button.setEnabled(false);
 	            } else {
+	            	if(button.getName().equals("addToCart")) continue;
 	                button.setBackground(Color.WHITE);
 	                button.setEnabled(true);
 	            }
