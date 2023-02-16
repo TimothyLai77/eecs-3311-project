@@ -61,7 +61,7 @@ public class OrderSelectionPage extends JFrame {
 	 */
 	public OrderSelectionPage() {
 
-		sandwichTypes = new String[]{"Chicken", "Beef", "Meatball", "Veggie", "Fish", "Cheese"};
+		sandwichTypes = new String[]{"Chicken", "Beef", "Meatball", "Veggie"};
 		//Reset the Current Order state
 		itemNum = 1;
 		
