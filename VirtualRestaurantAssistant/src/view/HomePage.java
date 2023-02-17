@@ -73,12 +73,13 @@ public class HomePage extends JFrame{
 				mouseY = e.getY();
 			}
 		});
-		
+
 		// Drag toolbar customization
 		dragBar.setBackground(Color.BLACK);
 		dragBar.setBorder(null);
 		dragBar.setBounds(0, 0, 601, 20);
 		contentPane.add(dragBar);
+	
 		
 		// Orange Panel for styling
 		JPanel panel = new JPanel();
@@ -87,6 +88,22 @@ public class HomePage extends JFrame{
 		contentPane.add(panel);
 		panel.setLayout(null);
 		
+		//Employee Selected button click
+		JButton employeeSelection = new JButton("Employee Login");
+		employeeSelection.setBorderPainted(false);
+		employeeSelection.setForeground(Color.WHITE);
+		employeeSelection.setFont(new Font("Serif", Font.PLAIN, 12));
+		employeeSelection.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
+		employeeSelection.setBackground(Color.DARK_GRAY);
+		employeeSelection.setBounds(111, 343, 120, 20);
+		employeeSelection.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				new EmployeeLogin().setVisible(true);
+			}
+		});
+		panel.add(employeeSelection);
+				
 		// Panel Image 1
 		JLabel eatingLabel = new JLabel("");
 		eatingLabel.setBounds(0, 90, 260, 240);

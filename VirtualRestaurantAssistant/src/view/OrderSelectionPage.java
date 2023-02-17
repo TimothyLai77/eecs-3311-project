@@ -50,16 +50,22 @@ public class OrderSelectionPage extends JFrame {
 	private JPanel orderDetailPanel; // Dynamic Order panel
 	private static int itemNum = 1; // Item number counter
 
-	// Sandwich Group Buttons
-	private static JButton chknBtn;
-	private static JButton beefBtn;
-	private static JButton mtballBtn;
-
+	//Sandwich panel - holding all the buttons
+	private static JPanel sandwichPanel;
+	
+	//Static list to hold sandwich types --- THIS IS TEMPORARY SINCE
+	//										 IT SHOULD EVENTUALLY BE 
+	// 										 FETCHED FROM THE DB.
+	private static Object[] sandwichTypes;
+	
 	/**
 	 * Page constructor for the Order selection.
 	 */
 	public OrderSelectionPage() {
-
+		
+		//This should fetch arraylist of base sandwiches.
+		sandwichTypes = new String[]{"Chicken", "Beef", "Meatball", "Veggie"};
+		
 		//Reset the Current Order state
 		itemNum = 1;
 		
@@ -180,12 +186,12 @@ public class OrderSelectionPage extends JFrame {
 		contentPane.add(makerTitle_1);
 
 		// Panel housing ingredient selection
-		JPanel ingredientsPanel = new JPanel();
-		ingredientsPanel.setBackground(new Color(0, 0, 0));
-		ingredientsPanel.setBounds(20, 69, 435, 315);
-		ingredientsPanel.setBorder(null);
-		contentPane.add(ingredientsPanel);
-		ingredientsPanel.setLayout(null);
+		sandwichPanel = new JPanel();
+		sandwichPanel.setBackground(new Color(0, 0, 0));
+		sandwichPanel.setBounds(20, 69, 435, 315);
+		sandwichPanel.setBorder(null);
+		contentPane.add(sandwichPanel);
+		sandwichPanel.setLayout(null);
 
 		/*
 		 * 
@@ -203,71 +209,40 @@ public class OrderSelectionPage extends JFrame {
 		orderQuantity.setForeground(Color.BLACK);
 		orderQuantity.setBackground(Color.ORANGE);
 		orderQuantity.setBounds(108, 269, 46, 35);
-		ingredientsPanel.add(orderQuantity);
+		sandwichPanel.add(orderQuantity);
 
-		// DISPLAY ERROR MESSGAE BACK TO USER --- NOT TECHINCAL ERROR.
+		// DISPLAY ERROR MESSAGE BACK TO USER --- NOT TECHNICAL ERROR.
 		JLabel errorMessageLbl = new JLabel("");
 		errorMessageLbl.setFont(new Font("Tahoma", Font.BOLD, 14));
 		errorMessageLbl.setHorizontalAlignment(SwingConstants.CENTER);
 		errorMessageLbl.setForeground(new Color(255, 0, 0));
 		errorMessageLbl.setBounds(116, 222, 201, 20);
-		ingredientsPanel.add(errorMessageLbl);
+		sandwichPanel.add(errorMessageLbl);
 
 		/*
-		 * Sandwich Button components
+		 * Renders all the sandwich buttons using the:
+		 * base sandwich list.
 		 */
+		renderSandwichButtons();
 		
-		// Chicken Sandwich button and its stlying
-		chknBtn = new JButton("Chicken ");
-		chknBtn.setName("Chicken");
-		chknBtn.setBounds(116, 50, 201, 35);
-		chknBtn.setBackground(Color.WHITE);
-		chknBtn.setBorder(null);
-		ingredientsPanel.add(chknBtn);
+		//Dynamic button action listener method - efficient button click tracking,
+		//and minimizes duplicate code.
+		for (Component component : sandwichPanel.getComponents()) {
+		    if (component instanceof JButton) {
+		        JButton button = (JButton) component;
+		        button.addActionListener(new ActionListener() {
+		            @Override
+		            public void actionPerformed(ActionEvent e) {
+		                // Get the button that was clicked
+		                JButton clickedButton = (JButton) e.getSource();
 
-		// Beef Sandwich button and its stlying
-		beefBtn = new JButton("Beef ");
-		beefBtn.setName("Beef");
-		beefBtn.setBackground(Color.WHITE);
-		beefBtn.setBounds(116, 107, 201, 35);
-		beefBtn.setBorder(null);
-		ingredientsPanel.add(beefBtn);
+		                // Call selectSandwich with the name of the clicked button
+		                selectSandwich(clickedButton.getName());
+		            }
+		        });
+		    }
+		}
 
-		// Meatball Sandwich button and its stlying
-		mtballBtn = new JButton("Meatball");
-		mtballBtn.setName("Meatball");
-		mtballBtn.setBackground(Color.WHITE);
-		mtballBtn.setBounds(116, 164, 201, 35);
-		mtballBtn.setBorder(null);
-		ingredientsPanel.add(mtballBtn);
-
-		chknBtn.addActionListener(new ActionListener() {
-			
-			// This onclick trigger calls setChicken on chicken selection
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				errorMessageLbl.setText(""); //Reset the error message
-				setChicken();
-			}
-		});
-		beefBtn.addActionListener(new ActionListener() {
-			
-			// This onclick trigger calls setBeef on beef selection
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				errorMessageLbl.setText(""); //Reset the error message
-				setBeef();
-			}
-		});
-		mtballBtn.addActionListener(new ActionListener() {
-			
-			// This onclick trigger calls setMeatball on meatball selection
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				errorMessageLbl.setText(""); //Reset the error message
-				setMeatball();
-			}
-		});
 
 		/*
 		 * 
@@ -280,18 +255,20 @@ public class OrderSelectionPage extends JFrame {
 
 		// Place Order Button- ADDING TO CART AND QUANTITY and its styling
 		JButton addToCartBtn = new JButton("Add to Cart");
+		addToCartBtn.setName("addToCart");
 		addToCartBtn.setFont(new Font("Serif", Font.PLAIN, 19));
 		addToCartBtn.setBorderPainted(false);
 		addToCartBtn.setBackground(Color.ORANGE);
 		addToCartBtn.setBounds(177, 268, 140, 35);
-		ingredientsPanel.add(addToCartBtn);
+		sandwichPanel.add(addToCartBtn);
 		
 		JLabel qtyLabel = new JLabel("Qty :");
 		qtyLabel.setFont(new Font("Times New Roman", Font.PLAIN, 13));
 		qtyLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		qtyLabel.setForeground(new Color(255, 255, 255));
 		qtyLabel.setBounds(52, 269, 50, 35);
-		ingredientsPanel.add(qtyLabel);
+		sandwichPanel.add(qtyLabel);
+	
 
 		addToCartBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -449,6 +426,57 @@ public class OrderSelectionPage extends JFrame {
 		setLocationRelativeTo(null);
 	}
 
+	/**
+	 * This method renders all the sandwich buttons dynamically
+	 * using the list of base sandwiches provided. This also dynamically 
+	 * resizes them and sorts them to adjust to the quantity 
+	 * while keeping simplistic design.
+	 * */
+	private void renderSandwichButtons() {
+		
+		int yVal = -25; // Y value of the button to render
+		int xVal = 0; // X value of the button to render
+		int btnWidth = 0; //Width of the button to render
+		boolean secCol = false; // Checks if second column is required to avoid overflow
+		
+		//Checks if there are more buttons, for resizing to fit
+		//them in and to adjust the columns.
+		
+		if(sandwichTypes.length <= 4) { // If there are less buttons, render them center.
+			
+			xVal = (sandwichPanel.getWidth()/2) - 105; //Sets X
+			btnWidth = 200; // Sets width
+		
+		} else { // If there are more buttons, render them to 2 columns
+		
+			xVal = 30; // Sets X
+			btnWidth = 150; // Sets width
+		
+		}
+		
+		//Iterate over the base sandwich list, creating buttons from them
+		//with the dimensions decided above.
+		for(int i = 0 ; i < sandwichTypes.length; i++) {
+			if(yVal >= 175 && !secCol) {
+				secCol = true;
+				yVal = -25;
+				xVal = sandwichPanel.getWidth()-(btnWidth+30);
+			}
+			
+			// If already in the second column and Y is too large, dont render more.
+			else if (yVal >= 175 && secCol) { 
+				break;
+			}
+			//Create button flow.
+			JButton newBtn = new JButton(""+ sandwichTypes[i]);
+			newBtn.setName(" "+ (sandwichTypes[i]));
+			newBtn.setBounds(xVal, yVal+=50, btnWidth, 35);
+			newBtn.setBackground(Color.WHITE);
+			newBtn.setBorder(null);
+			sandwichPanel.add(newBtn);
+		}
+		
+	}
 	/*
 	 * 
 	 * Iteratively clears all selections, and resets the state of the Customization
@@ -460,16 +488,20 @@ public class OrderSelectionPage extends JFrame {
 	 */
 	public void clearAllSelections() {
 
-		chknBtn.setBackground(Color.WHITE);
-		chknBtn.setEnabled(true);
-
-		beefBtn.setBackground(Color.WHITE);
-		beefBtn.setEnabled(true);
-
-		mtballBtn.setBackground(Color.WHITE);
-		mtballBtn.setEnabled(true);
-
-		orderQuantity.setValue(1);
+		// Iterates over all components inside the panel.
+		for (Component component : sandwichPanel.getComponents()) {
+			
+			//Sets to "DISABLED" state.
+	        if (component instanceof JButton) {
+	            JButton button = (JButton) component;
+	            if(!button.getName().equals("addToCart")) {
+		            button.setBackground(Color.white);
+		            button.setEnabled(true);	
+	            }
+	        }
+		}
+		
+		orderQuantity.setValue(1); // Resets counter
 	}
 
 	/*
@@ -478,52 +510,24 @@ public class OrderSelectionPage extends JFrame {
 	 * and resetting enabled status for Chicken.
 	 * 
 	 */
-	private void setChicken() {
+	 
+	private void selectSandwich(String selectedSandwich) {
+	    Color selectedColor = Color.ORANGE;
 
-		chknBtn.setBackground(Color.orange);
-		beefBtn.setBackground(Color.WHITE);
-		mtballBtn.setBackground(Color.WHITE);
-
-		chknBtn.setEnabled(false);
-		beefBtn.setEnabled(true);
-		mtballBtn.setEnabled(true);
-
-	}
-
-	/*
-	 * 
-	 * Button Selection Style change Method,
-	 * and resetting enabled status for Beef.
-	 * 
-	 */
-	private void setBeef() {
-
-		chknBtn.setBackground(Color.WHITE);
-		beefBtn.setBackground(Color.orange);
-		mtballBtn.setBackground(Color.WHITE);
-
-		chknBtn.setEnabled(true);
-		beefBtn.setEnabled(false);
-		mtballBtn.setEnabled(true);
-
-	}
-
-	/*
-	 * 
-	 * Button Selection Style change Method,
-	 * and resetting enabled status for Meatball.
-	 * 
-	 */
-	private void setMeatball() {
-
-		chknBtn.setBackground(Color.WHITE);
-		beefBtn.setBackground(Color.white);
-		mtballBtn.setBackground(Color.ORANGE);
-
-		chknBtn.setEnabled(true);
-		beefBtn.setEnabled(true);
-		mtballBtn.setEnabled(false);
-
+	    // Find the button corresponding to the selected sandwich and set the selected color
+	    for (Component component : sandwichPanel.getComponents()) {
+	        if (component instanceof JButton) {
+	            JButton button = (JButton) component;
+	            if (button.getName().equals(selectedSandwich)) {
+	                button.setBackground(selectedColor);
+	                button.setEnabled(false);
+	            } else {
+	            	if(button.getName().equals("addToCart")) continue;
+	                button.setBackground(Color.WHITE);
+	                button.setEnabled(true);
+	            }
+	        }
+	    }
 	}
 
 	/**
@@ -534,15 +538,15 @@ public class OrderSelectionPage extends JFrame {
 	private String getSelection() {
 		
 		//Returns the value that is currently enabled.
-		if (!chknBtn.isEnabled()) {
-			return chknBtn.getName();
-		} else if (!beefBtn.isEnabled()) {
-			return beefBtn.getName();
-		} else if (!mtballBtn.isEnabled()) {
-			return mtballBtn.getName();
-		} else {
-			return null;
-		}
+		for (Component component : sandwichPanel.getComponents()) {
+	        if (component instanceof JButton) {
+	            JButton button = (JButton) component;
+	            if (!button.isEnabled()) {
+	            	return button.getName();
+	            }
+	        }
+	    }
+		return null;
 	}
 
 	/**
