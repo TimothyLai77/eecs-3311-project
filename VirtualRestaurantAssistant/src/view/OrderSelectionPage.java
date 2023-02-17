@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import controller.OrderUIController;
+import model.ManagerSales;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -19,6 +20,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.sql.SQLException;
 import java.util.List;
 
 import javax.swing.SwingConstants;
@@ -293,7 +295,7 @@ public class OrderSelectionPage extends JFrame {
 		addToCartBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-				// Checks if a sandwich is selection otherwise return error statment.
+				// Checks if a sandwich is selection otherwise return error statement.
 				if (getSelection() == null) {
 					errorMessageLbl.setText("Please select an Item !");
 					return;
@@ -374,7 +376,21 @@ public class OrderSelectionPage extends JFrame {
 						
 					}
 					
-					// Promt user if they need a RECEIPT
+					// Add order details to database - sales history
+					double subTotal = 0;
+					int ind = 0;
+					for(CartItem it : order) {
+						subTotal += (costs.get(ind++) * it.getQuantity());
+					}
+					ManagerSales sales = new ManagerSales();
+					try {
+						sales.updateSalesHistory(cart.getID(), subTotal*1.13, cart.getOrderDate());
+					} catch (SQLException e1) {
+						e1.printStackTrace();
+					}
+					
+					
+					// Prompt user if they need a RECEIPT
 					int confirmed = JOptionPane.showConfirmDialog(null, "Would you like a receipt?", "Receipt",
 							JOptionPane.YES_NO_OPTION);
 					
