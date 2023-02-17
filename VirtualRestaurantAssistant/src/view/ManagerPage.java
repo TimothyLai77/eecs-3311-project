@@ -3,6 +3,7 @@ package view;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.SQLException;
+import java.awt.event.ActionListener;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -26,6 +27,7 @@ public class ManagerPage extends JFrame implements ItemListener, ActionListener 
 	private JButton confirmAddButton;
 	private JButton btnModify;
 	private JButton btnDelete;
+	private JButton btnSales;
 	private JTextArea resultDisplay;
 	private JTextArea resultDisplay_1;
 	private JTextArea textArea;
@@ -254,6 +256,18 @@ public class ManagerPage extends JFrame implements ItemListener, ActionListener 
 		contentPanel.add(lblInventoryList);
 		
 		displayInventory(textArea);
+		
+		btnSales = new JButton("Sales");
+		btnSales.setFont(new Font("Tahoma", Font.BOLD, 15));
+		btnSales.setBounds(852, 318, 103, 34);
+		btnSales.addActionListener(new ActionListener () {
+			@Override
+			// Show a pop-up of sales history frame
+			public void actionPerformed(ActionEvent e) {
+				new ManageHistory().setVisible(true);
+			}
+		});
+		contentPanel.add(btnSales);
 		
 	}
 	

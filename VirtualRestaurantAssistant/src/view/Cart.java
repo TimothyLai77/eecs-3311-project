@@ -1,6 +1,9 @@
 package view;
 
+import java.time.LocalDate;
 import java.util.LinkedList;
+import java.util.UUID;
+
 
 /*
  * 
@@ -11,6 +14,8 @@ import java.util.LinkedList;
 public class Cart {
 
 	private LinkedList<CartItem> itemList;
+	private String cartID;
+	private String orderDate;
 	
 	/*
 	 * Cart constructor initializes a LinkedList
@@ -18,7 +23,20 @@ public class Cart {
 	 * */
 	Cart(){
 		itemList = new LinkedList<>();
+		this.cartID = generateID();
+		this.orderDate = LocalDate.now().toString();
 	}
+	
+	
+	/**
+	 * Generate orderID / cartID for later use
+	 * 
+	 * */
+	public String generateID() {
+		String uniqueID = UUID.randomUUID().toString().substring(0, 8);
+		return uniqueID;
+	}
+	
 	
 	/**
 	 * Adds the CartItem instance to the Cart, 
@@ -58,6 +76,20 @@ public class Cart {
 	 * */
 	int getSize() {
 		return this.itemList.size();
+	}
+	
+	/**
+	 * Return the uniqueID of cart
+	 * */
+	public String getID() {
+		return this.cartID;
+	}
+	
+	/**
+	 * Get orderDate in format YYYY-MM-DD
+	 * */
+	public String getOrderDate() {
+		return this.orderDate;
 	}
 }
 

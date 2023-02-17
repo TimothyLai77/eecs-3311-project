@@ -20,7 +20,7 @@ public class Main {
 	
 	public static void main(String[] args) {
 
-		// look and feel setting for javaq swing.
+		// look and feel setting for java swing.
 		try {
 		    UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
 		} catch (Exception e) {
