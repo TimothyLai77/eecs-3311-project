@@ -4,6 +4,7 @@ import model.ChickenSandwichCreator;
 import model.MeatballSandwichCreator;
 import model.Sandwich;
 import model.SandwichCreator;
+import model.VeggiepattySandwichCreator;
 import view.CartItem;
 
 import java.util.List;
@@ -23,8 +24,11 @@ public class OrderUIController {
 		else if(name.equals("Beef")) {
 			return new BeefSandwichCreator();
 		}
-		else {
+		else if(name.equals("Meatball")) {
 			return new MeatballSandwichCreator();
+		}
+		else {
+			return new VeggiepattySandwichCreator();
 		}
 	}
 	

@@ -154,6 +154,7 @@ public class EmployeeLogin extends JFrame {
 		passIcon.setIcon(new ImageIcon(ImageImports.img_key));
 		passPanel.add(passIcon);
 		
+		// Log in to Manager UI
 		JButton loginBtn = new JButton("LOG IN");
 		loginBtn.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		loginBtn.setForeground(new Color(255, 255, 255));
@@ -163,7 +164,7 @@ public class EmployeeLogin extends JFrame {
 		loginBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose();
-//				new ManagementPage().setVisible(true);     LOAD MANAGEMENT PAGE WHEN READY
+				new ManagerPage().setVisible(true);
 			}
 		});
 		contentPane.add(loginBtn);
