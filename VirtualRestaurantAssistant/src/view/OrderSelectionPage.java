@@ -63,7 +63,7 @@ public class OrderSelectionPage extends JFrame {
 	 */
 	public OrderSelectionPage() {
 		
-		//This should fetch arraylist of base sandwiches.
+		//This should fetch arrayList of base sandwiches.
 		sandwichTypes = new String[]{"Chicken", "Beef", "Meatball", "Veggie"};
 		
 		//Reset the Current Order state
@@ -318,17 +318,17 @@ public class OrderSelectionPage extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				
 				/*
-				 * Checks if the Cart is populated with atleast 1 item,
+				 * Checks if the Cart is populated with at least 1 item,
 				 * if not then return error message.
 				 * */
 				if (cart.getSize() > 0) {
 					
-					// Initalizes an Order using the Cart's content.
+					// Initializes an Order using the Cart's content.
 					List<CartItem> order = cart.getCartContent(); 
 					
 					/*
 					 * Sends a request to get the order made by calling 
-					 * getSandwichOrder via the controller using the Order initalized above.
+					 * getSandwichOrder via the controller using the Order initialized above.
 					 * 
 					 * Then fetches the costs associated with each Order Item,
 					 * storing them to a costs list.
