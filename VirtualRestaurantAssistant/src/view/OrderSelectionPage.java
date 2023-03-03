@@ -469,7 +469,7 @@ public class OrderSelectionPage extends JFrame {
 			}
 			//Create button flow.
 			JButton newBtn = new JButton(""+ sandwichTypes[i]);
-			newBtn.setName(" "+ (sandwichTypes[i]));
+			newBtn.setName(""+ (sandwichTypes[i]));
 			newBtn.setBounds(xVal, yVal+=50, btnWidth, 35);
 			newBtn.setBackground(Color.WHITE);
 			newBtn.setBorder(null);
