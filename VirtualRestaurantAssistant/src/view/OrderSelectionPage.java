@@ -367,6 +367,13 @@ public class OrderSelectionPage extends JFrame {
 						e1.printStackTrace();
 					}
 					
+					// Add sandwich base counts into database
+					try {
+						sales.addCount(order);
+					} catch (SQLException e1) {
+						e1.printStackTrace();
+					}
+					
 					
 					// Prompt user if they need a RECEIPT
 					int confirmed = JOptionPane.showConfirmDialog(null, "Would you like a receipt?", "Receipt",
