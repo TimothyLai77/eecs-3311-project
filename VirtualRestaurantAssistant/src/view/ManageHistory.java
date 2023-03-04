@@ -17,15 +17,18 @@ import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
 import java.awt.Color;
 import javax.swing.JButton;
+import java.awt.SystemColor;
 
 public class ManageHistory extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextArea displayArea;
+	private JTextArea popularField;
 	private JButton btnrefresh;
 	private JLabel salesAmount;
 	private ManagerSales mg = new ManagerSales();
+	private JScrollPane scrollPane_1;
 
 	/**
 	 * Launch the application.
@@ -69,10 +72,15 @@ public class ManageHistory extends JFrame {
 		scrollPane.setViewportView(displayArea);
 		displayArea.setEditable(false);
 		
-		JTextArea popularField = new JTextArea();
-		popularField.setBackground(new Color(192, 192, 192));
-		popularField.setBounds(23, 540, 297, 114);
-		contentPane.add(popularField);
+		scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBounds(23, 540, 297, 114);
+		contentPane.add(scrollPane_1);
+		
+		popularField = new JTextArea();
+		popularField.setEditable(false);
+		scrollPane_1.setViewportView(popularField);
+		popularField.setFont(new Font("Monospaced", Font.BOLD, 16));
+		popularField.setBackground(SystemColor.inactiveCaption);
 		
 		JLabel lblTotalSales = new JLabel("Total Sales:");
 		lblTotalSales.setFont(new Font("Bell MT", Font.BOLD, 20));
@@ -90,6 +98,7 @@ public class ManageHistory extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				showSales();
 				showTotal();
+				showCounts();
 			}
 		});
 		contentPane.add(btnrefresh);
@@ -101,6 +110,7 @@ public class ManageHistory extends JFrame {
 		
 		showSales();
 		showTotal();
+		showCounts();
 	}
 	
 	
@@ -122,6 +132,18 @@ public class ManageHistory extends JFrame {
 	public void showTotal() {
 		try {
 			salesAmount.setText(mg.getTotalSales());
+		}
+		catch(Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Show the count for each of the bases
+	 * */
+	public void showCounts() {
+		try {
+			popularField.setText(mg.getCounts());
 		}
 		catch(Exception ex) {
 			ex.printStackTrace();

@@ -4,10 +4,23 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+import view.CartItem;
 
 public class ManagerSales {
 	
 	static Connection connection;  // connection to database
+	
+	public static void main(String[] args) {
+		ManagerSales sales = new ManagerSales();
+		try {
+			System.out.println(sales.getFavourite());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	// get connection
 	public ManagerSales() {
@@ -74,5 +87,72 @@ public class ManagerSales {
 		}
 		
 		return returnRes;
+	}
+	
+	/**
+	 * Add counts of sandwich bases into database
+	 * */
+	public void addCount(List<CartItem> bases) throws SQLException {
+		Statement st = connection.createStatement();
+		for(CartItem item : bases) {
+			if(!baseExists(item.getName())) {
+				String command = "INSERT INTO favourites values('" + item.getName() + "','1');";
+				st.executeUpdate(command);
+			}
+			else {
+				String com = "UPDATE favourites SET counts = counts + 1 WHERE sandwichBase = '" + item.getName() + "';";
+				st.executeUpdate(com);
+			}
+		}
+	}
+	
+	/**
+	 * Search for existing sandwich base count
+	 * */
+	public boolean baseExists(String name) throws SQLException {
+		ArrayList<String> bases = new ArrayList<>();
+		Statement st = connection.createStatement();
+		String query = "select sandwichBase from favourites;";
+		ResultSet rs = st.executeQuery(query);
+		
+		while(rs.next()) {
+			String baseName = rs.getString("sandwichBase");
+			bases.add(baseName);
+		}
+		
+		if(bases.isEmpty()) {
+			return false;
+		}
+		else if (bases.contains(name)) {
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * Return the list of counts of all bases
+	 * */
+	public String getCounts() throws SQLException {
+		Statement st = connection.createStatement();
+		String query = "select * from favourites ORDER BY counts DESC;";
+		ResultSet rs = st.executeQuery(query);
+		String res = "";
+		
+		while(rs.next()) {
+			String name = rs.getString("sandwichBase");
+			String count = rs.getString("counts");
+			res += name + ": " + count + "\n";
+		}
+		
+		return res;
+	}
+	
+	/**
+	 * Return the most popular / most ordered base
+	 * */
+	public String getFavourite() throws SQLException {
+		String allLines = getCounts();
+		String popular = allLines.substring(0, allLines.indexOf("\n"));
+		return popular.substring(0, popular.indexOf(":"));
 	}
 }
