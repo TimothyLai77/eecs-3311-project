@@ -1,25 +1,26 @@
-package model;
+package ingredients;
 
-public class Bread implements Ingredient {
-	
+import model.Ingredient;
+
+public class Veggiepatty implements Ingredient {
 	private String name;
 	private double price;
 	private String type;
 	
 	/**
-	 * Instantiates bread object with the given parameters 
+	 * Instantiates veggiepatty object with the given parameters 
 	 * @param name
 	 * @param price
 	 * @param type
 	 */
-	public Bread(String name, double price, String type) {
+	public Veggiepatty(String name, double price, String type) {
 		this.name = name;
 		this.price = price;
 		this.type = type;
 	}
 	
 	/**
-	 * @return:- This method returns the price of bread objects
+	 * @return:- This method returns the price of veggiepatty objects
 	 */
 	public double getPrice() {
 		return this.price;
@@ -33,10 +34,9 @@ public class Bread implements Ingredient {
 	}
 	
 	/**
-	 * @return:- This method returns the name of ingredient
+	 * @return:- This method returns the type of the ingredient
 	 */
 	public String getType() {
 		return this.type;
 	}
-
 }
