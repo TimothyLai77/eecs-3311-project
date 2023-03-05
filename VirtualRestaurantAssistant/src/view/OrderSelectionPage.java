@@ -514,6 +514,13 @@ public class OrderSelectionPage extends JFrame {
 						e1.printStackTrace();
 					}
 					
+					// Add sandwich base counts into database
+					try {
+						sales.addCount(order);
+					} catch (SQLException e1) {
+						e1.printStackTrace();
+					}
+					
 					
 					// Prompt user if they need a RECEIPT
 					int confirmed = JOptionPane.showConfirmDialog(null, "Would you like a receipt?", "Receipt",
@@ -624,11 +631,18 @@ public class OrderSelectionPage extends JFrame {
 				break;
 			}
 			//Create button flow.
-			JButton newBtn = new JButton(""+ sandwichTypes[i]);
+			JButton newBtn = null;
+			try {
+				newBtn = new JButton(""+ sandwichTypes[i] + addSymbol((String) sandwichTypes[i]));
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 			newBtn.setName(""+ (sandwichTypes[i]));
 			newBtn.setBounds(xVal, yVal+=50, btnWidth, 35);
 			newBtn.setBackground(Color.WHITE);
 			newBtn.setBorder(null);
+			
+			
 			sandwichPanel.add(newBtn);
 		}
 		
@@ -665,6 +679,18 @@ public class OrderSelectionPage extends JFrame {
 		
 	}
 	
+  
+	 /** Check whether the button is the most popular base
+	 * and mark it with a symbol
+	 * */
+	public String addSymbol(String name) throws SQLException {
+		ManagerSales s = new ManagerSales();
+		if(s.getFavourite().equals(name)) {
+			return " (popular)";
+		}
+		return "";
+	}
+
 	/*
 	 * 
 	 * Iteratively clears all selections, and resets the state of the Customization
