@@ -4,9 +4,9 @@ import java.util.LinkedList;
 
 import javax.swing.UIManager;
 
-import model.Beef;
-import model.Bread;
-import model.Chicken;
+import ingredients.Beef;
+import ingredients.Bread;
+import ingredients.Chicken;
 import model.Ingredient;
 import model.Inventory;
 import model.MapInventory;

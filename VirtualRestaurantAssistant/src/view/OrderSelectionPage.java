@@ -2,7 +2,6 @@ package view;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.FlowLayout;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -16,14 +15,12 @@ import model.ManagerSales;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import java.awt.Font;
-import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.SwingConstants;
@@ -593,6 +590,7 @@ public class OrderSelectionPage extends JFrame {
 	 * using the list of base sandwiches provided. This also dynamically 
 	 * resizes them and sorts them to adjust to the quantity 
 	 * while keeping simplistic design.
+	 * @throws SQLException 
 	 * */
 	private void renderSandwichButtons() {
 
@@ -617,6 +615,14 @@ public class OrderSelectionPage extends JFrame {
 		
 		}
 		
+		//Setting the favorite
+		String favorite = "";
+		try {
+			favorite = findPopular();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
 		//Iterate over the base sandwich list, creating buttons from them
 		//with the dimensions decided above.
 		for(int i = 0 ; i < sandwichTypes.length; i++) {
@@ -630,12 +636,15 @@ public class OrderSelectionPage extends JFrame {
 			else if (yVal >= 175 && secCol) { 
 				break;
 			}
+			
+
 			//Create button flow.
 			JButton newBtn = null;
-			try {
-				newBtn = new JButton(""+ sandwichTypes[i] + addSymbol((String) sandwichTypes[i]));
-			} catch (SQLException e) {
-				e.printStackTrace();
+			
+			if(favorite.equals(sandwichTypes[i])) {
+				newBtn = new JButton(""+ sandwichTypes[i] + " (popular)");
+			}else {
+				newBtn = new JButton(""+ sandwichTypes[i]);
 			}
 			newBtn.setName(""+ (sandwichTypes[i]));
 			newBtn.setBounds(xVal, yVal+=50, btnWidth, 35);
@@ -648,6 +657,14 @@ public class OrderSelectionPage extends JFrame {
 		
 	}
 	
+	/**
+	 * Finds the current popular from the manager sales,
+	 * and returns it.
+	 * */
+	private String findPopular() throws SQLException {
+		return new ManagerSales().getFavourite(); //Fetching sales data to check for favorites
+
+	}
 	/**
 	 * This method renders all the topping buttons dynamically
 	 * using the list of toppings provided. This also dynamically.
@@ -679,18 +696,7 @@ public class OrderSelectionPage extends JFrame {
 		
 	}
 	
-  
-	 /** Check whether the button is the most popular base
-	 * and mark it with a symbol
-	 * */
-	public String addSymbol(String name) throws SQLException {
-		ManagerSales s = new ManagerSales();
-		if(s.getFavourite().equals(name)) {
-			return " (popular)";
-		}
-		return "";
-	}
-
+	
 	/*
 	 * 
 	 * Iteratively clears all selections, and resets the state of the Customization
