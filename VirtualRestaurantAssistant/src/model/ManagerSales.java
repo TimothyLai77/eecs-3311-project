@@ -156,3 +156,4 @@ public class ManagerSales {
 		return popular.substring(0, popular.indexOf(":"));
 	}
 }
+
