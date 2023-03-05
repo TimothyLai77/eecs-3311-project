@@ -21,7 +21,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.SwingConstants;
@@ -31,6 +30,7 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import java.awt.GridLayout;
 
 public class OrderSelectionPage extends JFrame {
 
@@ -52,12 +52,16 @@ public class OrderSelectionPage extends JFrame {
 
 	//Sandwich panel - holding all the buttons
 	private static JPanel sandwichPanel;
+	private static JPanel toppingsCheckoutPanel;
 	
 	//Static list to hold sandwich types --- THIS IS TEMPORARY SINCE
 	//										 IT SHOULD EVENTUALLY BE 
 	// 										 FETCHED FROM THE DB.
 	private static Object[] sandwichTypes;
+	private static Object[][] toppingTypes; 
 	
+	JLabel errorMessageLbl, ingredientsError;
+	private static JPanel veggiesPanel, saucesPanel, cheesePanel;
 	/**
 	 * Page constructor for the Order selection.
 	 */
@@ -66,6 +70,8 @@ public class OrderSelectionPage extends JFrame {
 		//This should fetch arrayList of base sandwiches.
 		sandwichTypes = new String[]{"Chicken", "Beef", "Meatball", "Veggie"};
 		
+		// 2D array in the form Toppings[Vegetables[] , Sauces[] , Cheeses[] ]
+		toppingTypes = new String[][] {{"Tomato-v", "Lettuce-v"},{"Ketchup-s", "Mayo-s"},{"Cheddar-c", "American-c"} };
 		//Reset the Current Order state
 		itemNum = 1;
 		
@@ -170,12 +176,12 @@ public class OrderSelectionPage extends JFrame {
 		panel.add(scrollPane);
 
 		// Screen title "customization corner"
-		JLabel customizationCornerLbl = new JLabel("Sandwich Selection");
-		customizationCornerLbl.setBounds(104, 25, 265, 33);
-		customizationCornerLbl.setHorizontalAlignment(SwingConstants.CENTER);
-		customizationCornerLbl.setFont(new Font("Serif", Font.BOLD, 27));
-		customizationCornerLbl.setForeground(Color.ORANGE);
-		contentPane.add(customizationCornerLbl);
+		JLabel pageLabel = new JLabel("Sandwich Station");
+		pageLabel.setBounds(104, 25, 265, 33);
+		pageLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		pageLabel.setFont(new Font("Serif", Font.BOLD, 27));
+		pageLabel.setForeground(Color.ORANGE);
+		contentPane.add(pageLabel);
 
 		// Sub-title / Catchphrase
 		JLabel makerTitle_1 = new JLabel("Ordering made simple");
@@ -185,14 +191,57 @@ public class OrderSelectionPage extends JFrame {
 		makerTitle_1.setFont(new Font("Serif", Font.ITALIC, 23));
 		contentPane.add(makerTitle_1);
 
-		// Panel housing ingredient selection
+		// Panel housing sandwich selection
 		sandwichPanel = new JPanel();
 		sandwichPanel.setBackground(new Color(0, 0, 0));
-		sandwichPanel.setBounds(20, 69, 435, 315);
+		sandwichPanel.setBounds(20, 70, 435, 315);
 		sandwichPanel.setBorder(null);
-		contentPane.add(sandwichPanel);
 		sandwichPanel.setLayout(null);
+//		sandwichPanel.setVisible(false);
+		contentPane.add(sandwichPanel);
 
+		// Panel housing ingredient selection
+		toppingsCheckoutPanel = new JPanel();
+		toppingsCheckoutPanel.setBackground(new Color(0, 0, 0));
+		toppingsCheckoutPanel.setBounds(20, 69, 435, 315);
+		toppingsCheckoutPanel.setBorder(null);
+		toppingsCheckoutPanel.setLayout(null);
+		toppingsCheckoutPanel.setVisible(false);
+		contentPane.add(toppingsCheckoutPanel);
+		
+		//TOPPING ICONS AND BUTTONS
+		JLabel vegiIcon = new JLabel("");
+		vegiIcon.setBounds(10, 50, 40, 40);
+		vegiIcon.setIcon(new ImageIcon(ImageImports.imgVegi));
+		toppingsCheckoutPanel.add(vegiIcon);
+		
+		JLabel saucesIcon = new JLabel("");
+		saucesIcon.setBounds(10, 125, 40, 40);
+		saucesIcon.setIcon(new ImageIcon(ImageImports.imgSauces));
+		toppingsCheckoutPanel.add(saucesIcon);
+		
+		JLabel cheeseIcon = new JLabel("");
+		cheeseIcon.setBounds(10, 200, 40, 40);
+		cheeseIcon.setIcon(new ImageIcon(ImageImports.imgCheeses));
+		toppingsCheckoutPanel.add(cheeseIcon);
+		
+		veggiesPanel = new JPanel();
+		veggiesPanel.setBackground(Color.black);
+		veggiesPanel.setBounds(80, 55, 310, 30);
+		toppingsCheckoutPanel.add(veggiesPanel);
+		veggiesPanel.setLayout(new GridLayout(1, 0, 30, 0));
+		
+		saucesPanel = new JPanel();
+		saucesPanel.setBackground(Color.black);
+		saucesPanel.setBounds(80, 130, 310, 30);
+		toppingsCheckoutPanel.add(saucesPanel);
+		saucesPanel.setLayout(new GridLayout(1, 0, 30, 0));
+		
+		cheesePanel = new JPanel();
+		cheesePanel.setBackground(Color.black);
+		cheesePanel.setBounds(80, 205, 310, 30);
+		toppingsCheckoutPanel.add(cheesePanel);
+		cheesePanel.setLayout(new GridLayout(1, 0, 30, 0));
 		/*
 		 * 
 		 * ORDERING MANAGEMENT -- BELOW
@@ -202,6 +251,13 @@ public class OrderSelectionPage extends JFrame {
 		/*
 		 * Order quantity spinner component
 		 */
+		JLabel qtyLabel = new JLabel("Qty :");
+		qtyLabel.setFont(new Font("Times New Roman", Font.PLAIN, 13));
+		qtyLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		qtyLabel.setForeground(new Color(255, 255, 255));
+		qtyLabel.setBounds(52, 269, 50, 35);
+		toppingsCheckoutPanel.add(qtyLabel);
+		
 		orderQuantity = new JSpinner();
 		orderQuantity
 				.setModel(new SpinnerNumberModel(Integer.valueOf(1), Integer.valueOf(1), null, Integer.valueOf(1)));
@@ -209,21 +265,29 @@ public class OrderSelectionPage extends JFrame {
 		orderQuantity.setForeground(Color.BLACK);
 		orderQuantity.setBackground(Color.ORANGE);
 		orderQuantity.setBounds(108, 269, 46, 35);
-		sandwichPanel.add(orderQuantity);
+		toppingsCheckoutPanel.add(orderQuantity);
 
 		// DISPLAY ERROR MESSAGE BACK TO USER --- NOT TECHNICAL ERROR.
-		JLabel errorMessageLbl = new JLabel("");
+		errorMessageLbl = new JLabel("");
 		errorMessageLbl.setFont(new Font("Tahoma", Font.BOLD, 14));
 		errorMessageLbl.setHorizontalAlignment(SwingConstants.CENTER);
 		errorMessageLbl.setForeground(new Color(255, 0, 0));
 		errorMessageLbl.setBounds(116, 222, 201, 20);
 		sandwichPanel.add(errorMessageLbl);
+		
+		ingredientsError = new JLabel("");
+		ingredientsError.setFont(new Font("Tahoma", Font.BOLD, 12));
+		ingredientsError.setHorizontalAlignment(SwingConstants.CENTER);
+		ingredientsError.setForeground(new Color(255, 0, 0));
+		ingredientsError.setBounds(116, 235, 201, 20);
+		toppingsCheckoutPanel.add(ingredientsError);
 
 		/*
 		 * Renders all the sandwich buttons using the:
 		 * base sandwich list.
 		 */
 		renderSandwichButtons();
+		renderToppingButtons();
 		
 		//Dynamic button action listener method - efficient button click tracking,
 		//and minimizes duplicate code.
@@ -242,8 +306,32 @@ public class OrderSelectionPage extends JFrame {
 		        });
 		    }
 		}
-
-
+		for(int i = 0 ; i < toppingTypes.length ; i++) {
+			
+			JPanel jp = null;
+			if(i == 0) {jp = veggiesPanel;}
+			else if (i == 1) {jp = saucesPanel;}
+			else if (i == 2) {jp = cheesePanel;}
+			else break;
+			
+			for(Component component: jp.getComponents()) {
+				if(component instanceof JButton) {
+					JButton button = (JButton) component;
+					button.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {	
+							JButton clickedButton = (JButton) e.getSource();
+							
+							//Call selectTopping
+							selectTopping(clickedButton.getName());
+						}
+					});
+					
+				}
+			}
+		}
+		
+		
 		/*
 		 * 
 		 * Cart system to house temporary entities of the sandwiches being added, for
@@ -252,6 +340,50 @@ public class OrderSelectionPage extends JFrame {
 
 		// Initalise a new Cart Instance
 		Cart cart = new Cart();
+		
+		
+		/**
+		 * Next pane, for ingredient topping selection.
+		 */
+		
+		// Place Order Button- ADDING TO CART AND QUANTITY and its styling
+		JButton nextButton = new JButton("");
+		nextButton.setName("addToCart");
+		nextButton.setIcon(new ImageIcon(ImageImports.imgToToppings));
+		nextButton.setFont(new Font("Serif", Font.PLAIN, 19));
+		nextButton.setBorderPainted(false);
+		nextButton.setBackground(Color.ORANGE);
+		nextButton.setBounds(130, 250, 170, 50);
+		sandwichPanel.add(nextButton);
+		
+		JLabel chooseBaseLbl = new JLabel("Choose a base sandwich");
+		chooseBaseLbl.setHorizontalAlignment(SwingConstants.CENTER);
+		chooseBaseLbl.setForeground(Color.ORANGE);
+		chooseBaseLbl.setFont(new Font("Serif", Font.BOLD, 15));
+		chooseBaseLbl.setBounds(102, 11, 231, 20);
+		sandwichPanel.add(chooseBaseLbl);
+		nextButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				// Checks if a sandwich is selection otherwise return error statement.
+				if (getSelection() == null) {
+					errorMessageLbl.setText("Please select an Item !");
+					return;
+				}
+				toppingsCheckoutPanel.setVisible(true);
+				sandwichPanel.setVisible(false);
+				pageLabel.setText("Topping Trail");
+			}
+		});
+
+		// Cart Label
+		JLabel cartLabel = new JLabel("Cart");
+		cartLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		cartLabel.setForeground(new Color(0, 0, 0));
+		cartLabel.setFont(new Font("Serif", Font.BOLD, 27));
+		cartLabel.setBounds(4, 31, 265, 33);
+		panel.add(cartLabel);
+		
 
 		// Place Order Button- ADDING TO CART AND QUANTITY and its styling
 		JButton addToCartBtn = new JButton("Add to Cart");
@@ -260,24 +392,32 @@ public class OrderSelectionPage extends JFrame {
 		addToCartBtn.setBorderPainted(false);
 		addToCartBtn.setBackground(Color.ORANGE);
 		addToCartBtn.setBounds(177, 268, 140, 35);
-		sandwichPanel.add(addToCartBtn);
+		toppingsCheckoutPanel.add(addToCartBtn);
 		
-		JLabel qtyLabel = new JLabel("Qty :");
-		qtyLabel.setFont(new Font("Times New Roman", Font.PLAIN, 13));
-		qtyLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		qtyLabel.setForeground(new Color(255, 255, 255));
-		qtyLabel.setBounds(52, 269, 50, 35);
-		sandwichPanel.add(qtyLabel);
-	
+		JLabel veggieTxtLabel = new JLabel("Add Veggie(s):");
+		veggieTxtLabel.setHorizontalAlignment(SwingConstants.LEFT);
+		veggieTxtLabel.setForeground(Color.ORANGE);
+		veggieTxtLabel.setFont(new Font("Serif", Font.BOLD, 15));
+		veggieTxtLabel.setBounds(80, 30, 132, 20);
+		toppingsCheckoutPanel.add(veggieTxtLabel);
+		
+		JLabel saucesTxtLabel = new JLabel("Add Sauce(s) :");
+		saucesTxtLabel.setHorizontalAlignment(SwingConstants.LEFT);
+		saucesTxtLabel.setForeground(Color.ORANGE);
+		saucesTxtLabel.setFont(new Font("Serif", Font.BOLD, 15));
+		saucesTxtLabel.setBounds(80, 105, 132, 20);
+		toppingsCheckoutPanel.add(saucesTxtLabel);
+		
+		JLabel cheesesTxtLabel = new JLabel("Add Cheese(s) :");
+		cheesesTxtLabel.setHorizontalAlignment(SwingConstants.LEFT);
+		cheesesTxtLabel.setForeground(Color.ORANGE);
+		cheesesTxtLabel.setFont(new Font("Serif", Font.BOLD, 15));
+		cheesesTxtLabel.setBounds(80, 180, 132, 20);
+		toppingsCheckoutPanel.add(cheesesTxtLabel);
+		
 
 		addToCartBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
-				// Checks if a sandwich is selection otherwise return error statement.
-				if (getSelection() == null) {
-					errorMessageLbl.setText("Please select an Item !");
-					return;
-				}
 				
 				// Create an CartItem entity -- temporary entity to store items into the cart,
 				// then eventually taken to generate the sandwiches.
@@ -288,9 +428,19 @@ public class OrderSelectionPage extends JFrame {
 
 				// Dynamic rendering of the label into the cart
 				addLabelToCart(newItem);
-
+				
+				// Prompt user if they need a RECEIPT
+				int anotherOne = JOptionPane.showConfirmDialog(null, "Would you like to add another?", "Never enough sandwiches!",
+						JOptionPane.YES_NO_OPTION);
+				
 				// Reset all selections, ready for the next CartItem
 				clearAllSelections();
+				
+				if(anotherOne == JOptionPane.YES_NO_OPTION) {
+					sandwichPanel.setVisible(true);
+					toppingsCheckoutPanel.setVisible(false);
+					pageLabel.setText("Sandwich Station");
+				}
 			}
 		});
 
@@ -305,13 +455,6 @@ public class OrderSelectionPage extends JFrame {
 		placeOrderBtn.setBounds(67, 400, 140, 35);
 		panel.add(placeOrderBtn);
 		
-		JLabel cartLabek = new JLabel("Cart");
-		cartLabek.setHorizontalAlignment(SwingConstants.CENTER);
-		cartLabek.setForeground(new Color(0, 0, 0));
-		cartLabek.setFont(new Font("Serif", Font.BOLD, 27));
-		cartLabek.setBounds(4, 31, 265, 33);
-		panel.add(cartLabek);
-		
 		// Onclick handler for Placing order once User is ready to checkout.
 		placeOrderBtn.addActionListener(new ActionListener() {
 			
@@ -325,7 +468,7 @@ public class OrderSelectionPage extends JFrame {
 					
 					// Initializes an Order using the Cart's content.
 					List<CartItem> order = cart.getCartContent(); 
-					
+
 					/*
 					 * Sends a request to get the order made by calling 
 					 * getSandwichOrder via the controller using the Order initialized above.
@@ -334,7 +477,7 @@ public class OrderSelectionPage extends JFrame {
 					 * storing them to a costs list.
 					 * */
 					List<Double> costs = OrderUIController.getSandwichOrder(order);
-					
+
 					// Following Logic checks if the value returned is valid.
 					int numberOfSandwiches = 0;
 					
@@ -350,6 +493,7 @@ public class OrderSelectionPage extends JFrame {
 						 
 						// PROMPT USER ORDER COULD NOT BE MADE
 						errorMessageLbl.setText("Out of Ingredients");
+						ingredientsError.setText("Out of Ingredients");
 						return;
 						
 					}
@@ -393,6 +537,7 @@ public class OrderSelectionPage extends JFrame {
 					
 					// Error message prompt that no item was added.
 					errorMessageLbl.setText("Cart is empty");
+					ingredientsError.setText("Cart is empty");
 				}
 
 			}
@@ -415,6 +560,13 @@ public class OrderSelectionPage extends JFrame {
 			
 			// Trigger on back button.
 			public void actionPerformed(ActionEvent e) {
+		
+				if(toppingsCheckoutPanel.isVisible()) {
+					sandwichPanel.setVisible(true);
+					toppingsCheckoutPanel.setVisible(false);
+					pageLabel.setText("Sandwich Station");
+					return;
+				}
 				
 				// Prompts USER to confirm going back, as this will lose current CART.
 				int confirmed = JOptionPane.showConfirmDialog(null,
@@ -438,10 +590,12 @@ public class OrderSelectionPage extends JFrame {
 	 * using the list of base sandwiches provided. This also dynamically 
 	 * resizes them and sorts them to adjust to the quantity 
 	 * while keeping simplistic design.
+	 * @throws SQLException 
 	 * */
 	private void renderSandwichButtons() {
+
 		
-		int yVal = -25; // Y value of the button to render
+		int yVal = -10; // Y value of the button to render
 		int xVal = 0; // X value of the button to render
 		int btnWidth = 0; //Width of the button to render
 		boolean secCol = false; // Checks if second column is required to avoid overflow
@@ -461,12 +615,20 @@ public class OrderSelectionPage extends JFrame {
 		
 		}
 		
+		//Setting the favorite
+		String favorite = "";
+		try {
+			favorite = findPopular();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
 		//Iterate over the base sandwich list, creating buttons from them
 		//with the dimensions decided above.
 		for(int i = 0 ; i < sandwichTypes.length; i++) {
 			if(yVal >= 175 && !secCol) {
 				secCol = true;
-				yVal = -25;
+				yVal = -10;
 				xVal = sandwichPanel.getWidth()-(btnWidth+30);
 			}
 			
@@ -474,32 +636,64 @@ public class OrderSelectionPage extends JFrame {
 			else if (yVal >= 175 && secCol) { 
 				break;
 			}
+			
+
 			//Create button flow.
 			JButton newBtn = null;
-			try {
-				newBtn = new JButton(""+ sandwichTypes[i] + addSymbol((String) sandwichTypes[i]));
-			} catch (SQLException e) {
-				e.printStackTrace();
+			
+			if(favorite.equals(sandwichTypes[i])) {
+				newBtn = new JButton(""+ sandwichTypes[i] + " (popular)");
+			}else {
+				newBtn = new JButton(""+ sandwichTypes[i]);
 			}
 			newBtn.setName(""+ (sandwichTypes[i]));
 			newBtn.setBounds(xVal, yVal+=50, btnWidth, 35);
 			newBtn.setBackground(Color.WHITE);
 			newBtn.setBorder(null);
+			
+			
 			sandwichPanel.add(newBtn);
 		}
 		
 	}
 	
 	/**
-	 * Check whether the button is the most popular base
-	 * and mark it with a symbol
+	 * Finds the current popular from the manager sales,
+	 * and returns it.
 	 * */
-	public String addSymbol(String name) throws SQLException {
-		ManagerSales s = new ManagerSales();
-		if(s.getFavourite().equals(name)) {
-			return " (popular)";
+	private String findPopular() throws SQLException {
+		return new ManagerSales().getFavourite(); //Fetching sales data to check for favorites
+
+	}
+	/**
+	 * This method renders all the topping buttons dynamically
+	 * using the list of toppings provided. This also dynamically.
+	 * */
+	private void renderToppingButtons() {
+		
+		//Iterate over the topping list, creating buttons.
+		for(int i = 0 ; i < toppingTypes.length; i++) {
+			JPanel jp = null;
+			if(i == 0) jp = veggiesPanel;
+			if(i == 1) jp = saucesPanel;
+			if(i == 2) jp = cheesePanel;
+			if(i > 2) return;
+			
+			for(int j = 0 ; j < toppingTypes[i].length ; j++) {
+				
+				//Get name
+				String name = (""+toppingTypes[i][j]);
+				
+				//Create button flow.
+				JButton newBtn = new JButton(name.substring(0, name.length()-2));
+				newBtn.setName(name);
+				newBtn.setBackground(Color.WHITE);
+				newBtn.setBorder(null);
+				jp.add(newBtn);
+			}
+	        
 		}
-		return "";
+		
 	}
 	
 	
@@ -526,6 +720,27 @@ public class OrderSelectionPage extends JFrame {
 	            }
 	        }
 		}
+		for(int i = 0 ; i < 3 ; i++) {
+			
+			JPanel jp = null;
+			if(i == 0) {jp = veggiesPanel;}
+			else if(i == 1) {jp = saucesPanel;}
+			else if(i == 2) {jp = cheesePanel;}
+			else return;
+		
+			for (Component component : jp.getComponents()) {
+				
+				//Sets to "DISABLED" state.
+		        if (component instanceof JButton) {
+		            JButton button = (JButton) component;
+		            if(!button.getName().equals("addToCart")) {
+			            button.setBackground(Color.white);
+			            button.setEnabled(true);	
+		            }
+		        }
+			}
+		}
+		
 		
 		orderQuantity.setValue(1); // Resets counter
 	}
@@ -533,13 +748,14 @@ public class OrderSelectionPage extends JFrame {
 	/*
 	 * 
 	 * Button Selection Style change Method,
-	 * and resetting enabled status for Chicken.
+	 * and resetting enabled status.
 	 * 
 	 */
 	 
 	private void selectSandwich(String selectedSandwich) {
 	    Color selectedColor = Color.ORANGE;
-
+	    errorMessageLbl.setText("");
+	    ingredientsError.setText("");
 	    // Find the button corresponding to the selected sandwich and set the selected color
 	    for (Component component : sandwichPanel.getComponents()) {
 	        if (component instanceof JButton) {
@@ -551,6 +767,37 @@ public class OrderSelectionPage extends JFrame {
 	            	if(button.getName().equals("addToCart")) continue;
 	                button.setBackground(Color.WHITE);
 	                button.setEnabled(true);
+	            }
+	        }
+	    }
+	}
+	private void selectTopping(String selectedTopping) {
+		errorMessageLbl.setText("");
+	    ingredientsError.setText("");
+		Color selectedColor = Color.orange;
+		JPanel jp = null;
+		char type = selectedTopping.charAt(selectedTopping.length()-1);
+		switch(type) {
+		case 'v':
+			jp = veggiesPanel;
+			break;
+		case 's':
+			jp = saucesPanel;
+			break;
+		case 'c':
+			jp = cheesePanel;
+			break;
+		default:
+			return;
+		}
+		
+		//Find corresponding button and select
+		for (Component component : jp.getComponents()) {
+	        if (component instanceof JButton) {
+	            JButton button = (JButton) component;
+	            if (button.getName().equals(selectedTopping)) {
+	                button.setBackground(selectedColor);
+	                button.setEnabled(false);
 	            }
 	        }
 	    }
