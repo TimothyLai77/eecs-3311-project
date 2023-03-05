@@ -33,6 +33,6 @@ public class ImageImports {
 	protected static Image imgBack = new ImageIcon(HomePage.class.getResource("/res/backIcon.png")).getImage();
 
 	//Images for topping pane
-	protected static Image imgToToppings = new ImageIcon(HomePage.class.getResource("/res/next.png")).getImage().getScaledInstance(200, 50, Image.SCALE_SMOOTH);
+//	protected static Image imgToToppings = new ImageIcon(HomePage.class.getResource("/res/next.png")).getImage().getScaledInstance(200, 50, Image.SCALE_SMOOTH);
 
 }

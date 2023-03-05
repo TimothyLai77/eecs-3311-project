@@ -347,9 +347,9 @@ public class OrderSelectionPage extends JFrame {
 		 */
 		
 		// Place Order Button- ADDING TO CART AND QUANTITY and its styling
-		JButton nextButton = new JButton("");
+		JButton nextButton = new JButton("To Toppings");
 		nextButton.setName("addToCart");
-		nextButton.setIcon(new ImageIcon(ImageImports.imgToToppings));
+//		nextButton.setIcon(new ImageIcon(ImageImports.imgToToppings));
 		nextButton.setFont(new Font("Serif", Font.PLAIN, 19));
 		nextButton.setBorderPainted(false);
 		nextButton.setBackground(Color.ORANGE);
