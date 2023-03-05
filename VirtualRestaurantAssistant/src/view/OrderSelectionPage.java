@@ -272,14 +272,14 @@ public class OrderSelectionPage extends JFrame {
 		errorMessageLbl.setFont(new Font("Tahoma", Font.BOLD, 14));
 		errorMessageLbl.setHorizontalAlignment(SwingConstants.CENTER);
 		errorMessageLbl.setForeground(new Color(255, 0, 0));
-		errorMessageLbl.setBounds(116, 222, 201, 20);
+		errorMessageLbl.setBounds(116, 240, 201, 20);
 		sandwichPanel.add(errorMessageLbl);
 		
 		ingredientsError = new JLabel("");
 		ingredientsError.setFont(new Font("Tahoma", Font.BOLD, 12));
 		ingredientsError.setHorizontalAlignment(SwingConstants.CENTER);
 		ingredientsError.setForeground(new Color(255, 0, 0));
-		ingredientsError.setBounds(116, 235, 201, 20);
+		ingredientsError.setBounds(116, 240, 201, 20);
 		toppingsCheckoutPanel.add(ingredientsError);
 
 		/*
@@ -347,13 +347,13 @@ public class OrderSelectionPage extends JFrame {
 		 */
 		
 		// Place Order Button- ADDING TO CART AND QUANTITY and its styling
-		JButton nextButton = new JButton("To Toppings");
+		JButton nextButton = new JButton("To Toppings >");
 		nextButton.setName("addToCart");
 //		nextButton.setIcon(new ImageIcon(ImageImports.imgToToppings));
 		nextButton.setFont(new Font("Serif", Font.PLAIN, 19));
 		nextButton.setBorderPainted(false);
 		nextButton.setBackground(Color.ORANGE);
-		nextButton.setBounds(130, 250, 170, 50);
+		nextButton.setBounds(130, 267, 170, 33);
 		sandwichPanel.add(nextButton);
 		
 		JLabel chooseBaseLbl = new JLabel("Choose a base sandwich");
