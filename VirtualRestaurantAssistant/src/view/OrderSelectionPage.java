@@ -475,7 +475,12 @@ public class OrderSelectionPage extends JFrame {
 				break;
 			}
 			//Create button flow.
-			JButton newBtn = new JButton(""+ sandwichTypes[i]);
+			JButton newBtn = null;
+			try {
+				newBtn = new JButton(""+ sandwichTypes[i] + addSymbol((String) sandwichTypes[i]));
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 			newBtn.setName(""+ (sandwichTypes[i]));
 			newBtn.setBounds(xVal, yVal+=50, btnWidth, 35);
 			newBtn.setBackground(Color.WHITE);
@@ -484,6 +489,20 @@ public class OrderSelectionPage extends JFrame {
 		}
 		
 	}
+	
+	/**
+	 * Check whether the button is the most popular base
+	 * and mark it with a symbol
+	 * */
+	public String addSymbol(String name) throws SQLException {
+		ManagerSales s = new ManagerSales();
+		if(s.getFavourite().equals(name)) {
+			return " (popular)";
+		}
+		return "";
+	}
+	
+	
 	/*
 	 * 
 	 * Iteratively clears all selections, and resets the state of the Customization
