@@ -1,24 +1,26 @@
-package model;
+package ingredients;
 
-public class Beef implements Ingredient {
+import model.Ingredient;
+
+public class Chicken implements Ingredient {
 	private String name;
 	private double price;
 	private String type;
 	
 	/**
-	 * Instantiates beef object with the given parameters 
+	 * Instantiates chicken object with the given parameters 
 	 * @param name
 	 * @param price
 	 * @param type
 	 */
-	public Beef(String name, double price, String type) {
+	public Chicken(String name, double price, String type) {
 		this.name = name;
 		this.price = price;
 		this.type = type;
 	}
 	
 	/**
-	 * @return:- This method returns the price of beef objects
+	 * @return:- This method returns the price of chicken objects
 	 */
 	public double getPrice() {
 		return this.price;
@@ -32,7 +34,7 @@ public class Beef implements Ingredient {
 	}
 	
 	/**
-	 * @return:- This method returns the type of the ingredient
+	 * @return:- This method returns the name of ingredient
 	 */
 	public String getType() {
 		return this.type;
