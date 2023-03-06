@@ -21,6 +21,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.SwingConstants;
@@ -421,7 +422,9 @@ public class OrderSelectionPage extends JFrame {
 				
 				// Create an CartItem entity -- temporary entity to store items into the cart,
 				// then eventually taken to generate the sandwiches.
-				CartItem newItem = new CartItem(getSelection(), (int) orderQuantity.getValue());
+				ArrayList<String> toppings = new ArrayList<>();
+				toppings = getSelectedToppings();
+				CartItem newItem = new CartItem(getSelection(), toppings, (int) orderQuantity.getValue());
 
 				// Adding this temp to the cart
 				cart.add(newItem);
@@ -821,6 +824,34 @@ public class OrderSelectionPage extends JFrame {
 	    }
 		return null;
 	}
+	
+	private ArrayList<String> getSelectedToppings(){
+		
+		JPanel jp = null;
+		ArrayList<String> selections = new ArrayList<>();
+		
+		for(int i = 0 ; i < 3 ; i++) {
+			
+			if(i == 0) {jp = veggiesPanel;}
+			else if(i == 1) {jp = saucesPanel;}
+			else if(i == 2) {jp = cheesePanel;}
+		
+			for (Component component : jp.getComponents()) {
+				
+				//Fetches selections in toppings to send to Controller.
+		        if (component instanceof JButton) {
+		            JButton button = (JButton) component;
+		            if(!button.isEnabled()) {
+		            	String name = button.getName();
+		            	name = name.substring(0, name.length()-2);
+		            	selections.add(name);
+		            }
+		        }
+			}
+		}
+		
+		return selections;
+	}
 
 	/**
 	 * Method to add the current CartItem into the cart.
@@ -830,10 +861,9 @@ public class OrderSelectionPage extends JFrame {
 
 		// Create new Label Instance
 		JLabel newItem = new JLabel("");
-		
+		String itemText = generateCartLabelText(CartItem);
 		// Set the text to the current CartItem details, with formatting
-		newItem.setText("<html><body>Order Item: " + itemNum++ + "&emsp;&emsp; Qty: " + CartItem.getQuantity() + "<br>"
-				+ CartItem.getName() + " Sandwich<br></body></html>");
+		newItem.setText(itemText);
 		
 		//Styling of the item.
 		newItem.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -848,5 +878,18 @@ public class OrderSelectionPage extends JFrame {
 
 		validate(); //Reset current visual state.
 
+	}
+	private String generateCartLabelText(CartItem cartItem) {
+		String itemText = "<html><body>Order Item: " + itemNum++ + "&emsp;&emsp; Qty: " + cartItem.getQuantity() + "<br>"
+				+ cartItem.getName() + " Sandwich<br>";
+		if(cartItem.getAddedOptions().size() > 0) {
+			itemText += "<br>Added toppings:<br>";
+			for(int i = 0 ; i < cartItem.getAddedOptions().size(); i++) {
+				if(i != 0) itemText += ", "; 
+				itemText += cartItem.getAddedOptions().get(i);
+			}	
+		}
+		itemText += "</body></html>";
+		return itemText;
 	}
 }
