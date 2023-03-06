@@ -152,6 +152,9 @@ public class ManagerSales {
 	 * */
 	public String getFavourite() throws SQLException {
 		String allLines = getCounts();
+		if(allLines.isEmpty()) {
+			return "";
+		}
 		String popular = allLines.substring(0, allLines.indexOf("\n"));
 		return popular.substring(0, popular.indexOf(":"));
 	}
