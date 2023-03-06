@@ -151,12 +151,17 @@ public class ManagerSales {
 	 * Return the most popular / most ordered base
 	 * */
 	public String getFavourite() throws SQLException {
-		String allLines = getCounts();
-		if(allLines.isEmpty()) {
-			return "";
-		}
-		String popular = allLines.substring(0, allLines.indexOf("\n"));
-		return popular.substring(0, popular.indexOf(":"));
+		 Statement st = connection.createStatement();
+	        String query = "SELECT sandwichBase FROM favourites WHERE counts = (SELECT MAX(counts) FROM favourites)";
+
+	        ResultSet rs = st.executeQuery(query);
+	        String result = "";
+
+	        if(rs.next()){
+	            result = rs.getString("sandwichBase");
+	        }
+
+	        return result;
 	}
 }
 
