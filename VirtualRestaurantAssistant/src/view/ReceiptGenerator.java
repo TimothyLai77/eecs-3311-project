@@ -400,8 +400,7 @@ public class ReceiptGenerator {
 		JLabel newItem = new JLabel("");
 		
 		//Set text to the CartItem with details.
-        newItem.setText("<html><body>Order Item: " + itemNum + "&emsp;&emsp; Qty: " + CartItem.getQuantity() + "&emsp;&emsp;per " + currencyFormat(cost) + "<br>" + CartItem.getName() + "&emsp; &emsp; &emsp;Cost: "+ currencyFormat(cost*CartItem.getQuantity()) + " <br></body></html>");
-        
+        newItem.setText(generateCartLabelText(CartItem, itemNum, cost));
         //Add styling to the Label.
         newItem.setAlignmentX(Component.CENTER_ALIGNMENT);
         newItem.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
@@ -412,6 +411,19 @@ public class ReceiptGenerator {
         return newItem; // Return ready label.
 	}
 
+	private static String generateCartLabelText(CartItem CartItem, int itemNum, double cost) {
+		String itemText = "<html><body>Order Item: " + itemNum + "&emsp;&emsp; Qty: " + CartItem.getQuantity() + "&emsp;&emsp;per " + currencyFormat(cost) + "<br>" + CartItem.getName() + "&emsp; &emsp; &emsp;Cost: "+ currencyFormat(cost*CartItem.getQuantity());
+		
+		if(CartItem.getAddedOptions().size() > 0) {
+			itemText += "<br>Added toppings:<br>";
+			for(int i = 0 ; i < CartItem.getAddedOptions().size(); i++) {
+				if(i != 0) itemText += ", "; 
+				itemText += CartItem.getAddedOptions().get(i);
+			}	
+		}
+		itemText += "</body></html>";
+		return itemText;
+	}
 	/**
 	 * CONVERT double INPUT TO CURRENCY 2dp FORMAT
 	 * @param double input
