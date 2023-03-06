@@ -1,7 +1,8 @@
 package model;
 import java.util.List;
+
 public class ToppingRequester {
-	private List requestedIngredients;
+	private List<Ingredient> requestedIngredients;
 	private Sandwich baseSandwich;
 	
 	public ToppingRequester(Sandwich sandwich) {
@@ -23,12 +24,15 @@ public class ToppingRequester {
 	 * @return returns a sandwich with toppings.
 	 */
 	public Sandwich applyToppings() {
+		// pass in the base sandwich to a constructor that 
 		SandwichWithToppings sandwichWithToppings = new SandwichWithToppings(baseSandwich);
-		// deduct from the db here.
+		//TODO: call the DBINventory here...
 		
 		sandwichWithToppings.addToppings(this.requestedIngredients);
 		return sandwichWithToppings;
 	}
+
+
 	
 	
 }
