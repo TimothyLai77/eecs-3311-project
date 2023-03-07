@@ -23,9 +23,11 @@ public class ToppingRequester {
 		
 		
 		//todo: remove when db is implemented.
+		
+		
 		//DBInventory inventory = DBInventory.getInstance();
 
-
+		MapInventory inventory = MapInventory.getInstance();
 		//make a list of ingredients from the simplifie	d list
 		for(String ingredientName : simplifiedList){
 			// check if ingredient exists
