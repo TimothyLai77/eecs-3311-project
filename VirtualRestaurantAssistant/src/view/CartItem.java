@@ -1,5 +1,7 @@
 package view;
 
+import java.util.ArrayList;
+
 public class CartItem {
 
 /*
@@ -11,14 +13,16 @@ public class CartItem {
  * 
  * */
 	private String name; 
+	private ArrayList<String> addedOptions;
 	private int quantity;
 	
 	/**
 	 * Constructor to create a Cart Item.
 	 * @param String - name, int - quantity
 	 * */
-	public CartItem(String name, int quantity){
+	public CartItem(String name, ArrayList<String> addedOptions, int quantity){
 		this.name = name;
+		this.addedOptions = addedOptions;
 		this.quantity = quantity;
 	}
 	
@@ -28,6 +32,14 @@ public class CartItem {
 	 * */
 	public String getName() {
 		return this.name;
+	}
+	
+	/**
+	 * Gets the added toppings of the Cart Item
+	 * @return ArrayList<ArrayList<String>> - list of toppings
+	 * */
+	public ArrayList<String> getAddedOptions() {
+		return this.addedOptions;
 	}
 	
 	/**
