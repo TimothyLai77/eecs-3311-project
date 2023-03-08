@@ -36,6 +36,7 @@ public class DbInventory{
         }
         catch(Exception e){
             System.out.println(e.getMessage());
+            e.printStackTrace();
         }
         
         return null;
@@ -66,7 +67,7 @@ public class DbInventory{
             if(currentQuantity >= amount){
                 int newQuantity = currentQuantity - amount;
                 Statement stu = con.createStatement();
-			    String command = "UPDATE INGREDIENTS SET quantity = '" + quantity + "' WHERE ingredient_name = '" + name + "';";
+			    String command = "UPDATE INGREDIENTS SET quantity = '" + newQuantity + "' WHERE ingredient_name = '" + ingredientName + "';";
                 int updatedRows = stu.executeUpdate(command);
                 if(updatedRows>0){
                     return true;
@@ -91,7 +92,7 @@ public class DbInventory{
             String querry = "SELECT quantity FROM inventory WHERE ingredient_name = '"+ingredientName+"';";
             ResultSet rs = st.executeQuery(querry);
             if(rs.next()){
-                qu = rs.getInt("quantity")
+                qu = rs.getInt("quantity");
             }
         }
         catch(Exception e) {
