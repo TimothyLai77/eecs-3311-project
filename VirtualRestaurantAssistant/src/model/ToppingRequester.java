@@ -14,22 +14,16 @@ public class ToppingRequester {
 	 * @param requested, list of lists of each ingredient name requested
 	 * @return returns true or false of all the ingredients exist in the inventory
 	 */
-	public boolean requestToppings(List<List<String>> requested) {
+	public boolean requestToppings(List<String> requested) {
 		// check the db and determine if its possible to add the ingredeients
 		// returns t/f if ingredeints exist
 		
-		// simplify list
-		List<String> simplifiedList = simplifyInputList(requested);
-		
-		
-		//todo: remove when db is implemented.
-		
-		
+		//todo: SWAP out the map inventroy with the db inventory when that's done
 		//DBInventory inventory = DBInventory.getInstance();
-
 		MapInventory inventory = MapInventory.getInstance();
+		// todo: ^^^ above ^^^
 		//make a list of ingredients from the simplifie	d list
-		for(String ingredientName : simplifiedList){
+		for(String ingredientName : requested){
 			// check if ingredient exists
 			if(!inventory.searchIngredient(ingredientName)){
 				return false; // not all ingredients exist
@@ -41,21 +35,6 @@ public class ToppingRequester {
 		return true; // all ingredients exist in db, can proceed to add toppings
 	}
 	
-	/**
-	 * Private helper method to simplify the input list to a single list of strings
-	 * @param requested
-	 * @return
-	 */
-	private List<String> simplifyInputList(List<List<String>> requested){
-		List<String> simplifiedList = new ArrayList<String>();
-		// simplify data to a single list,
-		for(List<String> sublist : requested){
-			for(String topping : sublist){
-				simplifiedList.add(topping);
-			}
-		}
-		return simplifiedList;
-	}
 
 	/**
 	 * Method that applies the requested toppings to the base sandwich

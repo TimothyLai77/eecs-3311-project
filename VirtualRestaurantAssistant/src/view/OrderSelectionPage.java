@@ -481,6 +481,8 @@ public class OrderSelectionPage extends JFrame {
 					 * */
 					List<Double> costs = OrderUIController.getSandwichOrder(order);
 
+					//todo: Tim, add order ui contoller for topping stuff here.
+
 					// Following Logic checks if the value returned is valid.
 					int numberOfSandwiches = 0;
 					
