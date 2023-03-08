@@ -3,9 +3,6 @@ package ingredients;
 import model.Ingredient;
 
 public class Chicken extends Ingredient {
-	protected String name;
-	protected double price;
-	protected String type;
 	
 	/**
 	 * Instantiates chicken object with the given parameters 
