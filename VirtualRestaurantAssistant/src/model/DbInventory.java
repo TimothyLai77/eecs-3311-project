@@ -11,20 +11,24 @@ import java.util.List;
 import ingredients.*;
 
 public class DbInventory implements Inventory{
+    private static DbInventory instance;
     public static void main(String[] args) throws Exception {
 		getConnection();
 	}
     static Connection con;
     
-    public DbInventory(){
-        try{
-			getConnection();
-		}
-		catch(Exception e){
-			e.printStackTrace();
-		}
-    }
+    // public DbInventory(){
 
+    // }
+    
+    private DbInventory(){
+        try{
+            getConnection();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+    }
     public static Connection getConnection() throws Exception{
         try {
             // credentials to access database
@@ -179,11 +183,7 @@ public class DbInventory implements Inventory{
               
               
     	  	
-    	  
-              
-    	  		
-    	  	
-    	  
+
           catch(Exception e) {
               e.printStackTrace();
               System.out.println("Failed to search or error connecting database");
@@ -195,6 +195,13 @@ public class DbInventory implements Inventory{
         return null;
 
       }
+
+      public static DbInventory getInstance() {
+		if(DbInventory.instance == null) {
+			DbInventory.instance = new DbInventory();
+		}
+		return DbInventory.instance;
+	}
 
     @Override
     public List<Ingredient> removeAllIngredients(String ingredientName) {
