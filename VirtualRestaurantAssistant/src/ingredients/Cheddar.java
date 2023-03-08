@@ -1,5 +1,22 @@
 package ingredients;
 
-public class Cheddar {
+import model.Ingredient;
 
+public class Cheddar extends Ingredient{
+	protected String name;
+	protected double price;
+	protected String type;
+	
+	/**
+	 * Instantiates meat ball object with the given parameters 
+	 * @param name
+	 * @param price
+	 * @param type
+	 */
+	public Cheddar(String name, double price, String type) {
+		super.name = name;
+		super.price = price;
+		super.type = type;
+	}
+	
 }
