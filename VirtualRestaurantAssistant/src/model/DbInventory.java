@@ -8,6 +8,8 @@ import java.sql.Statement;
 import java.util.LinkedList;
 import java.util.List;
 
+import ingredients.*;
+
 public class DbInventory implements Inventory{
     public static void main(String[] args) throws Exception {
 		getConnection();
@@ -132,9 +134,64 @@ public class DbInventory implements Inventory{
        */
       @Override
       public Ingredient getIngredient(String ingredientName){
+//    	 int quantity = 0 ;
+    	 double price = 0 ;
+    	  try {
+              Statement st = con.createStatement();
+//              String querry_1 = "SELECT quantity FROM inventory WHERE ingredient_name = '"+ingredientName+"';";
+              String querry_2 = "SELECT price FROM inventory WHERE ingredient_name = '"+ingredientName+"';";
+  //            ResultSet rs = st.executeQuery(querry_1);
+              ResultSet rs2 = st.executeQuery(querry_2);
+   //           if(rs.next())
+     //         { quantity = rs.getInt("quantity") ;
+                  
+       //       }
+              if(rs2.next())
+              { price = rs2.getDouble("price");
+              }
+              if (ingredientName.equals("Beef")) {
+            	  return new Beef(ingredientName, price, "Meat");
+              } else if (ingredientName.equals("AmericanCheese")) { 
+            	  return new AmericanCheese(ingredientName, price, "Cheese");
+              } else if (ingredientName.equals("Bread")) {
+            	  return new Bread(ingredientName, price, "Bread");
+              } else if (ingredientName.equals("Cheddar")) {
+            	  return new Cheddar(ingredientName, price, "Cheese");
+              } else if (ingredientName.equals("Chicken")) {
+            	  return new Chicken(ingredientName, price, "Meat");
+              } else if (ingredientName.equals("Ketchup")) {
+            	  return new Ketchup(ingredientName, price, "Sauce");
+              } else if (ingredientName.equals("Lettuce")) {
+            	  return new Lettuce(ingredientName, price, "Vegetable");
+              } else if (ingredientName.equals("Mayonnaise")) {
+            	  return new Mayonnaise(ingredientName, price, "Sauce");
+              } else if (ingredientName.equals("Meatball")) {
+            	  return new Meatball(ingredientName, price, "Meat");
+              } else if (ingredientName.equals("Tomato")) {
+            	  return new Tomato(ingredientName, price, "Vegetable");
+              } else if (ingredientName.equals("Veggiepatty")) {
+            	  return new Veggiepatty(ingredientName, price, "Vegetable");
+              } else {
+            	  // Handle invalid ingredientName input here
+            	  return null;	
+              }
+    	  }
+              
+              
+    	  	
+    	  
+              
+    	  		
+    	  	
+    	  
+          catch(Exception e) {
+              e.printStackTrace();
+              System.out.println("Failed to search or error connecting database");
+          }
+    	  
         //get the SELECT price, quantity from inventory where name=ingredientName
         //check for the IngredientName 
-        // if (name == beef) new Beff(ingredientName,price, quantity); 
+        // if (name == beef) new Beef(ingredientName,price, quantity); 
         return null;
 
       }
