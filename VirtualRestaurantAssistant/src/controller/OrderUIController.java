@@ -53,17 +53,13 @@ public class OrderUIController {
 					ToppingRequester toppingRequester = new ToppingRequester(sandwich);
 					List<String> toppingsForThisSandwich = item.getAddedOptions();
 
-					if(!toppingRequester.requestToppings(toppingsForThisSandwich)){
-						// if not all topping exist, just add the base sandwich
-						orderBag.add(sandwich);
-			
-					}else{
-						// else apply the toppings
+					if(toppingRequester.requestToppings(toppingsForThisSandwich)){
+						// if toppings exist make the sandiwch with toppings
 						Sandwich sandwichWithToppings = toppingRequester.applyToppings();
-						
 						orderBag.add(sandwichWithToppings);
 					}
-				} // check if factory actually made a sandwich, and don't add the null return value
+					// otherwise don't add anything to the bag, and UI will show error
+				} 
 			}
 		}
 		
