@@ -7,6 +7,7 @@ public class ToppingRequester {
 	
 	public ToppingRequester(Sandwich sandwich) {
 		this.baseSandwich = sandwich;
+		this.requestedIngredients = new ArrayList<Ingredient>();
 	}
 	
 	/**
@@ -19,7 +20,7 @@ public class ToppingRequester {
 		// returns t/f if ingredeints exist
 		
 		//todo: SWAP out the map inventroy with the db inventory when that's done
-		//DBInventory inventory = DBInventory.getInstance();
+		// DBInventory inventory = DBInventory.getInstance();
 		MapInventory inventory = MapInventory.getInstance();
 		// todo: ^^^ above ^^^
 		//make a list of ingredients from the simplifie	d list
