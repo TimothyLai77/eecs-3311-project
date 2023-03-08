@@ -428,7 +428,7 @@ public class OrderSelectionPage extends JFrame {
 
 				// Adding this temp to the cart
 				cart.add(newItem);
-
+				
 				// Dynamic rendering of the label into the cart
 				addLabelToCart(newItem);
 				
