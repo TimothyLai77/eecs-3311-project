@@ -25,9 +25,9 @@ public class DbInventory{
         try {
             // credentials to access database
             String driver = "com.mysql.cj.jdbc.Driver";
-            String url = "jdbc:mysql://127.0.0.1:3306/dbinventory";//3311project
+            String url = "jdbc:mysql://127.0.0.1:3306/3311project";//dbinventory
             String username = "root";
-            String password = "28112001";root1234
+            String password = "root1234";// 28112001
             
             Class.forName(driver);
             con = DriverManager.getConnection(url,username,password);
