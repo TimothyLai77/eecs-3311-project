@@ -3,12 +3,9 @@ package ingredients;
 import model.Ingredient;
 
 public class AmericanCheese extends Ingredient{
-    protected String name;
-	protected double price;
-	protected String type;
 	
 	/**
-	 * Instantiates meat ball object with the given parameters 
+	 * Instantiates americancheese object with the given parameters 
 	 * @param name
 	 * @param price
 	 * @param type

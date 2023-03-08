@@ -4,9 +4,6 @@ import model.Ingredient;
 
 public class Bread extends Ingredient {
 	
-	protected String name;
-	protected double price;
-	protected String type;
 	
 	/**
 	 * Instantiates bread object with the given parameters 

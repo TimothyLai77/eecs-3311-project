@@ -3,9 +3,6 @@ package ingredients;
 import model.Ingredient;
 
 public class Meatball extends Ingredient {
-	protected String name;
-	protected double price;
-	protected String type;
 	
 	/**
 	 * Instantiates meat ball object with the given parameters 

@@ -3,10 +3,6 @@ package ingredients;
 import model.Ingredient;
 
 public class Beef extends Ingredient {
-	protected String name;
-	protected double price;
-	protected String type;
-	
 	/**
 	 * Instantiates beef object with the given parameters 
 	 * @param name
