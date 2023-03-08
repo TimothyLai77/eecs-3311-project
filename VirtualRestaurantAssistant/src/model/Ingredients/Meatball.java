@@ -1,4 +1,4 @@
-package ingredients;
+package model.Ingredients;
 
 import model.Ingredient;
 

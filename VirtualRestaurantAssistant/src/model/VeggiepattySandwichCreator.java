@@ -3,6 +3,8 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
+import model.Sandwiches.VeggiepattySandwich;
+
 public class VeggiepattySandwichCreator extends SandwichCreator{
 	
 	/*
