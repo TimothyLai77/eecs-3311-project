@@ -2,8 +2,8 @@ package ingredients;
 
 import model.Ingredient;
 
-public class Meatball extends Ingredient {
-	protected String name;
+public class AmericanCheese extends Ingredient{
+    protected String name;
 	protected double price;
 	protected String type;
 	
@@ -13,11 +13,10 @@ public class Meatball extends Ingredient {
 	 * @param price
 	 * @param type
 	 */
-	public Meatball(String name, double price, String type) {
+	public AmericanCheese(String name, double price, String type) {
 		super.name = name;
 		super.price = price;
 		super.type = type;
 	}
 	
-
 }
