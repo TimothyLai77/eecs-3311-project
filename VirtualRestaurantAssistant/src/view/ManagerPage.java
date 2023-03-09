@@ -5,10 +5,11 @@ import java.awt.event.*;
 import java.sql.SQLException;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 
 import model.ManagerMain;
 import javax.swing.border.LineBorder;
+
+import controller.ManagerUIController;
 
 public class ManagerPage extends JFrame implements ActionListener {
 
@@ -17,6 +18,9 @@ public class ManagerPage extends JFrame implements ActionListener {
 
 	// --------------------- MODIFIED CODE 
 
+	//Controller instance
+	ManagerUIController controller;
+	
 	//Frame coordinates, fetched at runtime.
 	private int mouseX, mouseY;
 	
@@ -47,7 +51,8 @@ public class ManagerPage extends JFrame implements ActionListener {
 	//Quantity and price
 	private JSpinner quantitySelector;
 	private JTextField priceField;
-	
+	private JButton incrementByTenButton;
+	private JButton decrementByTenButton;
 	
 	//Selected Data Management
 	private static String selectedProcess;
@@ -57,7 +62,7 @@ public class ManagerPage extends JFrame implements ActionListener {
 	private static double selectedPrice = 0;
 	
 	private JPanel managerLeftPanel;
-	private static ManagerMain mg;
+	
 
 	/**
 	 * Launch the application.
@@ -79,13 +84,15 @@ public class ManagerPage extends JFrame implements ActionListener {
 	 * Create the frame.
 	 */
 	public ManagerPage() {
-		mg = new ManagerMain();
-		//List of Ingredients supported by the App (m-meat, v-veg, s-sauce, c-cheese)
 		
+		//Establishing Manager Connection with Controller
+		controller = new ManagerUIController();
+		
+		//List of Ingredients supported by the App (m-meat, v-veg, s-sauce, c-cheese)
 		breadOptions = new String[]{"Bread"};
 	    meatOptions = new String[]{"Beef", "Chicken", "Meatball"};
 	    vegetablesOptions = new String[]{"VeggiePatty", "Lettuce", "Tomato"};
-	    sauceOptions = new String[] {"Mayo", "Ketcup"};
+	    sauceOptions = new String[] {"Mayo", "Ketchup"};
 	    cheeseOptions = new String[] {"Cheddar", "American"};
 	    
 		typeButtons = new String[] {"Bread", "Meat", "Vegetable", "Cheese", "Sauce"};
@@ -265,7 +272,7 @@ public class ManagerPage extends JFrame implements ActionListener {
 		quantitySelector.setBounds(464, 92, 46, 35);
 		managerLeftPanel.add(quantitySelector);
 		
-		JButton incrementByTenButton = new JButton("+10");
+		incrementByTenButton = new JButton("+10");
 		incrementByTenButton.setOpaque(false);
 		incrementByTenButton.setBackground(new Color(192, 192, 192));
 		incrementByTenButton.addActionListener(new ActionListener() {
@@ -278,7 +285,7 @@ public class ManagerPage extends JFrame implements ActionListener {
 		incrementByTenButton.setSize(55, 17);
 		managerLeftPanel.add(incrementByTenButton);
 		
-		JButton decrementByTenButton = new JButton("-10");
+		decrementByTenButton = new JButton("-10");
 		decrementByTenButton.setBackground(new Color(192, 192, 192));
 		decrementByTenButton.setOpaque(false);
 		decrementByTenButton.setBounds(520, 110, 55, 18);
@@ -393,25 +400,26 @@ public class ManagerPage extends JFrame implements ActionListener {
 		selectedName = (String) ingredientDropdown.getSelectedItem();
 		selectedQuantity = (int) quantitySelector.getValue();
 		selectedPrice = Double.parseDouble(priceField.getText());
-		managerMessageLabel.setText(addIngredient());
+		managerMessageLabel.setText(controller.addIngredient(selectedName, selectedType, selectedQuantity, selectedPrice));
 	}
 	// ADD EXISTING HANDLER
 	private void submitAddExistingHandler() throws SQLException {
 		selectedName = (String) ingredientDropdown.getSelectedItem();
 		selectedQuantity = (int) quantitySelector.getValue();
-		managerMessageLabel.setText(addExistingIngredient());
+		managerMessageLabel.setText(controller.addExistingIngredient(selectedName, selectedQuantity));
 	}
 	// DELETE HANDLER
 	private void submitDeleteHandler() throws SQLException {
 		selectedName = (String) ingredientDropdown.getSelectedItem();
-		managerMessageLabel.setText(deleteIngredient());
+		managerMessageLabel.setText(controller.deleteIngredient(selectedName));
 	}
 	//UPDATE PRICE HANDLER
 	private void submitUpdatePriceHandler() throws SQLException {
 		selectedName = (String) ingredientDropdown.getSelectedItem();
 		selectedPrice = Double.parseDouble(priceField.getText());
-		managerMessageLabel.setText(updatePrice());
+		managerMessageLabel.setText(controller.updatePrice(selectedName, selectedPrice));
 	}
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		
@@ -466,13 +474,19 @@ public class ManagerPage extends JFrame implements ActionListener {
 	private void setInputDelete() {
 		priceField.setEnabled(false);
 		quantitySelector.setEnabled(false);
+		incrementByTenButton.setEnabled(false);
+		decrementByTenButton.setEnabled(false);
 	}
 	private void setInputPrice() {
 		quantitySelector.setEnabled(false);
+		incrementByTenButton.setEnabled(false);
+		decrementByTenButton.setEnabled(false);
 	}
 	private void resetInput() {
 		priceField.setEnabled(true);
 		quantitySelector.setEnabled(true);
+		incrementByTenButton.setEnabled(true);
+		decrementByTenButton.setEnabled(true);
 	}
 	
 	/**
@@ -494,20 +508,5 @@ public class ManagerPage extends JFrame implements ActionListener {
 		}
 	}
 	
-	// Add ingredient method
-	private static String addIngredient() throws SQLException {
-		return mg.addIngredient(selectedName, selectedType, selectedQuantity, selectedPrice);
-	}
-	// Add existing ingredient method
-	private static String addExistingIngredient() throws SQLException {
-		return mg.addExistingIngredient(selectedName, selectedQuantity);
-	}
-	// Delete ingredient method
-	private static String deleteIngredient() throws SQLException {
-		return mg.deleteEntry(selectedName);
-	}
-	// Update price of ingredient method
-	private static String updatePrice() throws SQLException {
-		return mg.updatePrice(selectedName, selectedPrice);
-	}
+	
 }
