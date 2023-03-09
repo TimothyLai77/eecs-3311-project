@@ -5,11 +5,15 @@ import java.util.LinkedList;
 import javax.swing.UIManager;
 
 
-import ingredients.*;
 import model.Ingredient;
 import model.Inventory;
 import model.MapInventory;
-
+import model.Ingredients.Beef;
+import model.Ingredients.Bread;
+import model.Ingredients.Cheddar;
+import model.Ingredients.Chicken;
+import model.Ingredients.Lettuce;
+import model.Ingredients.Tomato;
 import view.HomePage;
 
 public class Main {

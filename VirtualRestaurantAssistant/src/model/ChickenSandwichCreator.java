@@ -1,6 +1,8 @@
 package model;
 import java.util.ArrayList;
 import java.util.List;
+
+import model.Sandwiches.ChickenSandwich;
 public class ChickenSandwichCreator extends SandwichCreator {
 	
 	/*
