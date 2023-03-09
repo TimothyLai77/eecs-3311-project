@@ -69,7 +69,7 @@ Feb 16; client meeting
 * Showed client our app, went through ordering a sandwich
 * showed that it would error out when there's not enough ingredients
 * showed them stories for iteration 2
-* Clients suggested a feature where they could see the most popular sandwiches and a cusotmer could order those. 
+* Clients suggested a feature where they could see the most popular sandwiches and a customer could order those. 
 * Clarified that we would suggest a base sandwich and not a specific combination. 
 
 
@@ -93,15 +93,20 @@ Client feature: popular orders
 
 SQL Database implementation
 	* MySQL related work finished by Quang (5 days)
-	* new Inventory implementation that uses the SQL DB finsihed by Aum and Muhammad (2 days)
+	* new Inventory implementation that uses the SQL DB finished by Aum and Muhammad (2 days)
 	* User Interface for the manager finished by Quang (3 days)
+	* Debugging by Tim (1 day)
+
+Modify Inventory of Ingredients:
+	* backend and initial frontend done by Quang (4 days)
+	* Redone front end to prevent user error done by Ali (1 day)
 
 Extra Base Sandwich
 	* finished by Aum and Muhammad (0.5 day)
 
 
 User Story Changes:
-* Added the client feature where the customer can see the most popualr base sandwich
+* Added the client feature where the customer can see the most popular base sandwich
 * Removed the ability to see the most popular ingredients, most popular ingredients, etc. But we're still tracking all the user orders in the database, and the manger can see the history.
 * Removed the ability to filter by dietary restrictions + show nutritional details (calories) 
 	* Stories were changed because of time lost due to university midterms.
