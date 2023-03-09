@@ -1,5 +1,7 @@
 package model.Ingredients;
-
+/*
+ * Vegtable patty class
+ */
 public class Veggiepatty extends Ingredient {
 	
 	/**

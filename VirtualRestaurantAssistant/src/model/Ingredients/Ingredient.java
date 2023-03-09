@@ -1,5 +1,9 @@
 package model.Ingredients;
 
+/**
+ * Abstract class where the actual ingredients will inherit these methods and variables
+ */
+
 public abstract class Ingredient {
 	protected String name;
 	protected double price;

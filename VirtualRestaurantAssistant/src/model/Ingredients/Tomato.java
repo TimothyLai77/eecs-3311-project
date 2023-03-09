@@ -1,5 +1,7 @@
 package model.Ingredients;
-
+/*
+ * tomato ingredient class
+ */
 public class Tomato extends Ingredient{
 	
 	/**

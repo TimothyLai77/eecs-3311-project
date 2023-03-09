@@ -1,5 +1,7 @@
 package model.Ingredients;
-
+/*
+ * chicken ingredient class
+ */
 public class Chicken extends Ingredient {
 	
 	/**

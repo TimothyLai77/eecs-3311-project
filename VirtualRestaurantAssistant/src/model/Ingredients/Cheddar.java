@@ -1,5 +1,8 @@
 package model.Ingredients;
 
+/*
+ * cheddar cheese class
+ */
 public class Cheddar extends Ingredient{
 	
 	/**

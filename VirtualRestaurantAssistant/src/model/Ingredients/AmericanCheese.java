@@ -1,5 +1,7 @@
 package model.Ingredients;
-
+/*
+ * americancheese class
+ */
 public class AmericanCheese extends Ingredient{
 	
 	/**

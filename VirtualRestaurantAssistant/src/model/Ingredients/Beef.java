@@ -1,5 +1,7 @@
 package model.Ingredients;
-
+/*
+ * beef class
+ */
 public class Beef extends Ingredient {
 	/**
 	 * Instantiates beef object with the given parameters 

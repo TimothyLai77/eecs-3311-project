@@ -1,5 +1,8 @@
 package model.Ingredients;
 
+/*
+ * bread class
+ */
 public class Bread extends Ingredient {
 	
 	

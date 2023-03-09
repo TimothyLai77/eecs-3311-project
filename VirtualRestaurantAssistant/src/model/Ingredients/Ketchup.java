@@ -1,5 +1,8 @@
 package model.Ingredients;
 
+/*
+ * ketchup ingredietn class
+ */
 public class Ketchup extends Ingredient{
 	
 	/**

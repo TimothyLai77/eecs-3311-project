@@ -1,5 +1,8 @@
 package model.Ingredients;
 
+/*
+ * mayo ingredient class
+ */
 public class Mayonnaise extends Ingredient{
 	
 	/**
