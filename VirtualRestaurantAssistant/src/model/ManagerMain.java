@@ -2,6 +2,7 @@ package model;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -46,40 +47,93 @@ public class ManagerMain {
 			
 		}
 	
+	private boolean ingredientPresent(String name) throws SQLException {
+		Statement st = con.createStatement();
+		String command = "SELECT COUNT(*) AS count FROM INGREDIENTS WHERE ingredient_name = '" + name + "'" + ";";
+		int count = -1;
+		ResultSet rs = st.executeQuery(command);
+		if (rs.next()) {
+		    count = rs.getInt("count");
+		}
+		
+		return count > 0;
+	}
 	
-	/* On Confirm button click, add specified ingredient to database */
-	public String addIngredient(String name, String type, int quantity, double price) throws SQLException {
-		// all fields must be specified for a new ingredient
-		if(!name.isEmpty() && !type.isEmpty() && quantity > 0 && price > 0) {
-			Statement st = con.createStatement();
-			String commmand = "INSERT INTO INGREDIENTS(ingredient_name, ingredient_type, quantity, price) VALUES('" + name + "','" + type + "','" + quantity + "','" + price + "');";
-			try {
-				st.executeUpdate(commmand);
+	/*
+	 * HELPER METHOD TO GET THE QUANTITY OF AN INGREDIENT BY NAME
+	 * */
+	private int getQuantity(String name) throws SQLException{
+		
+		Statement st = con.createStatement();
+		String command = "SELECT quantity FROM INGREDIENTS WHERE ingredient_name ='" + name + "';";
+		ResultSet rs = st.executeQuery(command);
+		if (rs.next()) {
+		    return rs.getInt("quantity");
+		} else {
+			return 0;
+		}
+		
+	}
+	
+	/*
+	 * Handles adding an existing ingredient, by updating its quantity.
+	 * */
+	public String addExistingIngredient(String name, int quantity) throws SQLException {
+		
+		if(!name.isEmpty() && quantity > 0) {
+			String command;
+			if(ingredientPresent(name)) {
+				int total = quantity + getQuantity(name);
+				command = "UPDATE INGREDIENTS SET quantity = " + total + " WHERE ingredient_name = '" + name + "'";
+				
+				PreparedStatement st = con.prepareStatement(command);
+
+				try {
+					int changedRow = st.executeUpdate(command);
+					if(changedRow > 0) {
+						return "Inventory updated successfully";
+					}
+				} 
+				catch(Exception e) {
+					e.printStackTrace();
+					return "Failed to add ingredient!";
+				}
+				
+				return "Inventory updated successfully";
+			} else {
+				return "Ingredient does not exist, please select 'Add Ingredient(s)' above";
 			}
-			catch(Exception e) {
-				e.printStackTrace();
-				return "Failed to add ingredient!";
-			}
-			return name + " added successfully";
 		}
 		return "Please check your input fields!";
 	}
 	
-	/* On Modify button click, update quantity of the corresponding ingredient in database */
-	public String modifyInventoryQuantity(String name, int quantity) throws SQLException {
-		if(!name.isEmpty()) {
-			Statement st = con.createStatement();
-			String command = "UPDATE INGREDIENTS SET quantity = '" + quantity + "' WHERE ingredient_name = '" + name + "';";
-			try {
-				st.executeUpdate(command);
+	/* On Confirm button click, add specified ingredient to database */
+	public String addIngredient(String name, String type, int quantity, double price) throws SQLException {
+		
+		// all fields must be specified for a new ingredient
+		if(!name.isEmpty() && !type.isEmpty() && quantity > 0 && price > 0) {
+			
+			String command;
+			if(!ingredientPresent(name)) {
+				command = "INSERT INTO INGREDIENTS(ingredient_name, ingredient_type, quantity, price) VALUES('" + name + "','" + type + "','" + quantity + "','" + price + "');";
+			} else {
+				return "Ingredient already exists, please select 'Add Existing Ingredient(s)' above\n, or if you need to change the price select 'Update price'";
 			}
+			PreparedStatement st = con.prepareStatement(command);
+
+			try {
+				int changedRow = st.executeUpdate(command);
+				if(changedRow > 0) {
+					return "Inventory updated successfully";
+				}
+			} 
 			catch(Exception e) {
 				e.printStackTrace();
-				return "Failed to modify quantity!";
+				return "Failed to add ingredient!";
 			}
-			return name + " modified successfully!";
 		}
 		return "Please check your input fields!";
+		
 	}
 	
 	/* On Modify button click, update price of the corresponding ingredient in database */
@@ -99,36 +153,20 @@ public class ManagerMain {
 		return "Please check your input fields!";
 	}
 	
-	/* On Modify button click, update both quantity and price of the corresponding ingredient in database */
-	public String modifyInventoryBoth(String name, int quantity, double price) throws SQLException {
-		if(!name.isEmpty()) {
-			Statement st = con.createStatement();
-			String command = "UPDATE INGREDIENTS SET price = '" + price + "', quantity = '" + quantity + "' WHERE ingredient_name = '" + name + "';";
-			try {
-				st.executeUpdate(command);
-			}
-			catch(Exception e) {
-				e.printStackTrace();
-				return "Failed to modify ingredient!";
-			}
-			return name + " modified successfully!";
-		}
-		return "Please check your input fields!";
-	}
-	
 	/* On Delete button click, remove the corresponding ingredient from database */
 	public String deleteEntry(String name) throws SQLException {
 		if(!name.isEmpty()) {
 			Statement st = con.createStatement();
 			String command = "DELETE FROM INGREDIENTS WHERE ingredient_name = '" + name + "';";
 			try {
-				st.executeUpdate(command);
+				int affected = st.executeUpdate(command);
+				if(affected > 0) return name + " deleted successfully";
+				else return name + " not found";
 			}
 			catch(Exception ex) {
 				ex.printStackTrace();
 				return "Failed to delete entry!";
 			}
-			return name + " deleted successfully";
 		}
 		return "Please check your input field!";
 	}
