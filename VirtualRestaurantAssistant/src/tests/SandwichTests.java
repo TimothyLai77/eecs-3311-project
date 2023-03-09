@@ -149,9 +149,4 @@ class SandwichTests {
 		assertEquals("type1", i.getType());
 	}
 	
-	
-	
-	
-	
-	
 }
