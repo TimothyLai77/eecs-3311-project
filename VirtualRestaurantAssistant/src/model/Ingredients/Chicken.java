@@ -1,0 +1,18 @@
+package model.Ingredients;
+
+public class Chicken extends Ingredient {
+	
+	/**
+	 * Instantiates chicken object with the given parameters 
+	 * @param name
+	 * @param price
+	 * @param type
+	 */
+	public Chicken(String name, double price, String type) {
+		super.name = name;
+		super.price = price;
+		super.type = type;
+	}
+	
+
+}

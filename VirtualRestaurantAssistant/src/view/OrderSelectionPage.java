@@ -428,7 +428,7 @@ public class OrderSelectionPage extends JFrame {
 
 				// Adding this temp to the cart
 				cart.add(newItem);
-
+				
 				// Dynamic rendering of the label into the cart
 				addLabelToCart(newItem);
 				
@@ -480,6 +480,8 @@ public class OrderSelectionPage extends JFrame {
 					 * storing them to a costs list.
 					 * */
 					List<Double> costs = OrderUIController.getSandwichOrder(order);
+
+					//todo: Tim, add order ui contoller for topping stuff here.
 
 					// Following Logic checks if the value returned is valid.
 					int numberOfSandwiches = 0;

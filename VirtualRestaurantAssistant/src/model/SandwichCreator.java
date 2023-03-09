@@ -1,5 +1,8 @@
 package model;
 import java.util.List;
+
+import model.Ingredients.Ingredient;
+
 import java.util.ArrayList;
 
 public abstract class SandwichCreator {
@@ -14,10 +17,9 @@ public abstract class SandwichCreator {
 	 */
 	protected List<Ingredient> gatherIngredients(){
 		prepStation = new ArrayList<Ingredient>();
-		Inventory inventory = MapInventory.getInstance();
+		Inventory inventory = DbInventory.getInstance();
 		for(String s : recipe){
 			if(!inventory.searchIngredient(s)){
-				refundIngredients();
 				return null;
 			}else{
 				prepStation.add(inventory.getIngredient(s)); // add items to prep 
@@ -26,15 +28,6 @@ public abstract class SandwichCreator {
 		return prepStation;
 	}
 
-	/*
-	 * Helper function to return ingredients back to inventory.
-	 */
-	protected void refundIngredients(){
-		Inventory inventory = MapInventory.getInstance();
-		for(Ingredient i : prepStation) {
-			inventory.putIngredient(i.getName(), i);
-		}
-		prepStation.clear();
-	}
+
 	
 }

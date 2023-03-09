@@ -1,6 +1,11 @@
-package model;
+package model.Sandwiches;
+
+import model.Sandwich;
+import model.Ingredients.Ingredient;
 
 import java.util.List;
+
+
 
 /**
  * Class representing a Chicken Sandwich.

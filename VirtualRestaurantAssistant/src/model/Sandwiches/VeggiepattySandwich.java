@@ -1,6 +1,9 @@
-package model;
+package model.Sandwiches;
 
 import java.util.List;
+
+import model.Sandwich;
+import model.Ingredients.Ingredient;
 
 /**
  * Class representing a Veggiepatty Sandwich.
