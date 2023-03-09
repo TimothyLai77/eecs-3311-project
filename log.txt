@@ -1,3 +1,4 @@
+-------------------- ITERATION 0 AND 1 ------------------------
 Meeting Jan 16:
 * Introduction to finalized team members. 
 * Categorized strenghts and weankesses of team for smoother division of labour. 
@@ -59,6 +60,10 @@ Feb 9:
 * Muhammad finished sandwich related classes (2 days)
 * Tim finished the documentation
 
+
+-------------- ITERATION 2 ------------------------------
+
+
 Feb 16; client meeting
 * Pitched clients our idea of a sandwich ordering kiosk
 * Showed client our app, went through ordering a sandwich
@@ -66,3 +71,38 @@ Feb 16; client meeting
 * showed them stories for iteration 2
 * Clients suggested a feature where they could see the most popular sandwiches and a cusotmer could order those. 
 * Clarified that we would suggest a base sandwich and not a specific combination. 
+
+
+Feb 17:
+* Meeting with our developers, we took a look at the app and used it for a bit
+* Suggested 2 features and the devs can pick which one they want to implement:
+	* Have the ability to flag a task, so that it cannot be marked as complete until someone else like a manager checks it off. 
+	* A priority feature for tasks, high priority, medium priority, low, etc.
+
+
+------------- Our Stories in Iteration 2: ----------
+Sandwich Toppings
+	* backend and logic finished by Tim (5 days)
+	* frontend finished by Ali (5 days)
+
+Sales History
+	* finished by Quang (3 days)
+
+Client feature: popular orders
+	* Finished by Quang and Ali (5 days)
+
+SQL Database implementation
+	* MySQL related work finished by Quang (5 days)
+	* new Inventory implementation that uses the SQL DB finsihed by Aum and Muhammad (2 days)
+	* User Interface for the manager finished by Quang (3 days)
+
+Extra Base Sandwich
+	* finished by Aum and Muhammad (0.5 day)
+
+
+User Story Changes:
+* Added the client feature where the customer can see the most popualr base sandwich
+* Removed the ability to see the most popular ingredients, most popular ingredients, etc. But we're still tracking all the user orders in the database, and the manger can see the history.
+* Removed the ability to filter by dietary restrictions + show nutritional details (calories) 
+	* Stories were changed because of time lost due to university midterms.
+		* Also needed time to implement testing for this iteration. 
