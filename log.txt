@@ -78,7 +78,17 @@ Feb 17:
 * Suggested 2 features and the devs can pick which one they want to implement:
 	* Have the ability to flag a task, so that it cannot be marked as complete until someone else like a manager checks it off. 
 	* A priority feature for tasks, high priority, medium priority, low, etc.
+Feb 19:
+* Connecting main page with manager UI
 
+Feb 27:
+* Cleaned up existing code base based on iteration 1 feedback from TAs.
+
+Mar 4:
+* Bug fixing and improving UI with images of "toppings"
+
+Mar 6:
+* Troubleshooting error occuring in SQL query logic.
 
 ------------- Our Stories in Iteration 2: ----------
 Sandwich Toppings
