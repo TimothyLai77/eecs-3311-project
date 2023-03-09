@@ -47,11 +47,13 @@ public class ManagerMain {
 			
 		}
 	
+	//Helper method to return whether an ingredient is present or not
 	private boolean ingredientPresent(String name) throws SQLException {
-		Statement st = con.createStatement();
 		String command = "SELECT COUNT(*) AS count FROM INGREDIENTS WHERE ingredient_name = '" + name + "'" + ";";
+		PreparedStatement st = con.prepareStatement(command);
+
 		int count = -1;
-		ResultSet rs = st.executeQuery(command);
+		ResultSet rs = st.executeQuery();
 		if (rs.next()) {
 		    count = rs.getInt("count");
 		}
@@ -64,8 +66,9 @@ public class ManagerMain {
 	 * */
 	private int getQuantity(String name) throws SQLException{
 		
-		Statement st = con.createStatement();
+		
 		String command = "SELECT quantity FROM INGREDIENTS WHERE ingredient_name ='" + name + "';";
+		PreparedStatement st = con.prepareStatement(command);
 		ResultSet rs = st.executeQuery(command);
 		if (rs.next()) {
 		    return rs.getInt("quantity");
@@ -137,18 +140,20 @@ public class ManagerMain {
 	}
 	
 	/* On Modify button click, update price of the corresponding ingredient in database */
-	public String modifyInventoryPrice(String name, double price) throws SQLException {
+	public String updatePrice(String name, double price) throws SQLException {
 		if(!name.isEmpty()) {
-			Statement st = con.createStatement();
 			String command = "UPDATE INGREDIENTS SET price = '" + price + "' WHERE ingredient_name = '" + name + "';";
+			PreparedStatement st = con.prepareStatement(command);
+
 			try {
-				st.executeUpdate(command);
+				int changedRow = st.executeUpdate(command);
+				if(changedRow > 0) return "Inventory successfully updated";
+				else return name + " not found";
 			}
 			catch(Exception e) {
 				e.printStackTrace();
-				return "Failed to modify quantity!";
+				return "Failed to update price! Check your connection.";
 			}
-			return name + " modified successfully!";
 		}
 		return "Please check your input fields!";
 	}
@@ -156,8 +161,10 @@ public class ManagerMain {
 	/* On Delete button click, remove the corresponding ingredient from database */
 	public String deleteEntry(String name) throws SQLException {
 		if(!name.isEmpty()) {
-			Statement st = con.createStatement();
+			
 			String command = "DELETE FROM INGREDIENTS WHERE ingredient_name = '" + name + "';";
+			PreparedStatement st = con.prepareStatement(command);
+
 			try {
 				int affected = st.executeUpdate(command);
 				if(affected > 0) return name + " deleted successfully";
@@ -165,11 +172,12 @@ public class ManagerMain {
 			}
 			catch(Exception ex) {
 				ex.printStackTrace();
-				return "Failed to delete entry!";
+				return "Failed to delete entry! Check your connection.";
 			}
 		}
 		return "Please check your input field!";
 	}
+	
 	
 	/* If there's any update to the database, display all entries in the inventory */
 	public String viewInventory() throws SQLException {
