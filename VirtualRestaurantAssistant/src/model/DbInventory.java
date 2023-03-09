@@ -117,6 +117,7 @@ public class DbInventory implements Inventory{
       where ingredient_name = 'ingredientName';
       */
       public boolean searchIngredient(String ingredientName){
+    	
         boolean flag = false;
         try {
             Statement st = con.createStatement();
@@ -140,6 +141,9 @@ public class DbInventory implements Inventory{
       public Ingredient getIngredient(String ingredientName){
 //    	 int quantity = 0 ;
     	 double price = 0 ;
+    	 
+    
+    	 
          int quantityInInventory = 0;
     	  try {
               Statement st = con.createStatement();
@@ -157,9 +161,10 @@ public class DbInventory implements Inventory{
               
               updateQuantity(ingredientName, quantityInInventory-1);
               
+              
               if (ingredientName.equals("Beef")) {
             	  return new Beef(ingredientName, price, "Meat");
-              } else if (ingredientName.equals("AmericanCheese")) { 
+              } else if (ingredientName.equals("American")) { 
             	  return new AmericanCheese(ingredientName, price, "Cheese");
               } else if (ingredientName.equals("Bread")) {
             	  return new Bread(ingredientName, price, "Bread");
@@ -171,7 +176,7 @@ public class DbInventory implements Inventory{
             	  return new Ketchup(ingredientName, price, "Sauce");
               } else if (ingredientName.equals("Lettuce")) {
             	  return new Lettuce(ingredientName, price, "Vegetable");
-              } else if (ingredientName.equals("Mayonnaise")) {
+              } else if (ingredientName.equals("Mayo")) {
             	  return new Mayonnaise(ingredientName, price, "Sauce");
               } else if (ingredientName.equals("Meatball")) {
             	  return new Meatball(ingredientName, price, "Meat");
