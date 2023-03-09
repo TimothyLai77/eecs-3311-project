@@ -3,38 +3,61 @@ package view;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.SQLException;
-import java.awt.event.ActionListener;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import model.ManagerMain;
+import javax.swing.border.LineBorder;
 
-public class ManagerPage extends JFrame implements ItemListener, ActionListener {
+public class ManagerPage extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;  // auto-generated serialID
-	private JPanel contentPanel;
-	private JTextField ingredientNameField;
-	private JTextField quantityField;
+	private JPanel contentPane;
+
+	// --------------------- MODIFIED CODE 
+
+	//Frame coordinates, fetched at runtime.
+	private int mouseX, mouseY;
+	
+	//Static list to hold sandwich types --- THIS IS TEMPORARY SINCE
+	//										 IT SHOULD EVENTUALLY BE 
+	// 										 FETCHED FROM THE DB.
+	private static String[] typeButtons;
+	
+	
+	private String[] breadOptions, meatOptions, vegetablesOptions, sauceOptions, cheeseOptions;
+	
+	//Submit change
+	private ButtonGroup submitTypeGroup;
+	
+	//Message Label
+	private JLabel managerMessageLabel;
+	
+	// Panel and Component references
+	private JComboBox<String> ingredientDropdown; //Dropdown list of names
+	
+	//Ingredient type components
+	private JPanel ingredientTypePanel; 
+	private ButtonGroup typeGroup;
+	
+	//Individual buttons
+	JRadioButton addChoiceBtn;
+	
+	//Quantity and price
+	private JSpinner quantitySelector;
 	private JTextField priceField;
-	private JRadioButton ingredientTypeBread;
-	private JRadioButton ingredientTypeMeat;
-	private JRadioButton ingredientTypeCheese;
-	private JRadioButton ingredientTypeVegetable;
-	private JRadioButton ingredientTypeSauce;
-	private JRadioButton ingredientTypeOther;
-	private ButtonGroup radioGroup = new ButtonGroup();  
-	private JButton confirmAddButton;
-	private JButton btnModify;
-	private JButton btnDelete;
-	private JButton btnSales;
-	private JTextArea resultDisplay;
-	private JTextArea resultDisplay_1;
-	private JTextArea textArea;
-	private String radioTypeVal;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
+	
+	
+	//Selected Data Management
+	private static String selectedProcess;
+	private static String selectedName = "";
+	private static String selectedType = "Bread";
+	private static int selectedQuantity = 0;
+	private static double selectedPrice = 0;
+	
+	private JPanel managerLeftPanel;
+	private static ManagerMain mg;
 
 	/**
 	 * Launch the application.
@@ -44,6 +67,7 @@ public class ManagerPage extends JFrame implements ItemListener, ActionListener 
 			public void run() {
 				try {
 					ManagerPage frame = new ManagerPage();
+					mg = new ManagerMain();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -56,306 +80,396 @@ public class ManagerPage extends JFrame implements ItemListener, ActionListener 
 	 * Create the frame.
 	 */
 	public ManagerPage() {
-		setTitle("Store Manager");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 995, 786);
-		contentPanel = new JPanel();
-		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 
-		setContentPane(contentPanel);
-		contentPanel.setLayout(null);
+		//List of Ingredients supported by the App (m-meat, v-veg, s-sauce, c-cheese)
 		
-		ingredientTypeBread = new JRadioButton("Bread");
-		ingredientTypeBread.setHorizontalAlignment(SwingConstants.LEFT);
-		ingredientTypeBread.setFont(new Font("Arial", Font.BOLD, 16));
-		ingredientTypeBread.setBounds(23, 65, 103, 21);
-		contentPanel.add(ingredientTypeBread);
-		ingredientTypeBread.addItemListener(this);
+		breadOptions = new String[]{"Bread"};
+	    meatOptions = new String[]{"Beef", "Chicken", "Meatball"};
+	    vegetablesOptions = new String[]{"VeggiePatty", "Lettuce", "Tomato"};
+	    sauceOptions = new String[] {"Mayo", "Ketcup"};
+	    cheeseOptions = new String[] {"Cheddar", "American"};
+	    
+		typeButtons = new String[] {"Bread", "Meat", "Vegetable", "Cheese", "Sauce"};
+		typeGroup = new ButtonGroup();
+		submitTypeGroup = new ButtonGroup();
 		
-		ingredientTypeMeat = new JRadioButton("Meat");
-		ingredientTypeMeat.setHorizontalAlignment(SwingConstants.LEFT);
-		ingredientTypeMeat.setFont(new Font("Arial", Font.BOLD, 16));
-		ingredientTypeMeat.setBounds(23, 105, 103, 21);
-		contentPanel.add(ingredientTypeMeat);
-		ingredientTypeMeat.addItemListener(this);
+		// Frame details setup.
+		setTitle("Store Manager");
+		setIconImage(ImageImports.frameLogo);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setUndecorated(true);
+		setBounds(100, 100, 995, 500);
+		contentPane = new JPanel();
+		contentPane.setBackground(new Color(255, 255, 255));
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
 		
-		ingredientTypeCheese = new JRadioButton("Cheese");
-		ingredientTypeCheese.setHorizontalAlignment(SwingConstants.LEFT);
-		ingredientTypeCheese.setFont(new Font("Arial", Font.BOLD, 16));
-		ingredientTypeCheese.setBounds(23, 144, 103, 21);
-		contentPanel.add(ingredientTypeCheese);
-		ingredientTypeCheese.addItemListener(this);
-		
-		ingredientTypeVegetable = new JRadioButton("Vegetable");
-		ingredientTypeVegetable.setHorizontalAlignment(SwingConstants.LEFT);
-		ingredientTypeVegetable.setFont(new Font("Arial", Font.BOLD, 16));
-		ingredientTypeVegetable.setBounds(23, 182, 103, 21);
-		contentPanel.add(ingredientTypeVegetable);
-		ingredientTypeVegetable.addItemListener(this);
-		
-		ingredientTypeSauce = new JRadioButton("Sauce");
-		ingredientTypeSauce.setHorizontalAlignment(SwingConstants.LEFT);
-		ingredientTypeSauce.setFont(new Font("Arial", Font.BOLD, 16));
-		ingredientTypeSauce.setBounds(23, 220, 103, 21);
-		contentPanel.add(ingredientTypeSauce);
-		ingredientTypeSauce.addItemListener(this);
-		
-		ingredientTypeOther = new JRadioButton("Other");
-		ingredientTypeOther.setHorizontalAlignment(SwingConstants.LEFT);
-		ingredientTypeOther.setFont(new Font("Arial", Font.BOLD, 16));
-		ingredientTypeOther.setBounds(23, 258, 103, 21);
-		contentPanel.add(ingredientTypeOther);
-		ingredientTypeOther.addItemListener(this);
-		
-		radioGroup.add(ingredientTypeBread);
-		radioGroup.add(ingredientTypeMeat);
-		radioGroup.add(ingredientTypeVegetable);
-		radioGroup.add(ingredientTypeCheese);
-		radioGroup.add(ingredientTypeSauce);
-		radioGroup.add(ingredientTypeOther);
-		
-		JLabel selectTypeLabel = new JLabel("Select your ingredient type:");
-		selectTypeLabel.setFont(new Font("Tahoma", Font.BOLD, 18));
-		selectTypeLabel.setBounds(23, 20, 265, 30);
-		contentPanel.add(selectTypeLabel);
-		
-		JLabel nameLabel = new JLabel("Name:");
-		nameLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		nameLabel.setBounds(328, 30, 45, 13);
-		contentPanel.add(nameLabel);
-		
-		ingredientNameField = new JTextField();
-		ingredientNameField.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		ingredientNameField.setBounds(383, 22, 132, 30);
-		contentPanel.add(ingredientNameField);
-		ingredientNameField.setColumns(10);
-		
-		JLabel quantityLabel = new JLabel("Quantity:");
-		quantityLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		quantityLabel.setBounds(308, 81, 65, 21);
-		contentPanel.add(quantityLabel);
-		
-		quantityField = new JTextField();
-		quantityField.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		quantityField.setColumns(10);
-		quantityField.setBounds(383, 75, 65, 30);
-		contentPanel.add(quantityField);
-		
-		JLabel priceLabel = new JLabel("Price per servings:");
-		priceLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		priceLabel.setBounds(258, 139, 115, 21);
-		contentPanel.add(priceLabel);
-		
-		priceField = new JTextField();
-		priceField.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		priceField.setColumns(10);
-		priceField.setBounds(383, 135, 65, 30);
-		contentPanel.add(priceField);
-		
-		confirmAddButton = new JButton("Confirm");
-		confirmAddButton.setFont(new Font("Tahoma", Font.BOLD, 15));
-		confirmAddButton.setBounds(308, 197, 103, 34);
-		contentPanel.add(confirmAddButton);
-		confirmAddButton.addActionListener(this);
-		
-		resultDisplay = new JTextArea();
-		resultDisplay.setForeground(new Color(255, 0, 0));
-		resultDisplay.setFont(new Font("Monospaced", Font.BOLD, 13));
-		resultDisplay.setEditable(false);
-		resultDisplay.setBounds(201, 245, 314, 30);
-		contentPanel.add(resultDisplay);
-		
-		JSeparator separator = new JSeparator();
-		separator.setBackground(new Color(0, 0, 0));
-		separator.setForeground(new Color(64, 0, 64));
-		separator.setOrientation(SwingConstants.VERTICAL);
-		separator.setBounds(555, 10, 10, 296);
-		contentPanel.add(separator);
-		
-		JSeparator separator_1 = new JSeparator();
-		separator_1.setForeground(new Color(64, 0, 64));
-		separator_1.setBackground(Color.BLACK);
-		separator_1.setBounds(14, 305, 542, 21);
-		contentPanel.add(separator_1);
-		
-		JLabel nameLabel_1 = new JLabel("Name:");
-		nameLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		nameLabel_1.setBounds(664, 69, 45, 13);
-		contentPanel.add(nameLabel_1);
-		
-		textField = new JTextField();
-		textField.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		textField.setColumns(10);
-		textField.setBounds(719, 61, 132, 30);
-		contentPanel.add(textField);
-		
-		JLabel lblModifyDelete = new JLabel("Modify / Delete");
-		lblModifyDelete.setHorizontalAlignment(SwingConstants.CENTER);
-		lblModifyDelete.setFont(new Font("Tahoma", Font.BOLD, 18));
-		lblModifyDelete.setBounds(650, 13, 265, 30);
-		contentPanel.add(lblModifyDelete);
-		
-		JLabel quantityLabel_1 = new JLabel("Quantity:");
-		quantityLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		quantityLabel_1.setBounds(644, 116, 65, 21);
-		contentPanel.add(quantityLabel_1);
-		
-		textField_1 = new JTextField();
-		textField_1.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		textField_1.setColumns(10);
-		textField_1.setBounds(719, 111, 65, 30);
-		contentPanel.add(textField_1);
-		
-		JLabel priceLabel_1 = new JLabel("Price per servings:");
-		priceLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		priceLabel_1.setBounds(594, 165, 115, 21);
-		contentPanel.add(priceLabel_1);
-		
-		textField_2 = new JTextField();
-		textField_2.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		textField_2.setColumns(10);
-		textField_2.setBounds(719, 161, 65, 30);
-		contentPanel.add(textField_2);
-		
-		btnModify = new JButton("Modify");
-		btnModify.setFont(new Font("Tahoma", Font.BOLD, 15));
-		btnModify.setBounds(632, 251, 103, 34);
-		btnModify.addActionListener(this);
-		contentPanel.add(btnModify);
-		
-		btnDelete = new JButton("Delete");
-		btnDelete.setFont(new Font("Tahoma", Font.BOLD, 15));
-		btnDelete.setBounds(812, 251, 103, 34);
-		btnDelete.addActionListener(this);
-		contentPanel.add(btnDelete);
-		
-		JSeparator separator_1_1 = new JSeparator();
-		separator_1_1.setForeground(new Color(64, 0, 64));
-		separator_1_1.setBackground(Color.BLACK);
-		separator_1_1.setBounds(429, 305, 552, 21);
-		contentPanel.add(separator_1_1);
-		
-		resultDisplay_1 = new JTextArea();
-		resultDisplay_1.setForeground(new Color(255, 0, 0));
-		resultDisplay_1.setFont(new Font("Monospaced", Font.BOLD, 13));
-		resultDisplay_1.setEditable(false);
-		resultDisplay_1.setBounds(604, 204, 351, 30);
-		contentPanel.add(resultDisplay_1);
-		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(23, 362, 934, 365);
-		contentPanel.add(scrollPane);
-		
-		textArea = new JTextArea();
-		textArea.setFont(new Font("Calibri", Font.PLAIN, 16));
-		scrollPane.setViewportView(textArea);
-		
-		JLabel lblInventoryList = new JLabel("Inventory List (Ingredient Name | Ingredient Type | Quantity | Price per serving):");
-		lblInventoryList.setFont(new Font("Tahoma", Font.BOLD, 16));
-		lblInventoryList.setBounds(23, 322, 698, 30);
-		contentPanel.add(lblInventoryList);
-		
-		displayInventory(textArea);
-		
-		btnSales = new JButton("Sales");
-		btnSales.setFont(new Font("Tahoma", Font.BOLD, 15));
-		btnSales.setBounds(852, 318, 103, 34);
-		btnSales.addActionListener(new ActionListener () {
+		// Custom Draggable Toolbar and customization
+		JPanel dragBar = new JPanel();
+		dragBar.addMouseMotionListener(new MouseMotionAdapter() {
+					
+			// Changes the frame location
 			@Override
-			// Show a pop-up of sales history frame
-			public void actionPerformed(ActionEvent e) {
-				new ManageHistory().setVisible(true);
+			public void mouseDragged(MouseEvent e) {
+				setLocation(getX() + e.getX() - mouseX, getY() + e.getY() - mouseY);
 			}
 		});
-		contentPanel.add(btnSales);
+		dragBar.addMouseListener(new MouseAdapter() {
+					
+			// Gets current X,Y Coordinates of the Frame
+			@Override
+			public void mousePressed(MouseEvent e) {
+				mouseX = e.getX();
+				mouseY = e.getY();
+			}
+		});				
+		dragBar.setBackground(Color.BLACK);
+		dragBar.setBorder(null);
+		dragBar.setBounds(0, 0, 888, 20);
+		contentPane.add(dragBar);
+
+		// Custom Close Button
+		JButton closeBtn = new JButton("E X I T");
+		closeBtn.addActionListener(new ActionListener() {
+					
+			// This event trigger closes the Application.
+			public void actionPerformed(ActionEvent e) {
+						
+				//Confirms the User to close the App.
+				int confirmed = JOptionPane.showConfirmDialog(null, "Are you sure you want to exit the program?","Exit Program", JOptionPane.YES_NO_OPTION);
+						
+				// If Confirmed then it will close the App, if not
+				// it will close the dialogue.
+				if (confirmed == JOptionPane.YES_OPTION) {
+					dispose();
+				}
+			}
+		});
+		closeBtn.setBorder(null);
+		closeBtn.setForeground(Color.WHITE);
+		closeBtn.setBackground(Color.BLACK);
+		closeBtn.setBounds(933, 0, 62, 20);
+		contentPane.add(closeBtn);
+
+		// Custom Minimize Screen Button
+		JButton minBtn = new JButton("_");
+		minBtn.addActionListener(new ActionListener() {
+					
+			// Trigger to minimize the application
+			public void actionPerformed(ActionEvent e) {
+				setState(JFrame.ICONIFIED);
+			}
+		});
+		minBtn.setForeground(Color.WHITE);
+		minBtn.setBorder(null);
+		minBtn.setBackground(Color.BLACK);
+		minBtn.setBounds(887, 0, 46, 20);
+		contentPane.add(minBtn);
+		
+		// INVENTORY MANAGER TITLE
+		JLabel managerSideTitle = new JLabel("Inventory Manager");
+		managerSideTitle.setBounds(393, 25, 181, 25);
+		contentPane.add(managerSideTitle);
+		managerSideTitle.setFont(new Font("Tahoma", Font.BOLD, 13));
+		managerSideTitle.setHorizontalAlignment(SwingConstants.CENTER);
+		managerSideTitle.setBackground(new Color(255, 255, 255));
+		
+		//CHOICE BUTTONS
+		addChoiceBtn = new JRadioButton("Add Ingredient(s)");
+		addChoiceBtn.setName("addChoice");
+		addChoiceBtn.setBackground(new Color(255, 255, 255));
+		addChoiceBtn.setBounds(200, 52, 126, 23);
+		addChoiceBtn.setSelected(true);
+		addChoiceBtn.addActionListener(this);
+		
+		selectedProcess = "add";
+		contentPane.add(addChoiceBtn);
+		submitTypeGroup.add(addChoiceBtn);
+		
+		JRadioButton deleteIngredientChoice = new JRadioButton("Delete Ingredient(s)");
+		deleteIngredientChoice.setName("deleteChoice");
+		deleteIngredientChoice.setBackground(new Color(255, 255, 255));
+		deleteIngredientChoice.setBounds(656, 52, 139, 23);
+		deleteIngredientChoice.addActionListener(this);
+		contentPane.add(deleteIngredientChoice);
+		submitTypeGroup.add(deleteIngredientChoice);
+		
+		JRadioButton addExistingChoice = new JRadioButton("Add Existing Ingredient(s)");
+		addExistingChoice.setName("addExistingChoice");
+		addExistingChoice.setBackground(new Color(255, 255, 255));
+		addExistingChoice.setBounds(342, 52, 181, 23);
+		addExistingChoice.addActionListener(this);
+		contentPane.add(addExistingChoice);
+		submitTypeGroup.add(addExistingChoice);
+		
+		JRadioButton updatePriceChoice = new JRadioButton("Update Price");
+		updatePriceChoice.setName("updatePriceChoice");
+		updatePriceChoice.setBackground(new Color(255, 255, 255));
+		updatePriceChoice.setBounds(528, 52, 111, 23);
+		updatePriceChoice.addActionListener(this);
+		contentPane.add(updatePriceChoice);
+		submitTypeGroup.add(updatePriceChoice);
+
+		managerLeftPanel = new JPanel();
+		managerLeftPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
+		managerLeftPanel.setBackground(new Color(255, 255, 255));
+		managerLeftPanel.setBounds(200, 85, 595, 289);
+		managerLeftPanel.setLayout(null);
+		contentPane.add(managerLeftPanel);
+		
+		ingredientDropdown = new JComboBox<String>();
+    	ingredientDropdown.setModel(new DefaultComboBoxModel<String>(breadOptions));
+		ingredientDropdown.setBounds(310, 61, 200, 20);
+		managerLeftPanel.add(ingredientDropdown);
+
+		ingredientTypePanel = new JPanel();
+		ingredientTypePanel.setBackground(new Color(255, 255, 255));
+		ingredientTypePanel.setBounds(95, 60, 138, 139);
+		ingredientTypePanel.setLayout(new BoxLayout(ingredientTypePanel, BoxLayout.Y_AXIS));
+		managerLeftPanel.add(ingredientTypePanel);
+		
+		//Labels for the selections
+		JLabel selectTypeLabel = new JLabel("Select and Ingredient Type:");
+		selectTypeLabel.setBounds(95, 35, 160, 14);
+		managerLeftPanel.add(selectTypeLabel);
+		
+		JLabel selectNameLabel = new JLabel("Select an Ingredient Name:");
+		selectNameLabel.setBounds(310, 36, 200, 14);
+		managerLeftPanel.add(selectNameLabel);
+		
+		JLabel selectQuantityLabel = new JLabel("Enter quantity:");
+		selectQuantityLabel.setBounds(310, 92, 144, 35);
+		managerLeftPanel.add(selectQuantityLabel);
+		
+		JLabel selectPriceLabel = new JLabel("Enter price:");
+		selectPriceLabel.setBounds(310, 130, 126, 35);
+		managerLeftPanel.add(selectPriceLabel);
+		
+		JLabel priceLogo = new JLabel("$");
+		priceLogo.setHorizontalAlignment(SwingConstants.CENTER);
+		priceLogo.setBounds(445, 131, 18, 35);
+		managerLeftPanel.add(priceLogo);
+		
+		// Renders all the ingredient type buttons
+		renderTypeButtons();
+
+
+		quantitySelector = new JSpinner();
+		quantitySelector
+				.setModel(new SpinnerNumberModel(Integer.valueOf(1), Integer.valueOf(1), null, Integer.valueOf(1)));
+		quantitySelector.setOpaque(false);
+		quantitySelector.setForeground(Color.BLACK);
+		quantitySelector.setBounds(464, 92, 46, 35);
+		managerLeftPanel.add(quantitySelector);
+		
+		JButton incrementByTenButton = new JButton("+10");
+		incrementByTenButton.setOpaque(false);
+		incrementByTenButton.setBackground(new Color(192, 192, 192));
+		incrementByTenButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int value = (Integer)quantitySelector.getValue();
+				quantitySelector.setValue(value + 10);
+			}
+		});
+		incrementByTenButton.setLocation(520, 92);
+		incrementByTenButton.setSize(55, 17);
+		managerLeftPanel.add(incrementByTenButton);
+		
+		JButton decrementByTenButton = new JButton("-10");
+		decrementByTenButton.setBackground(new Color(192, 192, 192));
+		decrementByTenButton.setOpaque(false);
+		decrementByTenButton.setBounds(520, 110, 55, 18);
+		decrementByTenButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int value = (Integer)quantitySelector.getValue();
+				if(value - 10 > 0) {
+					quantitySelector.setValue(value - 10);
+				} else {
+					return;
+				}
+			}
+		});
+		managerLeftPanel.add(decrementByTenButton);
+		
+		priceField = new JTextField("0.0");
+		priceField.setLocation(464, 138);
+		priceField.setSize(46, 20);
+		managerLeftPanel.add(priceField);
+		
+		JButton submitBtn = new JButton("Submit Change");
+		submitBtn.setBounds(310, 176, 200, 23);
+		submitBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					switch(selectedProcess) {
+					case "add":
+						submitAddHandler();
+						break;
+					case "addExisting":
+						submitAddExistingHandler();
+						break;
+					case "delete":
+						submitDeleteHandler();
+						break;
+					case "updatePrice":
+//						submitAddExistingHandler();
+						break;
+					default:
+						break;
+					}
+					clearSelections();
+				} catch(SQLException e1) {
+					managerMessageLabel.setText("Please FILL the required fields.");
+				} catch(NumberFormatException ee) {
+					managerMessageLabel.setText("Only VALID numeric PRICE please!");
+				}
+			}
+		});
+		managerLeftPanel.add(submitBtn);
+		
+		managerMessageLabel = new JLabel("");
+		managerMessageLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		managerMessageLabel.setBounds(95, 210, 423, 68);
+		managerLeftPanel.add(managerMessageLabel);
+		
+		
+
+		setLocationRelativeTo(null);
+	}
+	
+	/**
+	 * Render the radio buttons dynamically
+	 * */
+	private void renderTypeButtons() {
+		
+		for(int i = 0 ; i < typeButtons.length ; i++) {
+			JRadioButton newRadioBtn = new JRadioButton(""+ typeButtons[i]);
+			newRadioBtn.setName(""+ typeButtons[i]);
+			newRadioBtn.setBounds(0, 0, 103, 21);
+			newRadioBtn.setBackground(Color.WHITE);
+			newRadioBtn.setBorder(null);
+			ingredientTypePanel.add(newRadioBtn);
+			typeGroup.add(newRadioBtn);
+			newRadioBtn.addActionListener(this);
+
+			if(i == 0) newRadioBtn.setSelected(true);
+		}
 		
 	}
 	
-	/* Display the queried inventory from database */
-	public void displayInventory(JTextArea area) {
-		ManagerMain m = new ManagerMain();
-		String inventory = "";
-		try {
-			inventory = m.viewInventory();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		area.setText(inventory);
+	// ADD HANDLER
+	private void submitAddHandler() throws SQLException {
+		selectedName = (String) ingredientDropdown.getSelectedItem();
+		selectedQuantity = (int) quantitySelector.getValue();
+		selectedPrice = Double.parseDouble(priceField.getText());
+		managerMessageLabel.setText(addIngredient());
 	}
-	
-	/* Toggle radio button state */
-	@Override
-	public void itemStateChanged(ItemEvent e) {
-		Object src = e.getItemSelectable();
-		if (src == ingredientTypeBread) {
-			radioTypeVal = "bread";
-		}
-		else if (src == ingredientTypeMeat) {
-			radioTypeVal = "meat";
-		}
-		else if (src == ingredientTypeCheese) {
-			radioTypeVal = "cheese";
-		}
-		else if (src == ingredientTypeVegetable) {
-			radioTypeVal = "vegetable";
-		}
-		else if (src == ingredientTypeSauce) {
-			radioTypeVal = "sauce";
-		}
-		else {
-			radioTypeVal = "other";
-		}
-		System.out.println(radioTypeVal);
+	// ADD EXISTING HANDLER
+	private void submitAddExistingHandler() throws SQLException {
+		selectedName = (String) ingredientDropdown.getSelectedItem();
+		selectedQuantity = (int) quantitySelector.getValue();
+		managerMessageLabel.setText(addExistingIngredient());
 	}
-	
-	/* Listener to different button clicks --> add / modify / delete from database */
+	// DELETE HANDLER
+	private void submitDeleteHandler() throws SQLException {
+		selectedName = (String) ingredientDropdown.getSelectedItem();
+		managerMessageLabel.setText(deleteIngredient());
+	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource() == confirmAddButton) {
-			try {
-				ManagerMain mg = new ManagerMain();
-				int q = Integer.parseInt(quantityField.getText());
-				double p = Double.parseDouble(priceField.getText());
-				resultDisplay.setText(mg.addIngredient(ingredientNameField.getText(), radioTypeVal, q, p));
-			}
-			catch(SQLException ex) {
-				ex.printStackTrace();
+		
+		//Reset error state on changes
+		managerMessageLabel.setText("");
+		
+        // Determine which radio button was clicked
+		
+		String name = ((JRadioButton)e.getSource()).getName();
+		if(name.contains("Choice")) {
+			resetInput();
+			if(name.equals("addChoice")) {
+				selectedProcess = "add";
+			} else if (name.equals("deleteChoice")) {
+				selectedProcess = "delete";
+				setInputDelete();
+			} else if (name.equals("addExistingChoice")) {
+				selectedProcess = "addExisting";
+				setInputAddExisting();
+			} else if (name.equals("updatePriceChoice")) {
+				selectedProcess = "updatePrice";
+				setInputPrice();
+			} 
+			return;
+		}
+        if ( name.equals("Bread")) {
+        	selectedType = "Bread";
+        	ingredientDropdown.setModel(new DefaultComboBoxModel<String>(breadOptions));
+        } else if (name.equals("Meat")) {
+        	selectedType = "Meat";
+        	ingredientDropdown.setModel(new DefaultComboBoxModel<String>(meatOptions));
+        } else if (name.equals("Vegetable")) {
+        	selectedType = "Vegetable";
+        	ingredientDropdown.setModel(new DefaultComboBoxModel<String>(vegetablesOptions));
+        } else if (name.equals("Sauce")) {
+        	selectedType = "Sauce";
+        	ingredientDropdown.setModel(new DefaultComboBoxModel<String>(sauceOptions));
+        } else if (name.equals("Cheese")) {
+        	selectedType = "Cheese";
+        	ingredientDropdown.setModel(new DefaultComboBoxModel<String>(cheeseOptions));
+        } else {
+        	return;
+        }
+    }
+	
+	/*
+	 * INPUT RESTRICTING METHODS
+	 * */
+	private void setInputAddExisting() {
+		priceField.setEnabled(false);
+	}
+	private void setInputDelete() {
+		priceField.setEnabled(false);
+		quantitySelector.setEnabled(false);
+	}
+	private void setInputPrice() {
+		quantitySelector.setEnabled(false);
+	}
+	private void resetInput() {
+		priceField.setEnabled(true);
+		quantitySelector.setEnabled(true);
+	}
+	
+	/**
+	 * Clear all user selections.
+	 * */
+	private void clearSelections() {
+		addChoiceBtn.setSelected(true);
+		selectedProcess = "add";
+		resetInput();
+		for(Component comp: ingredientTypePanel.getComponents()) {
+			if(comp instanceof JRadioButton) {
+				((JRadioButton)comp).setSelected(true);
+	        	ingredientDropdown.setModel(new DefaultComboBoxModel<String>(breadOptions));
+	        	quantitySelector
+				.setModel(new SpinnerNumberModel(Integer.valueOf(1), Integer.valueOf(1), null, Integer.valueOf(1)));
+	        	priceField.setText("");
+	        	break;
 			}
 		}
-		else if(e.getSource() == btnModify) {
-			try {
-				ManagerMain mg = new ManagerMain();
-				if(!textField_1.getText().isEmpty() && textField_2.getText().isEmpty()) {
-					int q = Integer.parseInt(textField_1.getText());
-					resultDisplay_1.setText(mg.modifyInventoryQuantity(textField.getText(), q));
-				}
-				else if(textField_1.getText().isEmpty() && !textField_2.getText().isEmpty()) {
-					double p = Double.parseDouble(textField_2.getText());
-					resultDisplay_1.setText(mg.modifyInventoryPrice(textField.getText(), p));
-				}
-				else if(!textField_1.getText().isEmpty() && !textField_2.getText().isEmpty()) {
-					int q = Integer.parseInt(textField_1.getText());
-					double p = Double.parseDouble(textField_2.getText());
-					resultDisplay_1.setText(mg.modifyInventoryBoth(textField.getText(), q, p));
-				}
-			}
-			catch(SQLException ex) {
-				ex.printStackTrace();
-			}
-		}
-		else if(e.getSource() == btnDelete) {
-			ManagerMain mg = new ManagerMain();
-			try {
-				resultDisplay_1.setText(mg.deleteEntry(textField.getText()));
-			}
-			catch(SQLException ex) {
-				ex.printStackTrace();
-			}
-		}
-		else {
-			;
-		}
-		/* Display updated database after every action */
-		displayInventory(textArea);
+	}
+	
+	/*
+	 * 
+	 * ADD METHOD
+	 * */
+	private static String addIngredient() throws SQLException {
+		return mg.addIngredient(selectedName, selectedType, selectedQuantity, selectedPrice);
+	}
+	private static String addExistingIngredient() throws SQLException {
+		return mg.addExistingIngredient(selectedName, selectedQuantity);
+	}
+	private static String deleteIngredient() throws SQLException {
+		return mg.deleteEntry(selectedName);
 	}
 }
