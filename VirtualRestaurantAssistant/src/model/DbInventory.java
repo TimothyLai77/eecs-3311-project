@@ -8,7 +8,7 @@ import java.sql.Statement;
 import java.util.LinkedList;
 import java.util.List;
 
-import ingredients.*;
+import model.Ingredients.*;
 
 public class DbInventory implements Inventory{
     private static DbInventory instance;
