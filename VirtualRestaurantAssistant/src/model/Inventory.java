@@ -43,7 +43,7 @@ public interface Inventory {
 	 * 
 	 */
 	
-	public abstract List<Ingredient> removeAllIngredients(String ingredientName);
+	//public abstract List<Ingredient> removeAllIngredients(String ingredientName);
 	
 	
 	/**
@@ -57,7 +57,7 @@ public interface Inventory {
 	 * @return:- boolean value
 	 * returns a boolean value accordingly ie: on successful addition of the ingredient it returns true else it returns false
 	*/
-	public abstract boolean putIngredient(String ingredientName,Ingredient i);
+	//public abstract boolean putIngredient(String ingredientName,Ingredient i);
 	
 	/**
 	 * This method adds new type of ingredient in the map
@@ -67,7 +67,7 @@ public interface Inventory {
 	 * @return:- List<ingredient>
 	 * returns new list added in the map
 	 */
-	public abstract List<Ingredient> addIngredient(String ingredientName,LinkedList<Ingredient> list);
+	//public abstract List<Ingredient> addIngredient(String ingredientName,LinkedList<Ingredient> list);
 	
 	/**
 	 * 
