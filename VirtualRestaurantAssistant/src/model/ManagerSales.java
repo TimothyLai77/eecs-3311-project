@@ -11,7 +11,7 @@ import view.CartItem;
 
 public class ManagerSales {
 	
-	static Connection connection;  // connection to database
+	public static Connection connection;  // connection to database
 	
 	public static void main(String[] args) {
 		ManagerSales sales = new ManagerSales();
@@ -33,6 +33,11 @@ public class ManagerSales {
 		}
 	}
 	
+	// constructor to set Connection to test database
+	public ManagerSales(Connection con) {
+		connection = con; 
+	}
+
 	/** 
 	 * Update sales history in database
 	 * */
@@ -96,11 +101,11 @@ public class ManagerSales {
 		Statement st = connection.createStatement();
 		for(CartItem item : bases) {
 			if(!baseExists(item.getName())) {
-				String command = "INSERT INTO favourites values('" + item.getName() + "','1');";
+				String command = "INSERT INTO favourites values('" + item.getName() + "','" + item.getQuantity() + "');";
 				st.executeUpdate(command);
 			}
 			else {
-				String com = "UPDATE favourites SET counts = counts + 1 WHERE sandwichBase = '" + item.getName() + "';";
+				String com = "UPDATE favourites SET counts = counts + " + item.getQuantity() + " WHERE sandwichBase = '" + item.getName() + "';";
 				st.executeUpdate(com);
 			}
 		}
