@@ -188,7 +188,7 @@ public class HomePage extends JFrame{
 		hungryLbl.setFont(new Font("Serif", Font.PLAIN, 40));
 		hungryLbl.setHorizontalTextPosition(SwingConstants.CENTER);
 		hungryLbl.setHorizontalAlignment(SwingConstants.CENTER);
-		hungryLbl.setBounds(272, 103, 140, 53);
+		hungryLbl.setBounds(220, 103, 236, 53);
 		contentPane.add(hungryLbl);
 		
 		

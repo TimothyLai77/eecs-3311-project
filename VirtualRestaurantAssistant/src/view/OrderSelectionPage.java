@@ -69,7 +69,7 @@ public class OrderSelectionPage extends JFrame {
 	public OrderSelectionPage() {
 		
 		//This should fetch arrayList of base sandwiches.
-		sandwichTypes = new String[]{"Chicken", "Beef", "Meatball", "Veggie"};
+		sandwichTypes = new String[]{"Chicken", "Beef", "Meatball", "Veggiepatty"};
 		
 		// 2D array in the form Toppings[Vegetables[] , Sauces[] , Cheeses[] ]
 		toppingTypes = new String[][] {{"Tomato-v", "Lettuce-v"},{"Ketchup-s", "Mayo-s"},{"Cheddar-c", "American-c"} };
