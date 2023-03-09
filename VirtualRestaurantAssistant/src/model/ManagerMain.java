@@ -104,7 +104,7 @@ public class ManagerMain {
 				
 				return "Inventory updated successfully";
 			} else {
-				return "Ingredient does not exist, please select 'Add Ingredient(s)' above";
+				return "<html>Ingredient does not exist,<br> please select 'Add Ingredient(s)' above</html>";
 			}
 		}
 		return "Please check your input fields!";
@@ -120,7 +120,7 @@ public class ManagerMain {
 			if(!ingredientPresent(name)) {
 				command = "INSERT INTO INGREDIENTS(ingredient_name, ingredient_type, quantity, price) VALUES('" + name + "','" + type + "','" + quantity + "','" + price + "');";
 			} else {
-				return "Ingredient already exists, please select 'Add Existing Ingredient(s)' above\n, or if you need to change the price select 'Update price'";
+				return "<html>Ingredient already exists,<br>please select 'Add Existing Ingredient(s)' above,<br> or if you need to change the price select 'Update price'</html>";
 			}
 			PreparedStatement st = con.prepareStatement(command);
 
