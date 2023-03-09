@@ -4,6 +4,12 @@ import java.util.List;
 
 import model.Ingredients.Ingredient;
 import model.Sandwiches.BeefSandwich;
+
+
+/*
+ * A Concrete creator class to make a BeefSandwich
+ */
+
 public class BeefSandwichCreator extends SandwichCreator {
 
 	/*
@@ -21,10 +27,13 @@ public class BeefSandwichCreator extends SandwichCreator {
 	 * Creation method for a beef sandwich. 
 	 */
 	public Sandwich createSandwich() {
+		// call the parent's gather ingredient method
 		List<Ingredient> gatheredIngredients = super.gatherIngredients();
 		if(gatheredIngredients == null){
-			return null;
+			return null; // not all ingredients exist return null
 		}
+
+		// construct a new beef sandwich with the gathered ingredients
 		BeefSandwich sandwich = new BeefSandwich(gatheredIngredients);
 		return sandwich;
 	}

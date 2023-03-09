@@ -6,6 +6,10 @@ import java.util.List;
 import model.Ingredients.Ingredient;
 import model.Sandwiches.VeggiepattySandwich;
 
+/*
+ * Concrete creator class for a veggie patty sandwich
+ */
+
 public class VeggiepattySandwichCreator extends SandwichCreator{
 	
 	/*
@@ -24,10 +28,12 @@ public class VeggiepattySandwichCreator extends SandwichCreator{
 	 */
 	@Override
 	public Sandwich createSandwich() {
+		// call the parents' method to gatehr ingredients
 		List<Ingredient> gatheredIngredients = super.gatherIngredients();
 		if(gatheredIngredients == null){
-			return null;
+			return null; // not all ingredients exist return null
 		}
+		// make new sandwich with gathered ingredeints
 		VeggiepattySandwich sandwich = new VeggiepattySandwich(gatheredIngredients);
 		return sandwich;
 	}

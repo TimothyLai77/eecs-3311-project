@@ -4,6 +4,10 @@ import java.util.List;
 
 import model.Ingredients.Ingredient;
 import model.Sandwiches.ChickenSandwich;
+
+/*
+ * concrete creator class for chicken sandwich
+ */
 public class ChickenSandwichCreator extends SandwichCreator {
 	
 	/*
@@ -21,10 +25,12 @@ public class ChickenSandwichCreator extends SandwichCreator {
 	 * Creation method for a chicken sandwich. 
 	 */
 	public Sandwich createSandwich() {
+		//gather ingredietsn from parent method
 		List<Ingredient> gatheredIngredients = super.gatherIngredients();
 		if(gatheredIngredients == null){
-			return null;
+			return null; // reutrn null if not all ingredietns could not be gathered
 		}
+		// make sandwich and return it
 		ChickenSandwich sandwich = new ChickenSandwich(gatheredIngredients);
 		return sandwich;
 	}

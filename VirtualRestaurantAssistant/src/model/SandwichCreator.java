@@ -5,6 +5,11 @@ import model.Ingredients.Ingredient;
 
 import java.util.ArrayList;
 
+
+/*
+ * abstract class with a method that gathers ingredients for a sandwich. 
+ */
+
 public abstract class SandwichCreator {
 
 	protected List<String> recipe; 
@@ -17,7 +22,12 @@ public abstract class SandwichCreator {
 	 */
 	protected List<Ingredient> gatherIngredients(){
 		prepStation = new ArrayList<Ingredient>();
+
+		// use the inventory
 		Inventory inventory = DbInventory.getInstance();
+		
+		// loop through each ingredient in the sandwich's recipe and check the inventory if
+		// that ingredient exists
 		for(String s : recipe){
 			if(!inventory.searchIngredient(s)){
 				return null;
