@@ -28,12 +28,12 @@ public class VeggiepattySandwichCreator extends SandwichCreator{
 	 */
 	@Override
 	public Sandwich createSandwich() {
-		// call the parents' method to gatehr ingredients
+		// call the parents' method to gather ingredients
 		List<Ingredient> gatheredIngredients = super.gatherIngredients();
 		if(gatheredIngredients == null){
 			return null; // not all ingredients exist return null
 		}
-		// make new sandwich with gathered ingredeints
+		// make new sandwich with gathered ingredients
 		VeggiepattySandwich sandwich = new VeggiepattySandwich(gatheredIngredients);
 		return sandwich;
 	}

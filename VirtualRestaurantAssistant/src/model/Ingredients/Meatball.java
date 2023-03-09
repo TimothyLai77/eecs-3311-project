@@ -1,6 +1,6 @@
 package model.Ingredients;
 /*
- * meatball ingredietn class
+ * meatball ingredient class
  */
 public class Meatball extends Ingredient {
 	

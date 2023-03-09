@@ -25,7 +25,7 @@ public class ToppingRequester {
 	 * @return returns true or false of all the ingredients exist in the inventory
 	 */
 	public boolean requestToppings(List<String> requested) {
-		// check the db and determine if its possible to add the ingredeients
+		// check the db and determine if its possible to add the ingredients
 		Inventory inventory = DbInventory.getInstance();
 		for(String ingredientName : requested){
 			// check if ingredient exists

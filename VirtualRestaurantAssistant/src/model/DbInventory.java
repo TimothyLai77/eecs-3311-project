@@ -1,3 +1,8 @@
+/**
+ * This class establishes connection to INGREDIENTS Database for customer side , to access the ingredients 
+ * when customer places the order from the UI. This class implements the methods that allows customers to 
+ * get any ingredients from database to make a sandwich. It does not implements any methods that update or modify the database. 
+ */
 package model;
 
 import java.sql.Connection;
@@ -12,15 +17,19 @@ import model.Ingredients.*;
 
 public class DbInventory implements Inventory{
     private static DbInventory instance;
+    
+    
     public static void main(String[] args) throws Exception {
 		getConnection();
 	}
-    static Connection con;
     
-    // public DbInventory(){
-
-    // }
     
+    static Connection con;// connection to MySQL database
+    
+   
+    /**
+     *  Constructor - create connection to database to access the ingredients 
+     */
     private DbInventory(){
         try{
             getConnection();
@@ -29,13 +38,20 @@ public class DbInventory implements Inventory{
             e.printStackTrace();
         }
     }
+    
+    /**
+     * This methods uses the database credentials to establish the connection to access the database.
+     * 
+     * @return connection to database 
+     * @throws Exception
+     */
     public static Connection getConnection() throws Exception{
         try {
             // credentials to access database
             String driver = "com.mysql.cj.jdbc.Driver";
-            String url = "jdbc:mysql://127.0.0.1:3306/3311project";//dbinventory
+            String url = "jdbc:mysql://127.0.0.1:3306/3311project";
             String username = "root";
-            String password = "root1234";// 28112001
+            String password = "root1234";
             
             Class.forName(driver);
             con = DriverManager.getConnection(url,username,password);
@@ -52,19 +68,12 @@ public class DbInventory implements Inventory{
     }
 
     /**
-     * required methods to be implemented
-     * 1-getIngredient
-     * 2-searchIngredient
-     * 3-getInstance//not sure
-     * 4-checkQuantity
+     * This method allows to take a particular ingredient of specified quantity. And updates the database with new  quantity. It returns a boolean value if
+     * the operation is successful. 
+     * @param ingredientName
+     * @param amount
+     * @return boolean
      */
-
-     /**
-      * querry- select quantity
-      from INGREDIENTS 
-      where ingredient_name = 'ingredientName';
-      * table - INGREDIENTS 
-      */
       public boolean takeIngredient(String ingredientName,int amount){
         try{
         Statement st = con.createStatement();
@@ -86,13 +95,12 @@ public class DbInventory implements Inventory{
 			}
             return false;
       }
+      
     /**
-     * checkQuantity 
-     * querry- select quantity
-      from INGREDIENTS 
-      where ingredient_name = 'ingredientName';
+     * This method checks the quantity to help us know whether ingredients are sufficient.
+     * @param ingredientName
+     * @return quantity 
      */
-    
      public int checkQuantity(String ingredientName){
         int qu = 0;
         try{
@@ -110,12 +118,11 @@ public class DbInventory implements Inventory{
         return qu;
      }
 
-     /**
-      * searchIngredient
-      querry- select quantity
-      from INGREDIENTS 
-      where ingredient_name = 'ingredientName';
-      */
+    /**
+     * This method checks if the ingredient exists in the database and has the quantity more than 0.
+     * @param ingredientName
+     * @return boolean
+     */
       public boolean searchIngredient(String ingredientName){
     	
         boolean flag = false;
@@ -135,33 +142,28 @@ public class DbInventory implements Inventory{
       }
       
       /**
-       * getIngredient
+       * This generates a ingredient object to use it in sandwich creation.
+       * This method fetches 1 quantity and price from the database and generates a ingredient object using the data.
+       * @param ingredientName
+       * @return Ingredient
        */
       @Override
       public Ingredient getIngredient(String ingredientName){
-//    	 int quantity = 0 ;
     	 double price = 0 ;
-    	 
-    
-    	 
-         int quantityInInventory = 0;
+    	 int quantityInInventory = 0;
     	  try {
               Statement st = con.createStatement();
               String querry_2 = "SELECT price, quantity FROM INGREDIENTS WHERE ingredient_name = '"+ingredientName+"';";
               ResultSet rs2 = st.executeQuery(querry_2);
-              
-              
-
-              if(rs2.next())
-              { 
+              if(rs2.next()) { 
             	  price = rs2.getDouble("price");
             	  quantityInInventory = rs2.getInt("quantity");
               }
+              updateQuantity(ingredientName, quantityInInventory-1);//calls a method to update the database with new quantity
               
-              
-              updateQuantity(ingredientName, quantityInInventory-1);
-              
-              
+              /*
+               * This generates ingredient object according to ingredientName and uses the data fetched from the database. 
+               */
               if (ingredientName.equals("Beef")) {
             	  return new Beef(ingredientName, price, "Meat");
               } else if (ingredientName.equals("American")) { 
@@ -187,28 +189,20 @@ public class DbInventory implements Inventory{
               } else {
             	  // Handle invalid ingredientName input here
             	  return null;	
-              }
-              
-             
-              
+              }    
     	  }
-              
-              
-    	  	
-
           catch(Exception e) {
               e.printStackTrace();
               System.out.println("Failed to search or error connecting database");
           }
-    	  
-        //get the SELECT price, quantity from inventory where name=ingredientName
-        //check for the IngredientName 
-        // if (name == beef) new Beef(ingredientName,price, quantity); 
-        return null;
-
+        return null;// Handle exception here
       }
       
-      
+      /**
+       * This method updates quantity of specific ingredient with new quantity, after using that ingredient to make a sandwich. 
+       * @param ingredient
+       * @param newQuantity
+       */
       private void updateQuantity(String ingredient, int newQuantity) {
     	  try {
               Statement st = con.createStatement();
@@ -221,7 +215,12 @@ public class DbInventory implements Inventory{
           }
       }
       
-
+/** 
+ * This method generates its own instance, so that only one instance is created of this 
+ * inventory .
+ * 
+ * @return DbInventory instance
+ */
       public static DbInventory getInstance() {
 		if(DbInventory.instance == null) {
 			DbInventory.instance = new DbInventory();
