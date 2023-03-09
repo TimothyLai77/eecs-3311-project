@@ -21,7 +21,7 @@ public class Cart {
 	 * Cart constructor initializes a LinkedList
 	 * used to represent the Cart.
 	 * */
-	Cart(){
+	public Cart(){
 		itemList = new LinkedList<>();
 		this.cartID = generateID();
 		this.orderDate = LocalDate.now().toString();
