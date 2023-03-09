@@ -65,10 +65,10 @@ public class DbInventory implements Inventory{
       where ingredient_name = 'ingredientName';
       * table - INGREDIENTS 
       */
-      public boolean TakeIngredient(String ingredientName,int amount){
+      public boolean takeIngredient(String ingredientName,int amount){
         try{
         Statement st = con.createStatement();
-        String querry = "SELECT quantity FROM inventory WHERE ingredient_name = '"+ingredientName+"';";
+        String querry = "SELECT quantity FROM INGREDIENTS WHERE ingredient_name = '"+ingredientName+"';";
         ResultSet rs = st.executeQuery(querry);
          if(rs.next()){
             int currentQuantity = rs.getInt("quantity");
@@ -97,7 +97,7 @@ public class DbInventory implements Inventory{
         int qu = 0;
         try{
             Statement st = con.createStatement();
-            String querry = "SELECT quantity FROM inventory WHERE ingredient_name = '"+ingredientName+"';";
+            String querry = "SELECT quantity FROM INGREDIENTS WHERE ingredient_name = '"+ingredientName+"';";
             ResultSet rs = st.executeQuery(querry);
             if(rs.next()){
                 qu = rs.getInt("quantity");
@@ -120,7 +120,7 @@ public class DbInventory implements Inventory{
         boolean flag = false;
         try {
             Statement st = con.createStatement();
-            String querry = "SELECT quantity FROM inventory WHERE ingredient_name = '"+ingredientName+"';";
+            String querry = "SELECT quantity FROM INGREDIENTS WHERE ingredient_name = '"+ingredientName+"';";
             ResultSet rs = st.executeQuery(querry);
             if(rs.next() && rs.getInt("quantity")>0){
                 flag = true;
@@ -140,19 +140,23 @@ public class DbInventory implements Inventory{
       public Ingredient getIngredient(String ingredientName){
 //    	 int quantity = 0 ;
     	 double price = 0 ;
+         int quantityInInventory = 0;
     	  try {
               Statement st = con.createStatement();
-//              String querry_1 = "SELECT quantity FROM inventory WHERE ingredient_name = '"+ingredientName+"';";
-              String querry_2 = "SELECT price FROM inventory WHERE ingredient_name = '"+ingredientName+"';";
-  //            ResultSet rs = st.executeQuery(querry_1);
+              String querry_2 = "SELECT price, quantity FROM INGREDIENTS WHERE ingredient_name = '"+ingredientName+"';";
               ResultSet rs2 = st.executeQuery(querry_2);
-   //           if(rs.next())
-     //         { quantity = rs.getInt("quantity") ;
-                  
-       //       }
+              
+              
+
               if(rs2.next())
-              { price = rs2.getDouble("price");
+              { 
+            	  price = rs2.getDouble("price");
+            	  quantityInInventory = rs2.getInt("quantity");
               }
+              
+              
+              updateQuantity(ingredientName, quantityInInventory-1);
+              
               if (ingredientName.equals("Beef")) {
             	  return new Beef(ingredientName, price, "Meat");
               } else if (ingredientName.equals("AmericanCheese")) { 
@@ -179,6 +183,9 @@ public class DbInventory implements Inventory{
             	  // Handle invalid ingredientName input here
             	  return null;	
               }
+              
+             
+              
     	  }
               
               
@@ -195,6 +202,20 @@ public class DbInventory implements Inventory{
         return null;
 
       }
+      
+      
+      private void updateQuantity(String ingredient, int newQuantity) {
+    	  try {
+              Statement st = con.createStatement();
+              String querry = "UPDATE INGREDIENTS SET quantity = " + newQuantity + " WHERE ingredient_name = '"+ingredient+"';";
+              st.executeUpdate(querry);
+
+    	  }catch(Exception e) {
+              e.printStackTrace();
+              System.out.println("Failed to search or error connecting database");
+          }
+      }
+      
 
       public static DbInventory getInstance() {
 		if(DbInventory.instance == null) {
