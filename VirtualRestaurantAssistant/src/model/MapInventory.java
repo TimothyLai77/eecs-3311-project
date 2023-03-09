@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import model.Ingredients.Ingredient;
+
 public class MapInventory implements Inventory{
 	private HashMap<String,LinkedList<Ingredient>> inventory;
 	private static MapInventory instance;
