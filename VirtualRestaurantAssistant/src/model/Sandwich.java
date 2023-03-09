@@ -2,6 +2,8 @@ package model;
 
 import java.util.List;
 
+import model.Ingredients.Ingredient;
+
 
 /**
  * Abstract class representing a sandwich.

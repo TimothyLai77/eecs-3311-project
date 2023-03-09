@@ -1,7 +1,8 @@
 package model.Sandwiches;
 
-import model.Ingredient;
 import model.Sandwich;
+import model.Ingredients.Ingredient;
+
 import java.util.List;
 
 

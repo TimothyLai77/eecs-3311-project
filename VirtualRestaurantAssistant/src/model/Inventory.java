@@ -2,6 +2,8 @@ package model;
 
 import java.util.*;
 
+import model.Ingredients.Ingredient;
+
 
 public interface Inventory {
 

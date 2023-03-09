@@ -2,6 +2,7 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
+import model.Ingredients.Ingredient;
 import model.Sandwiches.BeefSandwich;
 public class BeefSandwichCreator extends SandwichCreator {
 

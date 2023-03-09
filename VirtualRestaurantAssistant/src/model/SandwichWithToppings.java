@@ -2,6 +2,8 @@ package model;
 
 import java.util.List;
 
+import model.Ingredients.Ingredient;
+
 public class SandwichWithToppings extends Sandwich {
 	
 	protected Sandwich baseSandwich;

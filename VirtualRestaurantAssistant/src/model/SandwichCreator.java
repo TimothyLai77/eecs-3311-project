@@ -1,5 +1,8 @@
 package model;
 import java.util.List;
+
+import model.Ingredients.Ingredient;
+
 import java.util.ArrayList;
 
 public abstract class SandwichCreator {
