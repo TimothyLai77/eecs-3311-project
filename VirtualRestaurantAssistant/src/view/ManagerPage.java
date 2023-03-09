@@ -67,7 +67,6 @@ public class ManagerPage extends JFrame implements ActionListener {
 			public void run() {
 				try {
 					ManagerPage frame = new ManagerPage();
-					mg = new ManagerMain();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -80,7 +79,7 @@ public class ManagerPage extends JFrame implements ActionListener {
 	 * Create the frame.
 	 */
 	public ManagerPage() {
-
+		mg = new ManagerMain();
 		//List of Ingredients supported by the App (m-meat, v-veg, s-sauce, c-cheese)
 		
 		breadOptions = new String[]{"Bread"};
@@ -101,7 +100,7 @@ public class ManagerPage extends JFrame implements ActionListener {
 		setBounds(100, 100, 995, 500);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(255, 255, 255));
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		contentPane.setBorder(new LineBorder(new Color(0, 0, 0)));
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
@@ -170,11 +169,13 @@ public class ManagerPage extends JFrame implements ActionListener {
 		
 		// INVENTORY MANAGER TITLE
 		JLabel managerSideTitle = new JLabel("Inventory Manager");
-		managerSideTitle.setBounds(393, 25, 181, 25);
+		managerSideTitle.setBorder(new LineBorder(new Color(0, 0, 0)));
+		managerSideTitle.setOpaque(true);
+		managerSideTitle.setBounds(0, 20, 995, 25);
 		contentPane.add(managerSideTitle);
 		managerSideTitle.setFont(new Font("Tahoma", Font.BOLD, 13));
 		managerSideTitle.setHorizontalAlignment(SwingConstants.CENTER);
-		managerSideTitle.setBackground(new Color(255, 255, 255));
+		managerSideTitle.setBackground(Color.orange);
 		
 		//CHOICE BUTTONS
 		addChoiceBtn = new JRadioButton("Add Ingredient(s)");
@@ -299,7 +300,11 @@ public class ManagerPage extends JFrame implements ActionListener {
 		managerLeftPanel.add(priceField);
 		
 		JButton submitBtn = new JButton("Submit Change");
+		submitBtn.setFont(new Font("Tahoma", Font.BOLD, 13));
+		submitBtn.setForeground(new Color(255, 255, 255));
+		submitBtn.setBackground(new Color(0, 0, 0));
 		submitBtn.setBounds(310, 176, 200, 23);
+		submitBtn.setBorder(null);
 		submitBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -314,7 +319,7 @@ public class ManagerPage extends JFrame implements ActionListener {
 						submitDeleteHandler();
 						break;
 					case "updatePrice":
-//						submitAddExistingHandler();
+						submitUpdatePriceHandler();
 						break;
 					default:
 						break;
@@ -334,6 +339,30 @@ public class ManagerPage extends JFrame implements ActionListener {
 		managerMessageLabel.setBounds(95, 210, 423, 68);
 		managerLeftPanel.add(managerMessageLabel);
 		
+		JButton backBtn = new JButton("< Back to Home");
+		backBtn.setBounds(10, 466, 170, 23);
+		contentPane.add(backBtn);
+		backBtn.setForeground(Color.WHITE);
+		backBtn.setFont(new Font("Tahoma", Font.BOLD, 13));
+		backBtn.setBorder(null);
+		backBtn.setBackground(Color.BLACK);
+		backBtn.addActionListener(new ActionListener() {
+			
+			// Trigger on back button.
+			public void actionPerformed(ActionEvent e) {
+				
+				// Prompts USER to confirm going back, as this will lose current CART.
+				int confirmed = JOptionPane.showConfirmDialog(null,
+						"Are you sure you want to exit the Inventory Manager...", "Going back to home page",
+						JOptionPane.YES_NO_OPTION);
+				
+				//If User confirms then will be taken back to HOMPAGE
+				if (confirmed == JOptionPane.YES_OPTION) {
+					new HomePage().setVisible(true);
+					dispose(); //Kill current frame
+				}
+			}
+		});
 		
 
 		setLocationRelativeTo(null);
@@ -376,6 +405,12 @@ public class ManagerPage extends JFrame implements ActionListener {
 	private void submitDeleteHandler() throws SQLException {
 		selectedName = (String) ingredientDropdown.getSelectedItem();
 		managerMessageLabel.setText(deleteIngredient());
+	}
+	//UPDATE PRICE HANDLER
+	private void submitUpdatePriceHandler() throws SQLException {
+		selectedName = (String) ingredientDropdown.getSelectedItem();
+		selectedPrice = Double.parseDouble(priceField.getText());
+		managerMessageLabel.setText(updatePrice());
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -459,17 +494,20 @@ public class ManagerPage extends JFrame implements ActionListener {
 		}
 	}
 	
-	/*
-	 * 
-	 * ADD METHOD
-	 * */
+	// Add ingredient method
 	private static String addIngredient() throws SQLException {
 		return mg.addIngredient(selectedName, selectedType, selectedQuantity, selectedPrice);
 	}
+	// Add existing ingredient method
 	private static String addExistingIngredient() throws SQLException {
 		return mg.addExistingIngredient(selectedName, selectedQuantity);
 	}
+	// Delete ingredient method
 	private static String deleteIngredient() throws SQLException {
 		return mg.deleteEntry(selectedName);
+	}
+	// Update price of ingredient method
+	private static String updatePrice() throws SQLException {
+		return mg.updatePrice(selectedName, selectedPrice);
 	}
 }
