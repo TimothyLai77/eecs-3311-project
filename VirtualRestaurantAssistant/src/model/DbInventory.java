@@ -229,21 +229,4 @@ public class DbInventory implements Inventory{
 		return DbInventory.instance;
 	}
 
-    @Override
-    public List<Ingredient> removeAllIngredients(String ingredientName) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'removeAllIngredients'");
-    }
-
-    @Override
-    public boolean putIngredient(String ingredientName, Ingredient i) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'putIngredient'");
-    }
-
-    @Override
-    public List<Ingredient> addIngredient(String ingredientName, LinkedList<Ingredient> list) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'addIngredient'");
-    }
 }

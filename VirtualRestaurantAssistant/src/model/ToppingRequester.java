@@ -21,11 +21,7 @@ public class ToppingRequester {
 	public boolean requestToppings(List<String> requested) {
 		// check the db and determine if its possible to add the ingredeients
 		// returns t/f if ingredeints exist
-		
-		//todo: SWAP out the map inventroy with the db inventory when that's done
-		// DBInventory inventory = DBInventory.getInstance();
 		Inventory inventory = DbInventory.getInstance();
-		// todo: ^^^ above ^^^
 		//make a list of ingredients from the simplifie	d list
 		for(String ingredientName : requested){
 			// check if ingredient exists
