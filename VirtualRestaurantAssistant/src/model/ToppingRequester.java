@@ -21,7 +21,7 @@ public class ToppingRequester {
 		
 		//todo: SWAP out the map inventroy with the db inventory when that's done
 		// DBInventory inventory = DBInventory.getInstance();
-		MapInventory inventory = MapInventory.getInstance();
+		Inventory inventory = DbInventory.getInstance();
 		// todo: ^^^ above ^^^
 		//make a list of ingredients from the simplifie	d list
 		for(String ingredientName : requested){

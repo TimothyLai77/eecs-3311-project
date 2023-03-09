@@ -14,10 +14,10 @@ public abstract class SandwichCreator {
 	 */
 	protected List<Ingredient> gatherIngredients(){
 		prepStation = new ArrayList<Ingredient>();
-		Inventory inventory = MapInventory.getInstance();
+		Inventory inventory = DbInventory.getInstance();
 		for(String s : recipe){
 			if(!inventory.searchIngredient(s)){
-				refundIngredients();
+				//refundIngredients();
 				return null;
 			}else{
 				prepStation.add(inventory.getIngredient(s)); // add items to prep 
