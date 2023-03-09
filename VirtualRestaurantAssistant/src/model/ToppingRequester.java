@@ -4,6 +4,12 @@ import java.util.List;
 import model.Ingredients.Ingredient;
 
 import java.util.ArrayList;
+
+
+
+/**
+ * Class that requests the toppings from the inventory and applies the toppings to the base sandwich
+ */
 public class ToppingRequester {
 	private List<Ingredient> requestedIngredients;
 	private Sandwich baseSandwich;
@@ -20,16 +26,14 @@ public class ToppingRequester {
 	 */
 	public boolean requestToppings(List<String> requested) {
 		// check the db and determine if its possible to add the ingredeients
-		// returns t/f if ingredeints exist
 		Inventory inventory = DbInventory.getInstance();
-		//make a list of ingredients from the simplifie	d list
 		for(String ingredientName : requested){
 			// check if ingredient exists
 			if(!inventory.searchIngredient(ingredientName)){
 				return false; // not all ingredients exist
 			}else{
 				Ingredient i = inventory.getIngredient(ingredientName);
-				requestedIngredients.add(i);
+				requestedIngredients.add(i); // ingredient exists add to list of ingredients
 			}
 		}
 		return true; // all ingredients exist in db, can proceed to add toppings
@@ -44,6 +48,7 @@ public class ToppingRequester {
 		// pass in the base sandwich to a constructor that 
 		SandwichWithToppings sandwichWithToppings = new SandwichWithToppings(baseSandwich);
 		
+		// apply the toppings and return a sandwich with toppings
 		sandwichWithToppings.addToppings(this.requestedIngredients);
 		return sandwichWithToppings;
 	}

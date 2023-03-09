@@ -6,6 +6,11 @@ import java.util.List;
 
 import model.Ingredients.Ingredient;
 
+
+/**
+ * An implementation of inventory interface. This implementation uses a map of (String, List<Ingredient>) 
+ * to store all the ingredients. Not persistent storage. 
+ */
 public class MapInventory implements Inventory{
 	private HashMap<String,LinkedList<Ingredient>> inventory;
 	private static MapInventory instance;
