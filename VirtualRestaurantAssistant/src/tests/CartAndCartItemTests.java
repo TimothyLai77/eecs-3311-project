@@ -8,9 +8,13 @@ import view.Cart;
 import view.CartItem;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.LinkedList;
 class CartAndCartItemTests {
 	
 	private CartItem ci;
+	private CartItem ci2;
+	private CartItem ci3;
+	private CartItem ciToAdd;
 	private ArrayList<String> myList;
 	private Cart myCart;
 	@BeforeEach
@@ -20,7 +24,13 @@ class CartAndCartItemTests {
 		myList.add("bb");
 		ci = new CartItem("name", myList, 1);
 		
-
+		ci2 = new CartItem("name2", myList, 2);
+		ci3 = new CartItem("name3", myList, 3);
+		ciToAdd = new CartItem("added", myList, 4);
+		myCart = new Cart();
+		myCart.add(ci);
+		myCart.add(ci2);
+		myCart.add(ci3);
 	}
 	
 	
@@ -48,6 +58,39 @@ class CartAndCartItemTests {
 		assertEquals(100, ci.getQuantity());
 		assertNotEquals(1, ci.getQuantity());
 	}
+	
+	// Cart tests
+	
+	@Test
+	void testCartID() {
+		assertTrue(myCart.getID() instanceof String);
+	}
+	
+	
+	@Test
+	void testCartAddSize() {
+		int oldSize = myCart.getSize();
+		myCart.add(ciToAdd);
+		assertEquals(4, myCart.getSize());
+		assertNotEquals(oldSize, myCart.getSize());
+	}
+	
+	@Test
+	void testCartGetContent() {
+		LinkedList<CartItem> ret = myCart.getCartContent();
+		assertEquals(3, ret.size());
+		assertEquals(ci, ret.get(0));
+		assertEquals(ci2, ret.get(1));
+		assertEquals(ci3, ret.get(2));
+	}
+	
+	@Test
+	void testCartGetDate() {
+		assertTrue(myCart.getOrderDate() instanceof String);
+	}
+	
+	
+	
 	
 	
 	
