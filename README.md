@@ -3,6 +3,26 @@ Repo for EECS3311 W23 Project
  [Wiki](https://github.com/TimothyLai77/eecs-3311-project/wiki)
 
 ## Iteration 2
+
+
+## Iteration 2
+### Documentation
+
+[System Architecture Sketch](https://raw.githubusercontent.com/TimothyLai77/eecs-3311-project/main/Documentation/Iteration%202/updated%20sas.png).
+
+[Updated UML Diagram](https://raw.githubusercontent.com/TimothyLai77/eecs-3311-project/main/Documentation/Iteration%202/iteration2_uml_diagram.pdf)
+
+[Original Iteration 2 Stories and Developer Tasks](https://raw.githubusercontent.com/TimothyLai77/eecs-3311-project/main/Documentation/Iteration%202/iteration2_original_stories%20.png)
+
+[Updated Iteration 2 Stories and Developer Tasks](https://raw.githubusercontent.com/TimothyLai77/eecs-3311-project/main/Documentation/Iteration%202/iteration2_updated_stories_with_client_feature.png) 
+
+### Running the App
+* Download the VirtualRestaurantAssistant.jar from the root folder
+* Setup the SQL Database (see below)
+* Run the .jar file
+
+
+
 ### MySQL database setup
 There are two sql scripts provided, both will create the database the app will use and create the tables. 
 
