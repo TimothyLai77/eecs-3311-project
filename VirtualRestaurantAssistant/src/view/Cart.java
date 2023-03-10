@@ -47,7 +47,7 @@ public class Cart {
 	 * 
 	 * @param A CartItem Object
 	 * */ 
-	void add(CartItem CartItem) {
+	public void add(CartItem CartItem) {
 		
 		// if(this.getSize() > 0) {
 		// 	for(CartItem i : itemList) {
@@ -67,7 +67,7 @@ public class Cart {
 	 * Return the Cart LinkedList.
 	 * @return LinkedList<CartItem> - The Contents of the cart as a LinkedList
 	 * */
-	LinkedList<CartItem> getCartContent(){
+	public LinkedList<CartItem> getCartContent(){
 		return this.itemList;
 	}
 	
@@ -75,7 +75,7 @@ public class Cart {
 	 * Returns the size of the cart.
 	 * @return int - size of the list
 	 * */
-	int getSize() {
+	public int getSize() {
 		return this.itemList.size();
 	}
 	
