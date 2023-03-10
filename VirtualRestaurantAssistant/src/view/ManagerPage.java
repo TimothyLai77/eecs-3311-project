@@ -360,7 +360,6 @@ public class ManagerPage extends JFrame implements ActionListener {
 		
 		inventoryShowcaseLabel = new JTextArea("Beef                           meat                           62                             $99.00                          \nBread                          bread                          69                             $99.00                          \nChicken                        meat                           4                              $2.00                           \n");
 		inventoryShowcaseLabel.setEditable(false);
-//		inventoryShowcaseLabel.setBounds(200, 387, 595, 68);
 		JScrollPane scrollPane = new JScrollPane(inventoryShowcaseLabel);
 		scrollPane.setBounds(200, 403, 595, 86);
 
