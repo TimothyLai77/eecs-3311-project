@@ -148,6 +148,7 @@ public class DbInventory implements Inventory{
        * @return Ingredient
        */
       @Override
+      /*
       public Ingredient getIngredient(String ingredientName){
     	 double price = 0 ;
     	 int quantityInInventory = 0;
@@ -161,9 +162,9 @@ public class DbInventory implements Inventory{
               }
               updateQuantity(ingredientName, quantityInInventory-1);//calls a method to update the database with new quantity
               
-              /*
-               * This generates ingredient object according to ingredientName and uses the data fetched from the database. 
-               */
+              
+               //This generates ingredient object according to ingredientName and uses the data fetched from the database. 
+               
               if (ingredientName.equals("Beef")) {
             	  return new Beef(ingredientName, price, "Meat");
               } else if (ingredientName.equals("American")) { 
@@ -197,9 +198,158 @@ public class DbInventory implements Inventory{
           }
         return null;// Handle exception here
       }
+      */
+      
       
       /**
-       * This method updates quantity of specific ingredient with new quantity, after using that ingredient to make a sandwich. 
+       * ---------------------------------------------------------------------------------
+       * refactored getIngredient()
+       * start from here
+       */
+      public Ingredient getIngredient(String ingredientName){
+     	 double price = 0 ;
+     	 int quantityInInventory = 0;
+     	 String ingredientType = "";
+     	  try {
+               Statement st = con.createStatement();
+               String querry_2 = "SELECT price, quantity, ingredient_type FROM INGREDIENTS WHERE ingredient_name = '"+ingredientName+"';"; // this querry fetches price, quantity, ingredient type.
+               ResultSet rs2 = st.executeQuery(querry_2);
+               if(rs2.next()) { 
+             	  price = rs2.getDouble("price");
+             	  quantityInInventory = rs2.getInt("quantity");
+             	 ingredientType = rs2.getString("ingredient_type");
+               }
+               updateQuantity(ingredientName, quantityInInventory-1);//calls a method to update the database with new quantity
+                //This generates ingredient object according to ingredientName and uses the data fetched from the database. 
+              return getIngredientObj(ingredientName, price, ingredientType);
+             
+     	  }
+           catch(Exception e) {
+               e.printStackTrace();
+               System.out.println("Failed to search or error connecting database");
+           }
+         return null;// Handle exception here
+      
+      }
+      
+      /**
+       * This will help generates Ingredient Object for  getIngredient() method.
+       * It is a helper method which generates Ingredient Object based on the type 
+       * by calling other helper methods which further
+       * generates specific ingredient objects like beef , chicken, etc.
+       * @param ingredientName
+       * @param price
+       * @param type
+       * @return Ingredient
+       */
+      private Ingredient getIngredientObj(String ingredientName, double price, String type) {
+    	  if(type.equals("Bread")) {
+    		  return getBreadIngredient(ingredientName,price, type);
+    	  } else if(type.equals("Meat")) {
+    		  return getMeatIngredient(ingredientName,price, type);
+    	  } else if(type.equals("Vegetable")) {
+    		  return getVegetableIngredient(ingredientName,price, type);
+    	  } else if(type.equals("Sauce")) {
+    		  return getSauceIngredient(ingredientName,price, type);
+    	  } else if(type.equals("Cheese")) {
+    		  return getCheeseIngredient(ingredientName,price, type);
+    	  } else {
+    		  return null;
+    	  }
+      }
+      
+      /**
+       * It is a helper function that creates a bread ingredient object
+       * @param ingredientName
+       * @param price
+       * @param type
+       * @return bread ingredient
+       */
+      private Ingredient getBreadIngredient(String ingredientName, double price, String type) {
+    	  return new Bread(ingredientName, price, type);
+      }
+      
+      /**
+       *  It is a helper function that creates a meat ingredient object
+       * @param ingredientName
+       * @param price
+       * @param type
+       * @return meat ingredient
+       */
+      private Ingredient getMeatIngredient(String ingredientName, double price, String type) {
+    	  if (ingredientName.equals("Beef")) {
+        	  return new Beef(ingredientName, price, type);
+          } else if (ingredientName.equals("Chicken")) {
+        	  return new Chicken(ingredientName, price, type);
+          } else if (ingredientName.equals("Meatball")) {
+        	  return new Meatball(ingredientName, price, type);
+          } else {
+        	  return null;
+          }
+      }
+      
+      /**
+       *  It is a helper function that creates a vegetable ingredient object
+       * @param ingredientName
+       * @param price
+       * @param type
+       * @return vegetable ingredient
+       */
+      private Ingredient getVegetableIngredient(String ingredientName, double price, String type) {
+    	  if (ingredientName.equals("Lettuce")) {
+        	  return new Lettuce(ingredientName, price, type);
+          } else if (ingredientName.equals("Tomato")) {
+        	  return new Tomato(ingredientName, price, type);
+          } else if (ingredientName.equals("Veggiepatty")) {
+        	  return new Veggiepatty(ingredientName, price, type);
+          } else {
+        	  return null;
+          }
+      }
+      
+      /**
+       *  It is a helper function that creates a sauce ingredient object
+       * @param ingredientName
+       * @param price
+       * @param type
+       * @return sauce ingredient
+       */
+      private Ingredient getSauceIngredient(String ingredientName, double price, String type) {
+    	  if (ingredientName.equals("Ketchup")) {
+        	  return new Ketchup(ingredientName, price, type);
+          } else if (ingredientName.equals("Mayo")) {
+        	  return new Mayonnaise(ingredientName, price, type);
+          } else {
+        	  return null;
+          }
+      }
+      
+      /**
+       *  It is a helper function that creates a cheese ingredient object
+       * @param ingredientName
+       * @param price
+       * @param type
+       * @return cheese ingredient
+       */
+      private Ingredient getCheeseIngredient(String ingredientName, double price, String type) {
+    	  if (ingredientName.equals("American")) { 
+        	  return new AmericanCheese(ingredientName, price, type);
+          } else if (ingredientName.equals("Cheddar")) {
+        	  return new Cheddar(ingredientName, price, type);
+          }  else {
+        	  return null;
+          }
+      }
+      
+      /**
+       * refactored getIngredient()
+       * ends here
+       * ----------------------------------------------------------------
+       */
+      
+      
+      /**
+       * This helper method that updates quantity of specific ingredient with new quantity, after using that ingredient to make a sandwich. 
        * @param ingredient
        * @param newQuantity
        */
