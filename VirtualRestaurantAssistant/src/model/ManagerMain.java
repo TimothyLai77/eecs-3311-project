@@ -25,6 +25,11 @@ public class ManagerMain {
 		}
 	}
 	
+	// Constructor to connect to test database
+	public ManagerMain(Connection c) {
+		con = c;
+	}
+	 
 	//Establish connection
 	public static Connection getConnection() throws Exception{
 			try {
