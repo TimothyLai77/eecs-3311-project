@@ -28,4 +28,8 @@ public class ManagerUIController {
 	public String updatePrice(String name, double price) throws SQLException {
 		return mg.updatePrice(name, price);
 	}
+	// Views the current inventory
+	public String viewInventory() throws SQLException{
+		return mg.viewInventory();
+	}
 }
