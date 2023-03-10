@@ -14,7 +14,7 @@ Repo for EECS3311 W23 Project
 [Updated Iteration 2 Stories and Developer Tasks](https://raw.githubusercontent.com/TimothyLai77/eecs-3311-project/main/Documentation/Iteration%202/iteration2_updated_stories_with_client_feature.png) 
 
 ### Running the App
-* Download the VirtualRestaurantAssistant.jar from the root folder
+* Download the `VirtualRestaurantAssistant.jar` from the root folder
 * Setup the SQL Database (see below)
 * Run the .jar file
    * Note: At least Java 18 might be needed to run the file.
