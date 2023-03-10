@@ -17,6 +17,7 @@ Repo for EECS3311 W23 Project
 * Download the VirtualRestaurantAssistant.jar from the root folder
 * Setup the SQL Database (see below)
 * Run the .jar file
+   * Note: At least Java 18 might be needed to run the file.
 
 
 
