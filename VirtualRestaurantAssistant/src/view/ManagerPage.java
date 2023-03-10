@@ -38,6 +38,9 @@ public class ManagerPage extends JFrame implements ActionListener {
 	//Message Label
 	private JLabel managerMessageLabel;
 	
+	//Inventory Label
+	private JTextArea inventoryShowcaseLabel;
+	
 	// Panel and Component references
 	private JComboBox<String> ingredientDropdown; //Dropdown list of names
 	
@@ -331,6 +334,7 @@ public class ManagerPage extends JFrame implements ActionListener {
 					default:
 						break;
 					}
+					updateInventoryDisplay();
 					clearSelections();
 				} catch(SQLException e1) {
 					managerMessageLabel.setText("Please FILL the required fields.");
@@ -353,6 +357,39 @@ public class ManagerPage extends JFrame implements ActionListener {
 		backBtn.setFont(new Font("Tahoma", Font.BOLD, 13));
 		backBtn.setBorder(null);
 		backBtn.setBackground(Color.BLACK);
+		
+		inventoryShowcaseLabel = new JTextArea("Beef                           meat                           62                             $99.00                          \nBread                          bread                          69                             $99.00                          \nChicken                        meat                           4                              $2.00                           \n");
+		inventoryShowcaseLabel.setEditable(false);
+//		inventoryShowcaseLabel.setBounds(200, 387, 595, 68);
+		JScrollPane scrollPane = new JScrollPane(inventoryShowcaseLabel);
+		scrollPane.setBounds(200, 403, 595, 86);
+
+		contentPane.add(scrollPane);
+		
+		JLabel showcaseLabel = new JLabel("Current Inventory:");
+		showcaseLabel.setFont(new Font("Tahoma", Font.BOLD, 11));
+		showcaseLabel.setBounds(26, 386, 160, 14);
+		contentPane.add(showcaseLabel);
+		
+		JLabel invName = new JLabel("Name:");
+		invName.setFont(new Font("Tahoma", Font.BOLD, 11));
+		invName.setBounds(200, 385, 139, 14);
+		contentPane.add(invName);
+		
+		JLabel lblIngredientType = new JLabel("Type:");
+		lblIngredientType.setFont(new Font("Tahoma", Font.BOLD, 11));
+		lblIngredientType.setBounds(312, 385, 111, 14);
+		contentPane.add(lblIngredientType);
+		
+		JLabel lblIngredientQty = new JLabel("Qty:");
+		lblIngredientQty.setFont(new Font("Tahoma", Font.BOLD, 11));
+		lblIngredientQty.setBounds(433, 385, 71, 14);
+		contentPane.add(lblIngredientQty);
+		
+		JLabel lblPrice = new JLabel("Price:");
+		lblPrice.setFont(new Font("Tahoma", Font.BOLD, 11));
+		lblPrice.setBounds(528, 385, 111, 14);
+		contentPane.add(lblPrice);
 		backBtn.addActionListener(new ActionListener() {
 			
 			// Trigger on back button.
@@ -371,7 +408,13 @@ public class ManagerPage extends JFrame implements ActionListener {
 			}
 		});
 		
-
+		try {
+			updateInventoryDisplay();
+		} catch (SQLException e2) {
+			managerMessageLabel.setText("Inventory is empty");
+			e2.printStackTrace();
+		}
+		
 		setLocationRelativeTo(null);
 	}
 	
@@ -418,6 +461,10 @@ public class ManagerPage extends JFrame implements ActionListener {
 		selectedName = (String) ingredientDropdown.getSelectedItem();
 		selectedPrice = Double.parseDouble(priceField.getText());
 		managerMessageLabel.setText(controller.updatePrice(selectedName, selectedPrice));
+	}
+	//UPDATE INVENTORY DISPLAY
+	private void updateInventoryDisplay() throws SQLException {
+		inventoryShowcaseLabel.setText(controller.viewInventory());
 	}
 	
 	@Override
@@ -507,6 +554,4 @@ public class ManagerPage extends JFrame implements ActionListener {
 			}
 		}
 	}
-	
-	
 }
