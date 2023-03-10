@@ -18,6 +18,7 @@ Repo for EECS3311 W23 Project
 * Setup the SQL Database (see below)
 * Run the .jar file
    * Note: At least Java 18 might be needed to run the file.
+   * Also needs JUnit5 for the tests
 
 
 
