@@ -4,11 +4,15 @@ Repo for EECS3311 W23 Project
 
 ## Iteration 2
 ### MySQL database setup
-There are two sql scripts provided, both will create the database the app will use and create the tables. databaseSetupWithIngredients.sql will populate the tables with data, so the user can just order a sandwich. The other script will only make the tables, and the user must go to the manager page (bottom right of home screen)  within the app to add ingredients. 
+There are two sql scripts provided, both will create the database the app will use and create the tables. 
 
-* [SQL Script No Ingredients](https://raw.githubusercontent.com/TimothyLai77/eecs-3311-project/main/databaseSetupNoIngredients.sql)*
+databaseSetupProduction.sql will populate the tables with data, so the user can just order a sandwich. To manually add ingredients, run the above script without the `insert into` queries, then go to the manager page (bottom right of home screen)  within the app to add ingredients. 
 
-* [SQL Script With Ingredients](https://raw.githubusercontent.com/TimothyLai77/eecs-3311-project/main/databaseSetupWithIngredients.sql)*
+The other script (databaseSetupTesting.sql) is used for integration testing. To set up database, check the comment section within the script for credentials. 
+
+* [SQL Script Production](https://raw.githubusercontent.com/TimothyLai77/eecs-3311-project/main/databaseSetupProduction.sql)*
+
+* [SQL Script Testing](https://raw.githubusercontent.com/TimothyLai77/eecs-3311-project/main/databaseSetupTesting.sql)*
 
 The app is configured to use the database with the following credentials:
 * Username: `root`
