@@ -1,3 +1,12 @@
+/*This is the script for the production version of the app (actual database instance).
+Create your database using this script and the credentials below:
+
+String driver = "com.mysql.cj.jdbc.Driver";
+String url = "jdbc:mysql://127.0.0.1:3306/3311project";
+String username = "root";
+String password = "root1234";
+*/
+
 CREATE DATABASE 3311project;
 USE 3311project;
 

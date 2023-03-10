@@ -1,5 +1,14 @@
-CREATE DATABASE 3311project;
-USE 3311project;
+/*This is the script for integration testing of database.
+Create your testing database using this script and the credentials below:
+
+String driver = "com.mysql.cj.jdbc.Driver";
+String url = "jdbc:mysql://127.0.0.1:3306/3311test";
+String username = "root";
+String password = "root1234";
+*/
+
+CREATE DATABASE 3311test;
+USE 3311test;
 
 create table INGREDIENTS (
     ingredient_name        VARCHAR(40)        PRIMARY KEY     NOT NULL,
