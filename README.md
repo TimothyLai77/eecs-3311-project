@@ -3,9 +3,6 @@ Repo for EECS3311 W23 Project
  [Wiki](https://github.com/TimothyLai77/eecs-3311-project/wiki)
 
 ## Iteration 2
-
-
-## Iteration 2
 ### Documentation
 
 [System Architecture Sketch](https://raw.githubusercontent.com/TimothyLai77/eecs-3311-project/main/Documentation/Iteration%202/updated%20sas.png).
