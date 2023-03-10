@@ -60,8 +60,10 @@ public class DBTests {
 		if(con != null) {
 			Statement st1 = con.createStatement();
 			Statement st2 = con.createStatement();
+			Statement st3 = con.createStatement();
 			st1.executeUpdate("delete from orders;");
 			st2.executeUpdate("delete from favourites;");
+			st3.executeUpdate("delete from INGREDIENTS;");
 		}
 	}
 }
