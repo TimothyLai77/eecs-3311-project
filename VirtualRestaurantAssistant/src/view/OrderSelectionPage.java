@@ -9,6 +9,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import controller.ManagerUIController;
 import controller.OrderUIController;
 import model.ManagerSales;
 
@@ -41,8 +42,10 @@ public class OrderSelectionPage extends JFrame {
 	private static final long serialVersionUID = 1L;
 
 	// Content Pane to house all elements of this page.
-	private JPanel contentPane;
 
+	private JPanel panel;
+	private JPanel contentPane;
+	
 	//Frame coordinates, fetched at runtime.
 	private int mouseX, mouseY;
 
@@ -54,6 +57,12 @@ public class OrderSelectionPage extends JFrame {
 	//Sandwich panel - holding all the buttons
 	private static JPanel sandwichPanel;
 	private static JPanel toppingsCheckoutPanel;
+	
+	//Panel logo
+	private JLabel pageLabel;
+	
+	//Cart Instance
+	private Cart cart;
 	
 	//Static list to hold sandwich types --- THIS IS TEMPORARY SINCE
 	//										 IT SHOULD EVENTUALLY BE 
@@ -67,21 +76,177 @@ public class OrderSelectionPage extends JFrame {
 	 * Page constructor for the Order selection.
 	 */
 	public OrderSelectionPage() {
-		
+		initializeBaseVariables(); // Initializes the sandwich/toppings arrays.
+		setupOrderSelectionPageBase(); // Sets up required base components.
+		createQuantityComponents(); //Sets up to get QTY per order
+		renderAllButtons(); //Renders all choice buttons
+		attachActionListeners(); //Runs actionlistener adders
+		createNextButton(); //To Toppings Panel
+		setupCart(); //Setup for base Cart
+		createPlaceOrderButton();//Placing Order flow
+		createBackButton();//To previous Panel
+	}
+	
+	//Calls all required methods to setup the BASE Components required
+	//for the OrderSelectionPage.
+	private void setupOrderSelectionPageBase() {
+		setupFrame();
+		setupContentPane();
+		setupToolbar(); 
+		createPanel(); 
+		createCloseButton();
+		createMinButton(); 
+		createOrderdetailPanel();		
+		createSandwichStationLabel();
+		createSubtitle();
+		createSandwichPanel();
+		createToppingsPanel();
+		createToppingIcons();
+		createToppingTypePanels();
+		createChooseBaseLabel();
+		createErrorMessageLabels(); 
+	}
+	
+	//Initialize static variables and arrays to be used in this page.
+	private void initializeBaseVariables() {
 		//This should fetch arrayList of base sandwiches.
 		sandwichTypes = new String[]{"Chicken", "Beef", "Meatball", "Veggiepatty"};
-		
+				
 		// 2D array in the form Toppings[Vegetables[] , Sauces[] , Cheeses[] ]
 		toppingTypes = new String[][] {{"Tomato-v", "Lettuce-v"},{"Ketchup-s", "Mayo-s"},{"Cheddar-c", "American-c"} };
+		
 		//Reset the Current Order state
 		itemNum = 1;
+	}
+	
+	/*
+	 * Go back to previous page - in this case the APP HOME PAGE 
+	 * and styling for the button.
+	 */
+	private void createBackButton() {
+		JButton backBtn = new JButton("");
+		backBtn.setFont(new Font("Serif", Font.PLAIN, 19));
+		backBtn.setBorderPainted(false);
+		backBtn.setBackground(new Color(255, 255, 255));
+		backBtn.setBounds(14, 395, 80, 40);
+		backBtn.setIcon(new ImageIcon(ImageImports.imgBack));
+		contentPane.add(backBtn);
+		backBtn.addActionListener(new ActionListener() {
+			// Trigger on back button.
+			public void actionPerformed(ActionEvent e) {
+				promptUserToGoBack();
+			}
+		});
+	}
+	
+	//BackBtnHelper - Prompts the user with the confirmation to go back
+	private void promptUserToGoBack() {
+		if(toppingsCheckoutPanel.isVisible()) {
+			sandwichPanel.setVisible(true);
+			toppingsCheckoutPanel.setVisible(false);
+			pageLabel.setText("Sandwich Station");
+			return;
+		}
 		
+		// Prompts USER to confirm going back, as this will lose current CART.
+		int confirmed = JOptionPane.showConfirmDialog(null,
+				"Are you sure you want to go back, current order will be lost...", "Going back to home page",
+				JOptionPane.YES_NO_OPTION);
+		
+		//If User confirms then will be taken back to HOMPAGE
+		if (confirmed == JOptionPane.YES_OPTION) {
+			new HomePage().setVisible(true);
+			dispose(); //Kill current frame
+		}
+	}
+	
+	/**
+	 * This method renders all the sandwich buttons dynamically
+	 * using the list of base sandwiches provided. This also dynamically 
+	 * resizes them and sorts them to adjust to the quantity 
+	 * while keeping simplistic design.
+	 * @throws SQLException 
+	 * */
+	private void renderAllButtons() {
+		renderSandwichButtons(); //Render Base sandwich buttons
+		renderToppingButtons(); //Render topping buttons
+	}
+	private void attachActionListeners() {
+		attachActionListenersToSandwiches(); //Add action listener to Sandwich Buttons
+		attachActionListenersToToppings(); //Add action Listener to Topping Buttons
+	}
+	private void renderSandwichButtons() {
+		int yVal = -10, xVal = 0, btnWidth = 0; // X,Y,Width of button to render
+		boolean secCol = false; // Checks Y axis overflow, to add second column if needed
+		
+		//Adjusts dimensions according to number of buttons
+		if(sandwichTypes.length <= 4) { // If there are less buttons, render them center.
+			xVal = (sandwichPanel.getWidth()/2) - 105; //Sets X
+			btnWidth = 200; // Sets Button width
+		} else { // If there are more buttons, render them to 2 columns
+			xVal = 30; // Sets X
+			btnWidth = 150; // Sets width
+		}
+		
+		String favorite = "";//Setting the favorite
+		try { favorite = findPopular();} 
+		catch (SQLException e) {e.printStackTrace();}
+		sandwichButtonRenderLoop(favorite, xVal, yVal, secCol, btnWidth);
+	}
+	
+	//RenderSandwichButtonsHelper - Loop Render
+	private void sandwichButtonRenderLoop(String favorite, int xVal, int yVal, boolean secCol, int btnWidth) {
+		//Iterate over the base sandwich list, creating buttons from them
+				//with the dimensions decided above.
+				for(int i = 0 ; i < sandwichTypes.length; i++) {
+					if(yVal >= 175 && !secCol) {
+						secCol = true;
+						yVal = -10;
+						xVal = sandwichPanel.getWidth()-(btnWidth+30);
+					}
+					
+					// If already in the second column and Y is too large, dont render more.
+					else if (yVal >= 175 && secCol) { 
+						break;
+					}
+					
+					createSandwichButton(i, favorite, xVal, yVal+=50, btnWidth);
+					
+				}
+	}
+	
+	//RenderSandwichButtonHelper - Create button
+	private void createSandwichButton(int i ,String favorite, int xVal, int yVal, int btnWidth) {
+		//Create button flow.
+		JButton newBtn = null;
+		if(favorite.equals(sandwichTypes[i])) {
+			newBtn = new JButton(""+ sandwichTypes[i] + " (popular)");
+		}else {
+			newBtn = new JButton(""+ sandwichTypes[i]);
+		}
+		newBtn.setName(""+ (sandwichTypes[i]));
+		newBtn.setBounds(xVal, yVal, btnWidth, 35);
+		newBtn.setBackground(Color.WHITE);
+		newBtn.setBorder(null);
+		
+		sandwichPanel.add(newBtn);
+	}
+	
+	//  PAGE RENDERING METHODS to HELP SETUP 
+	
+	//Setting up the JFrame
+	private void setupFrame() {
 		// Frame details setup.
 		setIconImage(ImageImports.frameLogo);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setUndecorated(true);
 		setBounds(100, 100, 750, 450);
-		
+		// Defaulting position to center
+		setLocationRelativeTo(null);
+	}
+	
+	//Setting the contentpane
+	private void setupContentPane() {
 		//ContentPane details setup.
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.DARK_GRAY);
@@ -90,68 +255,85 @@ public class OrderSelectionPage extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
+	}
+
+	//Create backpanel (ORANGE)
+	private void createPanel() {
+		// Orange Panel for styling
+		panel = new JPanel();
+		panel.setBackground(Color.ORANGE);
+		panel.setBounds(481, 0, 269, 450);
+		contentPane.add(panel);
+		panel.setLayout(null);		
+	}
+	
+	//Creating functioning draggable toolbar
+	private void setupToolbar() {
 		// Custom Draggable Toolbar
 		JPanel dragBar = new JPanel();
-		dragBar.addMouseMotionListener(new MouseMotionAdapter() {
-			
-			// Changes the frame location
-			@Override
-			public void mouseDragged(MouseEvent e) {
-				setLocation(getX() + e.getX() - mouseX, getY() + e.getY() - mouseY);
-			}
-		});
-		dragBar.addMouseListener(new MouseAdapter() {
-			
-			// Gets current X,Y Coordinates of the Frame
-			@Override
-			public void mousePressed(MouseEvent e) {
-				mouseX = e.getX();
-				mouseY = e.getY();
-			}
-		});
-		
+		addDrag(dragBar);
 		// Drag toolbar customization
 		dragBar.setBackground(Color.BLACK);
 		dragBar.setBorder(null);
 		dragBar.setBounds(0, 0, 645, 20);
 		contentPane.add(dragBar);
-
-		// Orange Panel for styling
-		JPanel panel = new JPanel();
-		panel.setBackground(Color.ORANGE);
-		panel.setBounds(481, 0, 269, 450);
-		contentPane.add(panel);
-		panel.setLayout(null);
-
+	}
+	
+	// DragbarHelper - add drag to toolbar
+	private void addDrag(JPanel dragBar) {
+		dragBar.addMouseMotionListener(new MouseMotionAdapter() {
+			// Changes the frame location
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				setLocation(getX() + e.getX() - mouseX, getY() + e.getY() - mouseY);
+				}
+			});
+			dragBar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				mouseX = e.getX(); mouseY = e.getY();
+			}
+		});
+	}
+	
+	//Create custom close button
+	private void createCloseButton() {
 		// Custom Close Button
 		JButton closeBtn = new JButton("E X I T");
 		closeBtn.addActionListener(new ActionListener() {
-			
+					
 			// This event trigger closes the Application.
 			public void actionPerformed(ActionEvent e) {
+				exitApp();	
+			}});
 				
-				//Confirms the User to close the App.
-				int confirmed = JOptionPane.showConfirmDialog(null, "Are you sure you want to exit the program?","Exit Program", JOptionPane.YES_NO_OPTION);
-				
-				// If Confirmed then it will close the App, if not
-				// it will close the dialogue.
-				if (confirmed == JOptionPane.YES_OPTION) {
-					dispose();
-				}
-			}
-		});
-		
-		//Close button styling
-		closeBtn.setBorder(null);
-		closeBtn.setForeground(Color.WHITE);
-		closeBtn.setBackground(Color.BLACK);
-		closeBtn.setBounds(207, 0, 62, 20);
-		panel.add(closeBtn);
+			//Close button styling
+			closeBtn.setBorder(null);
+			closeBtn.setForeground(Color.WHITE);
+			closeBtn.setBackground(Color.BLACK);
+			closeBtn.setBounds(207, 0, 62, 20);
+			panel.add(closeBtn);
+
+	}
+	
+	//Helper frame exit method
+	private void exitApp() {
+		//Confirms the User to close the App.
+		int confirmed = JOptionPane.showConfirmDialog(null, "Are you sure you want to exit the program?","Exit Program", JOptionPane.YES_NO_OPTION);
+					
+		// If Confirmed then it will close the App, if not
+		// it will close the dialogue.
+		if (confirmed == JOptionPane.YES_OPTION) {
+			dispose();
+		}
+	}
+	
+	//Create custom minimize button
+	private void createMinButton() {
 
 		// Custom Minimize Screen Button
 		JButton minBtn = new JButton("_");
 		minBtn.addActionListener(new ActionListener() {
-			
 			// Trigger to minimize the application
 			public void actionPerformed(ActionEvent e) {
 				setState(JFrame.ICONIFIED);
@@ -164,26 +346,35 @@ public class OrderSelectionPage extends JFrame {
 		minBtn.setBackground(Color.BLACK);
 		minBtn.setBounds(161, 0, 46, 20);
 		panel.add(minBtn);
+	}
 
+	// Creates order detail panel
+	private void createOrderdetailPanel() {
 		// VISUAL CART - UPDATES AS NEW ITEMS ARE ADDED
 		orderDetailPanel = new JPanel();
 		orderDetailPanel.setBackground(Color.DARK_GRAY);
 		orderDetailPanel.setLayout(new BoxLayout(orderDetailPanel, BoxLayout.Y_AXIS));
 		orderDetailPanel.setBorder(new EmptyBorder(20, 15, 20, 15));
-		
+				
 		// The panel above is added to this to scroll when overflowing.
 		JScrollPane scrollPane = new JScrollPane(orderDetailPanel);
 		scrollPane.setBounds(20, 70, 230, 315);
 		panel.add(scrollPane);
-
+	}
+	
+	//Create panel label for sandwich station
+	private void createSandwichStationLabel(){
 		// Screen title "customization corner"
-		JLabel pageLabel = new JLabel("Sandwich Station");
+		pageLabel = new JLabel("Sandwich Station");
 		pageLabel.setBounds(104, 25, 265, 33);
 		pageLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		pageLabel.setFont(new Font("Serif", Font.BOLD, 27));
 		pageLabel.setForeground(Color.ORANGE);
 		contentPane.add(pageLabel);
-
+	}
+	
+	//Create page subtitle
+	private void createSubtitle() {
 		// Sub-title / Catchphrase
 		JLabel makerTitle_1 = new JLabel("Ordering made simple");
 		makerTitle_1.setBounds(220, 400, 250, 33);
@@ -191,16 +382,21 @@ public class OrderSelectionPage extends JFrame {
 		makerTitle_1.setForeground(Color.ORANGE);
 		makerTitle_1.setFont(new Font("Serif", Font.ITALIC, 23));
 		contentPane.add(makerTitle_1);
-
+	}
+	
+	//Generates Sanwiches panel
+	private void createSandwichPanel() {
 		// Panel housing sandwich selection
 		sandwichPanel = new JPanel();
 		sandwichPanel.setBackground(new Color(0, 0, 0));
 		sandwichPanel.setBounds(20, 70, 435, 315);
 		sandwichPanel.setBorder(null);
 		sandwichPanel.setLayout(null);
-//		sandwichPanel.setVisible(false);
 		contentPane.add(sandwichPanel);
-
+	}
+	
+	//Generates Toppings panel
+	private void createToppingsPanel() {
 		// Panel housing ingredient selection
 		toppingsCheckoutPanel = new JPanel();
 		toppingsCheckoutPanel.setBackground(new Color(0, 0, 0));
@@ -209,23 +405,29 @@ public class OrderSelectionPage extends JFrame {
 		toppingsCheckoutPanel.setLayout(null);
 		toppingsCheckoutPanel.setVisible(false);
 		contentPane.add(toppingsCheckoutPanel);
-		
+	}
+	
+	//Creates icons for the toppings
+	private void createToppingIcons() {
 		//TOPPING ICONS AND BUTTONS
 		JLabel vegiIcon = new JLabel("");
 		vegiIcon.setBounds(10, 50, 40, 40);
 		vegiIcon.setIcon(new ImageIcon(ImageImports.imgVegi));
 		toppingsCheckoutPanel.add(vegiIcon);
-		
+				
 		JLabel saucesIcon = new JLabel("");
 		saucesIcon.setBounds(10, 125, 40, 40);
 		saucesIcon.setIcon(new ImageIcon(ImageImports.imgSauces));
 		toppingsCheckoutPanel.add(saucesIcon);
-		
+				
 		JLabel cheeseIcon = new JLabel("");
 		cheeseIcon.setBounds(10, 200, 40, 40);
 		cheeseIcon.setIcon(new ImageIcon(ImageImports.imgCheeses));
 		toppingsCheckoutPanel.add(cheeseIcon);
-		
+	}
+	
+	//Creates each topping type's panel
+	private void createToppingTypePanels() {
 		veggiesPanel = new JPanel();
 		veggiesPanel.setBackground(Color.black);
 		veggiesPanel.setBounds(80, 55, 310, 30);
@@ -243,15 +445,11 @@ public class OrderSelectionPage extends JFrame {
 		cheesePanel.setBounds(80, 205, 310, 30);
 		toppingsCheckoutPanel.add(cheesePanel);
 		cheesePanel.setLayout(new GridLayout(1, 0, 30, 0));
-		/*
-		 * 
-		 * ORDERING MANAGEMENT -- BELOW
-		 * 
-		 */
-
-		/*
-		 * Order quantity spinner component
-		 */
+	}
+	
+	// Creates Order quantity spinner component and label
+	private void createQuantityComponents() {
+		
 		JLabel qtyLabel = new JLabel("Qty :");
 		qtyLabel.setFont(new Font("Times New Roman", Font.PLAIN, 13));
 		qtyLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -267,7 +465,10 @@ public class OrderSelectionPage extends JFrame {
 		orderQuantity.setBackground(Color.ORANGE);
 		orderQuantity.setBounds(108, 269, 46, 35);
 		toppingsCheckoutPanel.add(orderQuantity);
-
+	}
+	
+	//Create error message labels
+	private void createErrorMessageLabels() {
 		// DISPLAY ERROR MESSAGE BACK TO USER --- NOT TECHNICAL ERROR.
 		errorMessageLbl = new JLabel("");
 		errorMessageLbl.setFont(new Font("Tahoma", Font.BOLD, 14));
@@ -275,23 +476,17 @@ public class OrderSelectionPage extends JFrame {
 		errorMessageLbl.setForeground(new Color(255, 0, 0));
 		errorMessageLbl.setBounds(116, 240, 201, 20);
 		sandwichPanel.add(errorMessageLbl);
-		
+				
 		ingredientsError = new JLabel("");
 		ingredientsError.setFont(new Font("Tahoma", Font.BOLD, 12));
 		ingredientsError.setHorizontalAlignment(SwingConstants.CENTER);
 		ingredientsError.setForeground(new Color(255, 0, 0));
 		ingredientsError.setBounds(116, 240, 201, 20);
 		toppingsCheckoutPanel.add(ingredientsError);
-
-		/*
-		 * Renders all the sandwich buttons using the:
-		 * base sandwich list.
-		 */
-		renderSandwichButtons();
-		renderToppingButtons();
-		
-		//Dynamic button action listener method - efficient button click tracking,
-		//and minimizes duplicate code.
+	}
+	
+	//Attach actionlisteners to the rendered sandwich buttons
+	private void attachActionListenersToSandwiches() {
 		for (Component component : sandwichPanel.getComponents()) {
 		    if (component instanceof JButton) {
 		        JButton button = (JButton) component;
@@ -307,6 +502,10 @@ public class OrderSelectionPage extends JFrame {
 		        });
 		    }
 		}
+	}
+	
+	//Attach actionlisteners to the topping buttons
+	private void attachActionListenersToToppings() {
 		for(int i = 0 ; i < toppingTypes.length ; i++) {
 			
 			JPanel jp = null;
@@ -314,69 +513,87 @@ public class OrderSelectionPage extends JFrame {
 			else if (i == 1) {jp = saucesPanel;}
 			else if (i == 2) {jp = cheesePanel;}
 			else break;
+			helperAddingToppingActionListeners(jp);
 			
-			for(Component component: jp.getComponents()) {
-				if(component instanceof JButton) {
-					JButton button = (JButton) component;
-					button.addActionListener(new ActionListener() {
-						@Override
-						public void actionPerformed(ActionEvent e) {	
-							JButton clickedButton = (JButton) e.getSource();
-							
-							//Call selectTopping
-							selectTopping(clickedButton.getName());
-						}
-					});
-					
-				}
+		}
+	}
+	
+	//Helper method for above actionlistenerAdder
+	private void helperAddingToppingActionListeners(JPanel jp) {
+		for(Component component: jp.getComponents()) {
+			if(component instanceof JButton) {
+				JButton button = (JButton) component;
+				button.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {	
+						JButton clickedButton = (JButton) e.getSource();
+						selectTopping(clickedButton.getName()); //Call selectTopping
+					}
+				});
 			}
 		}
-		
-		
-		/*
-		 * 
-		 * Cart system to house temporary entities of the sandwiches being added, for
-		 * the front-end.
-		 */
-
-		// Initalise a new Cart Instance
-		Cart cart = new Cart();
-		
-		
-		/**
-		 * Next pane, for ingredient topping selection.
-		 */
-		
+	}
+	
+	//Creates next button to go to the toppings page
+	private void createNextButton() {
 		// Place Order Button- ADDING TO CART AND QUANTITY and its styling
 		JButton nextButton = new JButton("To Toppings >");
 		nextButton.setName("addToCart");
-//		nextButton.setIcon(new ImageIcon(ImageImports.imgToToppings));
 		nextButton.setFont(new Font("Serif", Font.PLAIN, 19));
 		nextButton.setBorderPainted(false);
 		nextButton.setBackground(Color.ORANGE);
 		nextButton.setBounds(130, 267, 170, 33);
 		sandwichPanel.add(nextButton);
-		
+		nextButton.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+			nextButtonHelperMethod();
+			}
+		});
+	}
+	
+	//Helper for the abve methd to go through dialogue
+	private void nextButtonHelperMethod() {
+		// Checks if a sandwich is selection otherwise return error statement.
+		if (getSelection() == null) {
+			errorMessageLbl.setText("Please select an Item !");
+			return;
+		}
+		toppingsCheckoutPanel.setVisible(true);
+		sandwichPanel.setVisible(false);
+		pageLabel.setText("Topping Trail");
+	
+	}
+	
+	//Creates Label for "Choose base sandwich"
+	private void createChooseBaseLabel() {
 		JLabel chooseBaseLbl = new JLabel("Choose a base sandwich");
 		chooseBaseLbl.setHorizontalAlignment(SwingConstants.CENTER);
 		chooseBaseLbl.setForeground(Color.ORANGE);
 		chooseBaseLbl.setFont(new Font("Serif", Font.BOLD, 15));
 		chooseBaseLbl.setBounds(102, 11, 231, 20);
-		sandwichPanel.add(chooseBaseLbl);
-		nextButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-
-				// Checks if a sandwich is selection otherwise return error statement.
-				if (getSelection() == null) {
-					errorMessageLbl.setText("Please select an Item !");
-					return;
-				}
-				toppingsCheckoutPanel.setVisible(true);
-				sandwichPanel.setVisible(false);
-				pageLabel.setText("Topping Trail");
-			}
-		});
-
+		sandwichPanel.add(chooseBaseLbl);		
+	}
+	
+	/*
+	 * Cart system to house temporary entities of the sandwiches being added, for
+	 * the front-end.
+	 */
+	private void setupCart() {
+		cart = new Cart();// Initalise a new Cart Instance
+		createVisualCartComponents();//Creating the Cart and its components
+		createToppingTextLabel();//Create topping labels
+	}
+	
+	//CartHelper - Creates Cart visual Components
+	private void createVisualCartComponents() {
+				
+		createCartLabel(); //Creates the title for the cart
+		createCartButton(); //Creates the button and action listener
+		
+	}
+	
+	//CartHelper - Creates Cart label
+	private void createCartLabel() {
 		// Cart Label
 		JLabel cartLabel = new JLabel("Cart");
 		cartLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -384,8 +601,10 @@ public class OrderSelectionPage extends JFrame {
 		cartLabel.setFont(new Font("Serif", Font.BOLD, 27));
 		cartLabel.setBounds(4, 31, 265, 33);
 		panel.add(cartLabel);
-		
-
+	}
+	
+	//CartHelper - creates Cart button
+	private void createCartButton() {
 		// Place Order Button- ADDING TO CART AND QUANTITY and its styling
 		JButton addToCartBtn = new JButton("Add to Cart");
 		addToCartBtn.setName("addToCart");
@@ -394,59 +613,70 @@ public class OrderSelectionPage extends JFrame {
 		addToCartBtn.setBackground(Color.ORANGE);
 		addToCartBtn.setBounds(177, 268, 140, 35);
 		toppingsCheckoutPanel.add(addToCartBtn);
+		addToCartBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				addToCartFlow();
+				
+				}
+			});
+	}
+	
+	//CartHelper - add helper
+	private void addToCartFlow() {
+		// Create an CartItem entity -- temporary entity to store items into the cart,
+		// then eventually taken to generate the sandwiches.
+		ArrayList<String> toppings = new ArrayList<>();
+		toppings = getSelectedToppings();
+		CartItem newItem = new CartItem(getSelection(), toppings, (int) orderQuantity.getValue());
+		// Adding this temp to the cart
+		cart.add(newItem);
+		// Dynamic rendering of the label into the cart
+		addLabelToCart(newItem);
+				
+		//Ask user for another addition
+		promptAnotheroneDialogue();
+	}
+	
+	//CartHelper - create another sandwich dialogue
+	private void promptAnotheroneDialogue() {
+		// Prompt user if they need a RECEIPT
+		int anotherOne = JOptionPane.showConfirmDialog(null, "Would you like to add another?", "Never enough sandwiches!",
+				JOptionPane.YES_NO_OPTION);
+
+		// Reset all selections, ready for the next CartItem
+		clearAllSelections();
+		
+		if(anotherOne == JOptionPane.YES_NO_OPTION) {
+			sandwichPanel.setVisible(true);
+			toppingsCheckoutPanel.setVisible(false);
+			pageLabel.setText("Sandwich Station");
+		}
+	}
+	
+	//Create Topping labels
+	private void createToppingTextLabel() {
 		
 		JLabel veggieTxtLabel = new JLabel("Add Veggie(s):");
-		veggieTxtLabel.setHorizontalAlignment(SwingConstants.LEFT);
 		veggieTxtLabel.setForeground(Color.ORANGE);
 		veggieTxtLabel.setFont(new Font("Serif", Font.BOLD, 15));
 		veggieTxtLabel.setBounds(80, 30, 132, 20);
 		toppingsCheckoutPanel.add(veggieTxtLabel);
-		
 		JLabel saucesTxtLabel = new JLabel("Add Sauce(s) :");
-		saucesTxtLabel.setHorizontalAlignment(SwingConstants.LEFT);
 		saucesTxtLabel.setForeground(Color.ORANGE);
 		saucesTxtLabel.setFont(new Font("Serif", Font.BOLD, 15));
 		saucesTxtLabel.setBounds(80, 105, 132, 20);
 		toppingsCheckoutPanel.add(saucesTxtLabel);
-		
 		JLabel cheesesTxtLabel = new JLabel("Add Cheese(s) :");
-		cheesesTxtLabel.setHorizontalAlignment(SwingConstants.LEFT);
 		cheesesTxtLabel.setForeground(Color.ORANGE);
 		cheesesTxtLabel.setFont(new Font("Serif", Font.BOLD, 15));
 		cheesesTxtLabel.setBounds(80, 180, 132, 20);
 		toppingsCheckoutPanel.add(cheesesTxtLabel);
-		
-
-		addToCartBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				// Create an CartItem entity -- temporary entity to store items into the cart,
-				// then eventually taken to generate the sandwiches.
-				ArrayList<String> toppings = new ArrayList<>();
-				toppings = getSelectedToppings();
-				CartItem newItem = new CartItem(getSelection(), toppings, (int) orderQuantity.getValue());
-
-				// Adding this temp to the cart
-				cart.add(newItem);
-				
-				// Dynamic rendering of the label into the cart
-				addLabelToCart(newItem);
-				
-				// Prompt user if they need a RECEIPT
-				int anotherOne = JOptionPane.showConfirmDialog(null, "Would you like to add another?", "Never enough sandwiches!",
-						JOptionPane.YES_NO_OPTION);
-				
-				// Reset all selections, ready for the next CartItem
-				clearAllSelections();
-				
-				if(anotherOne == JOptionPane.YES_NO_OPTION) {
-					sandwichPanel.setVisible(true);
-					toppingsCheckoutPanel.setVisible(false);
-					pageLabel.setText("Sandwich Station");
-				}
-			}
-		});
-
+	
+	}
+	
+	//PlaceOrderHelper - Create Place Order button
+	private void createPlaceOrderButton() {
 		/*
 		 * Place Order Button and its styling
 		 */
@@ -460,215 +690,114 @@ public class OrderSelectionPage extends JFrame {
 		
 		// Onclick handler for Placing order once User is ready to checkout.
 		placeOrderBtn.addActionListener(new ActionListener() {
-			
 			public void actionPerformed(ActionEvent e) {
-				
-				/*
-				 * Checks if the Cart is populated with at least 1 item,
-				 * if not then return error message.
-				 * */
-				if (cart.getSize() > 0) {
-					
-					// Initializes an Order using the Cart's content.
-					List<CartItem> order = cart.getCartContent(); 
-
-					/*
-					 * Sends a request to get the order made by calling 
-					 * getSandwichOrder via the controller using the Order initialized above.
-					 * 
-					 * Then fetches the costs associated with each Order Item,
-					 * storing them to a costs list.
-					 * */
-					List<Double> costs = OrderUIController.getSandwichOrder(order);
-
-					//todo: Tim, add order ui contoller for topping stuff here.
-
-					// Following Logic checks if the value returned is valid.
-					int numberOfSandwiches = 0;
-					
-					for(CartItem item : order) {
-						
-						// Fetches number of sandwiches.
-						numberOfSandwiches += item.getQuantity();
-					}
-					
-					// Checks whether the returned value was valid,
-					// if it was not equal, some Ingredients were missing.
-					if (costs.size() != numberOfSandwiches) {
-						 
-						// PROMPT USER ORDER COULD NOT BE MADE
-						errorMessageLbl.setText("Out of Ingredients");
-						ingredientsError.setText("Out of Ingredients");
-						return;
-						
-					}
-					
-					// Add order details to database - sales history
-					double subTotal = 0;
-					int ind = 0;
-					for(CartItem it : order) {
-						subTotal += (costs.get(ind++) * it.getQuantity());
-					}
-					ManagerSales sales = new ManagerSales();
-					try {
-						sales.updateSalesHistory(cart.getID(), subTotal*1.13, cart.getOrderDate());
-					} catch (SQLException e1) {
-						e1.printStackTrace();
-					}
-					
-					// Add sandwich base counts into database
-					try {
-						sales.addCount(order);
-					} catch (SQLException e1) {
-						e1.printStackTrace();
-					}
-					
-					
-					// Prompt user if they need a RECEIPT
-					int confirmed = JOptionPane.showConfirmDialog(null, "Would you like a receipt?", "Receipt",
-							JOptionPane.YES_NO_OPTION);
-					
-					// If USER selects YES, PUSH TO GENERATE A RECIEPT.
-					if (confirmed == JOptionPane.YES_OPTION) {
-						new ReceiptGenerator(cart.getCartContent(), costs);
-						
-					// If not then USER is taken back to HOMEPAGE.
-					} else {
-						new HomePage().setVisible(true);
-					}
-					
-					dispose(); // Kill current frame
-				} else {
-					
-					// Error message prompt that no item was added.
-					errorMessageLbl.setText("Cart is empty");
-					ingredientsError.setText("Cart is empty");
-				}
-
+				checkCartForOrder();
 			}
 		});
 
+	}
+	
+	//PlaceOrderHelper - CheckOrderState
+	private void checkCartForOrder() {
 		/*
-		 * Go back to previous page - in this case the APP HOME PAGE 
-		 * and styling for the button.
-		 */
-
-		JButton backBtn = new JButton("");
-		backBtn.setFont(new Font("Serif", Font.PLAIN, 19));
-		backBtn.setBorderPainted(false);
-		backBtn.setBackground(new Color(255, 255, 255));
-		backBtn.setBounds(14, 395, 80, 40);
-		backBtn.setIcon(new ImageIcon(ImageImports.imgBack));
-		contentPane.add(backBtn);
-		
-		backBtn.addActionListener(new ActionListener() {
-			
-			// Trigger on back button.
-			public void actionPerformed(ActionEvent e) {
-		
-				if(toppingsCheckoutPanel.isVisible()) {
-					sandwichPanel.setVisible(true);
-					toppingsCheckoutPanel.setVisible(false);
-					pageLabel.setText("Sandwich Station");
-					return;
-				}
-				
-				// Prompts USER to confirm going back, as this will lose current CART.
-				int confirmed = JOptionPane.showConfirmDialog(null,
-						"Are you sure you want to go back, current order will be lost...", "Going back to home page",
-						JOptionPane.YES_NO_OPTION);
-				
-				//If User confirms then will be taken back to HOMPAGE
-				if (confirmed == JOptionPane.YES_OPTION) {
-					new HomePage().setVisible(true);
-					dispose(); //Kill current frame
-				}
-			}
-		});
-
-		// Defaulting position to center
-		setLocationRelativeTo(null);
-	}
-
-	/**
-	 * This method renders all the sandwich buttons dynamically
-	 * using the list of base sandwiches provided. This also dynamically 
-	 * resizes them and sorts them to adjust to the quantity 
-	 * while keeping simplistic design.
-	 * @throws SQLException 
-	 * */
-	private void renderSandwichButtons() {
-
-		
-		int yVal = -10; // Y value of the button to render
-		int xVal = 0; // X value of the button to render
-		int btnWidth = 0; //Width of the button to render
-		boolean secCol = false; // Checks if second column is required to avoid overflow
-		
-		//Checks if there are more buttons, for resizing to fit
-		//them in and to adjust the columns.
-		
-		if(sandwichTypes.length <= 4) { // If there are less buttons, render them center.
-			
-			xVal = (sandwichPanel.getWidth()/2) - 105; //Sets X
-			btnWidth = 200; // Sets width
-		
-		} else { // If there are more buttons, render them to 2 columns
-		
-			xVal = 30; // Sets X
-			btnWidth = 150; // Sets width
-		
+		 * Checks if the Cart is populated with at least 1 item,
+		 * if not then return error message.
+		 * */
+		if (cart.getSize() > 0) {
+			placeOrder();
+		} else {
+			// Error message prompt that no item was added.
+			errorMessageLbl.setText("Cart is empty");
+			ingredientsError.setText("Cart is empty");
 		}
+	}
+	
+	//PlaceOrderHelper - OutofIngredients
+	private boolean OutOfIngredients(int costs, int num) {
+		if(costs != num) {
+			// PROMPT USER ORDER COULD NOT BE MADE
+			errorMessageLbl.setText("Out of Ingredients");
+			ingredientsError.setText("Out of Ingredients");
+			return true;
+		}
+		return false;
+	}
+	
+	//PlaceOrderHelper - Receipt generation
+	private void promptUserForReceipt(List<Double> costs) {
+		// Prompt user if they need a RECEIPT
+		int confirmed = JOptionPane.showConfirmDialog(null, "Would you like a receipt?", "Receipt",
+				JOptionPane.YES_NO_OPTION);
 		
-		//Setting the favorite
-		String favorite = "";
+		// If USER selects YES, PUSH TO GENERATE A RECIEPT.
+		if (confirmed == JOptionPane.YES_OPTION) {
+			new ReceiptGenerator(cart.getCartContent(), costs);
+			
+		// If not then USER is taken back to HOMEPAGE.
+		} else {
+			new HomePage().setVisible(true);
+		}
+		dispose(); // Kill current frame
+	}
+	
+	//PlaceOrderHelper - PlaceOrder Flow
+	private void placeOrder() {
+		// Initializes an Order using the Cart's content.
+		List<CartItem> order = cart.getCartContent(); 
+		/*
+		 * Sends a request to get the order made by calling 
+		 * getSandwichOrder via the controller using the Order initialized above.
+		 * 
+		 * Then fetches the costs associated with each Order Item,
+		 * storing them to a costs list.
+		 * */
+		List<Double> costs = OrderUIController.getSandwichOrder(order);
+		//todo: Tim, add order ui contoller for topping stuff here.
+
+		// Checks whether the returned value was valid, if NOT then order was not made.
+		if(OutOfIngredients(costs.size(), getNumberOfSandwiches(order))) return;
+		sendOrderSaleToController(order, costs);
+		promptUserForReceipt(costs);
+	}
+	
+	//PlaceOrderHelper - Send to Controller to Store in DB
+	private void sendOrderSaleToController(List<CartItem> order, List<Double> costs) {
+		// Add order details to database - sales history
+		double subTotal = 0;
+		int ind = 0;
+		for(CartItem it : order) {
+			subTotal += (costs.get(ind++) * it.getQuantity());
+		}
+				
+		// Add sandwich base counts, and update sales history into database
+		ManagerUIController controller = new ManagerUIController(true);
 		try {
-			favorite = findPopular();
-		} catch (SQLException e) {
-			e.printStackTrace();
+			controller.updateSalesHistory(cart.getID(), subTotal*1.13, cart.getOrderDate());
+			controller.addCount(order);
+		} catch (SQLException e1) {
+			e1.printStackTrace();
 		}
-		
-		//Iterate over the base sandwich list, creating buttons from them
-		//with the dimensions decided above.
-		for(int i = 0 ; i < sandwichTypes.length; i++) {
-			if(yVal >= 175 && !secCol) {
-				secCol = true;
-				yVal = -10;
-				xVal = sandwichPanel.getWidth()-(btnWidth+30);
-			}
-			
-			// If already in the second column and Y is too large, dont render more.
-			else if (yVal >= 175 && secCol) { 
-				break;
-			}
-			
-
-			//Create button flow.
-			JButton newBtn = null;
-			
-			if(favorite.equals(sandwichTypes[i])) {
-				newBtn = new JButton(""+ sandwichTypes[i] + " (popular)");
-			}else {
-				newBtn = new JButton(""+ sandwichTypes[i]);
-			}
-			newBtn.setName(""+ (sandwichTypes[i]));
-			newBtn.setBounds(xVal, yVal+=50, btnWidth, 35);
-			newBtn.setBackground(Color.WHITE);
-			newBtn.setBorder(null);
-			
-			
-			sandwichPanel.add(newBtn);
-		}
-		
 	}
+	
+	//PlaceOrderHelper - Get Number of Sandwiches
+	private int getNumberOfSandwiches(List<CartItem> order) {
+		// Following Logic checks if the value returned is valid.
+		int numberOfSandwiches = 0;
+		for(CartItem item : order) {
+			// Fetches number of sandwiches.
+			numberOfSandwiches += item.getQuantity();
+		}
+		return numberOfSandwiches;
+	}
+
 	
 	/**
 	 * Finds the current popular from the manager sales,
 	 * and returns it.
 	 * */
 	private String findPopular() throws SQLException {
-		return new ManagerSales().getFavourite(); //Fetching sales data to check for favorites
-
+		 //Fetching sales data to check for favorites
+		return new ManagerUIController(true).getFavourite();
 	}
 	/**
 	 * This method renders all the topping buttons dynamically

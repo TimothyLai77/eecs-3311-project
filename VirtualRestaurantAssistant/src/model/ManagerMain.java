@@ -45,7 +45,11 @@ public class ManagerMain {
 				return con;
 			}
 			catch(Exception e){
-				System.out.println(e.getMessage());
+				String message = e.getMessage().split("\n", 2)[0].toLowerCase().replaceAll(" ", "");
+				if(message.equals("communicationslinkfailure")) {
+					System.out.println("No Local Server found. Please start a local MySQL Server to run app.");
+				}
+				System.exit(0);
 			}
 			
 			return null;

@@ -90,18 +90,37 @@ public class ManagerPage extends JFrame implements ActionListener {
 		
 		//Establishing Manager Connection with Controller
 		controller = new ManagerUIController();
-		
+		generateManagerPage(); //Sets up the neccessary basis of the page
+		renderChoiceButtons(); //Render possible proccesses for on the Inventory
+		preSelect(); //Selects add as the pre-selecred process
+		createManagerPanel(); //Creates the base panel to house components
+		createButtons(); //Creates all extra required buttons
+		createMessageDisplay(); //Creates label to show message to user
+		createInventoryShowcase(); //Invenotry display
+		try {
+			updateInventoryDisplay();
+		} catch (SQLException e2) {
+			managerMessageLabel.setText("Inventory is empty");
+			e2.printStackTrace();
+		}
+	}
+	
+	//Initalize basic variables
+	private void initalizeBaseVariables() {
 		//List of Ingredients supported by the App (m-meat, v-veg, s-sauce, c-cheese)
 		breadOptions = new String[]{"Bread"};
-	    meatOptions = new String[]{"Beef", "Chicken", "Meatball"};
-	    vegetablesOptions = new String[]{"VeggiePatty", "Lettuce", "Tomato"};
-	    sauceOptions = new String[] {"Mayo", "Ketchup"};
-	    cheeseOptions = new String[] {"Cheddar", "American"};
-	    
+		meatOptions = new String[]{"Beef", "Chicken", "Meatball"};
+		vegetablesOptions = new String[]{"VeggiePatty", "Lettuce", "Tomato"};
+		sauceOptions = new String[] {"Mayo", "Ketchup"};
+		cheeseOptions = new String[] {"Cheddar", "American"};
+			    
 		typeButtons = new String[] {"Bread", "Meat", "Vegetable", "Cheese", "Sauce"};
 		typeGroup = new ButtonGroup();
 		submitTypeGroup = new ButtonGroup();
-		
+	}
+	
+	//Create Frame
+	private void createFrame() {
 		// Frame details setup.
 		setTitle("Store Manager");
 		setIconImage(ImageImports.frameLogo);
@@ -111,49 +130,49 @@ public class ManagerPage extends JFrame implements ActionListener {
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(255, 255, 255));
 		contentPane.setBorder(new LineBorder(new Color(0, 0, 0)));
-
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
+		setLocationRelativeTo(null);
+	}
+	
+	//Create dragbar with functionality
+	private void createDragbar() {
 		// Custom Draggable Toolbar and customization
 		JPanel dragBar = new JPanel();
+		dragBar.setBackground(Color.BLACK);
+		dragBar.setBorder(null);
+		dragBar.setBounds(0, 0, 888, 20);
+		contentPane.add(dragBar);
+		addDrag(dragBar);
+	}
+	
+	//DRAGBAR HELPER: Add drag functionality
+	private void addDrag(JPanel dragBar) {
 		dragBar.addMouseMotionListener(new MouseMotionAdapter() {
-					
-			// Changes the frame location
-			@Override
-			public void mouseDragged(MouseEvent e) {
-				setLocation(getX() + e.getX() - mouseX, getY() + e.getY() - mouseY);
+		// Changes the frame location
+		@Override
+		public void mouseDragged(MouseEvent e) {
+			setLocation(getX() + e.getX() - mouseX, getY() + e.getY() - mouseY);
 			}
 		});
 		dragBar.addMouseListener(new MouseAdapter() {
-					
 			// Gets current X,Y Coordinates of the Frame
 			@Override
 			public void mousePressed(MouseEvent e) {
 				mouseX = e.getX();
 				mouseY = e.getY();
 			}
-		});				
-		dragBar.setBackground(Color.BLACK);
-		dragBar.setBorder(null);
-		dragBar.setBounds(0, 0, 888, 20);
-		contentPane.add(dragBar);
-
+		});	
+	}
+		
+	//Create close button
+	private void createCloseButton() {
 		// Custom Close Button
 		JButton closeBtn = new JButton("E X I T");
 		closeBtn.addActionListener(new ActionListener() {
-					
 			// This event trigger closes the Application.
 			public void actionPerformed(ActionEvent e) {
-						
-				//Confirms the User to close the App.
-				int confirmed = JOptionPane.showConfirmDialog(null, "Are you sure you want to exit the program?","Exit Program", JOptionPane.YES_NO_OPTION);
-						
-				// If Confirmed then it will close the App, if not
-				// it will close the dialogue.
-				if (confirmed == JOptionPane.YES_OPTION) {
-					dispose();
-				}
+				closeFrame();
 			}
 		});
 		closeBtn.setBorder(null);
@@ -161,22 +180,39 @@ public class ManagerPage extends JFrame implements ActionListener {
 		closeBtn.setBackground(Color.BLACK);
 		closeBtn.setBounds(933, 0, 62, 20);
 		contentPane.add(closeBtn);
-
+	}
+	
+	//Close HELPER: Close frame
+	private void closeFrame() {
+		//Confirms the User to close the App.
+		int confirmed = JOptionPane.showConfirmDialog(null, "Are you sure you want to exit the program?","Exit Program", JOptionPane.YES_NO_OPTION);
+		// If Confirmed then it will close the App, if not
+		// it will close the dialogue.
+		if (confirmed == JOptionPane.YES_OPTION) {
+			dispose();
+		}
+		
+	}
+	
+	//Create minimize button
+	private void createMinButton() {
 		// Custom Minimize Screen Button
 		JButton minBtn = new JButton("_");
 		minBtn.addActionListener(new ActionListener() {
-					
 			// Trigger to minimize the application
 			public void actionPerformed(ActionEvent e) {
 				setState(JFrame.ICONIFIED);
-			}
-		});
+				}
+			});
 		minBtn.setForeground(Color.WHITE);
 		minBtn.setBorder(null);
 		minBtn.setBackground(Color.BLACK);
 		minBtn.setBounds(887, 0, 46, 20);
 		contentPane.add(minBtn);
-		
+	}
+	
+	//ManagerPage Title
+	private void createTitle() {
 		// INVENTORY MANAGER TITLE
 		JLabel managerSideTitle = new JLabel("Inventory Manager");
 		managerSideTitle.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -186,19 +222,34 @@ public class ManagerPage extends JFrame implements ActionListener {
 		managerSideTitle.setFont(new Font("Tahoma", Font.BOLD, 13));
 		managerSideTitle.setHorizontalAlignment(SwingConstants.CENTER);
 		managerSideTitle.setBackground(Color.orange);
-		
-		//CHOICE BUTTONS
+	}
+	
+	// CREATE BASE OF THE MANAGER PAGE
+	private void generateManagerPage() {
+		initalizeBaseVariables(); //Initialize all base variables to use
+		createFrame(); //Create frame styling
+		createDragbar(); //Create dragbar
+		createCloseButton(); //Create frame close
+		createMinButton(); //Create frame minimize
+		createTitle(); //Renders the Manager Page's Title on top
+	}
+	
+	//Render all the different process buttons in 2 sets (too many process for 1)
+	private void renderChoiceButtons() {
+		renderChoiceButtonsFirstSet();
+		renderChoiceButtonsSecondSet();
+	}
+	private void renderChoiceButtonsFirstSet(){
+		//ADD NEW PROCESS
 		addChoiceBtn = new JRadioButton("Add Ingredient(s)");
 		addChoiceBtn.setName("addChoice");
 		addChoiceBtn.setBackground(new Color(255, 255, 255));
 		addChoiceBtn.setBounds(200, 52, 126, 23);
 		addChoiceBtn.setSelected(true);
 		addChoiceBtn.addActionListener(this);
-		
-		selectedProcess = "add";
 		contentPane.add(addChoiceBtn);
 		submitTypeGroup.add(addChoiceBtn);
-		
+		//DELETE PROCESS
 		JRadioButton deleteIngredientChoice = new JRadioButton("Delete Ingredient(s)");
 		deleteIngredientChoice.setName("deleteChoice");
 		deleteIngredientChoice.setBackground(new Color(255, 255, 255));
@@ -206,7 +257,9 @@ public class ManagerPage extends JFrame implements ActionListener {
 		deleteIngredientChoice.addActionListener(this);
 		contentPane.add(deleteIngredientChoice);
 		submitTypeGroup.add(deleteIngredientChoice);
-		
+	}
+	private void renderChoiceButtonsSecondSet() {
+		//ADD EXISTING PROCESS
 		JRadioButton addExistingChoice = new JRadioButton("Add Existing Ingredient(s)");
 		addExistingChoice.setName("addExistingChoice");
 		addExistingChoice.setBackground(new Color(255, 255, 255));
@@ -214,7 +267,7 @@ public class ManagerPage extends JFrame implements ActionListener {
 		addExistingChoice.addActionListener(this);
 		contentPane.add(addExistingChoice);
 		submitTypeGroup.add(addExistingChoice);
-		
+		//UPDATE PRICE PROCESS
 		JRadioButton updatePriceChoice = new JRadioButton("Update Price");
 		updatePriceChoice.setName("updatePriceChoice");
 		updatePriceChoice.setBackground(new Color(255, 255, 255));
@@ -222,51 +275,73 @@ public class ManagerPage extends JFrame implements ActionListener {
 		updatePriceChoice.addActionListener(this);
 		contentPane.add(updatePriceChoice);
 		submitTypeGroup.add(updatePriceChoice);
-
+	}
+	
+	//Sets the preselected option to "ADD new"
+	private void preSelect() {
+		selectedProcess = "add";
+	}
+	
+	//Create ManagerPanel
+	private void createManagerPanel() {
 		managerLeftPanel = new JPanel();
 		managerLeftPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
 		managerLeftPanel.setBackground(new Color(255, 255, 255));
 		managerLeftPanel.setBounds(200, 85, 595, 289);
 		managerLeftPanel.setLayout(null);
 		contentPane.add(managerLeftPanel);
-		
+		generateManagerPanelComponents();
+	}
+	
+	//Creates all nested components in this panel
+	private void generateManagerPanelComponents() {
+		createIngredientDropdown(); //Creates the dropdown to house ing. names
+		createIngredientTypePanel(); //Create the panel to house ing. types.
+		createInputLabels(); //Add labels to the input fields
+		renderTypeButtons(); // Renders all the ingredient type buttons
+		createNumericInputs(); // Creates input fields for quantity
+	}
+	
+	// Create Ingredient dropdown list to hold ingredient names
+	private void createIngredientDropdown() {
 		ingredientDropdown = new JComboBox<String>();
     	ingredientDropdown.setModel(new DefaultComboBoxModel<String>(breadOptions));
 		ingredientDropdown.setBounds(310, 61, 200, 20);
 		managerLeftPanel.add(ingredientDropdown);
-
+	}
+	
+	//Create Ingredient panel: to hold the types "Meat, cheese, etc..."
+	private void createIngredientTypePanel() {
 		ingredientTypePanel = new JPanel();
 		ingredientTypePanel.setBackground(new Color(255, 255, 255));
 		ingredientTypePanel.setBounds(95, 60, 138, 139);
 		ingredientTypePanel.setLayout(new BoxLayout(ingredientTypePanel, BoxLayout.Y_AXIS));
 		managerLeftPanel.add(ingredientTypePanel);
-		
+	}
+	
+	//Create all the input type labels
+	private void createInputLabels() {
 		//Labels for the selections
 		JLabel selectTypeLabel = new JLabel("Select and Ingredient Type:");
-		selectTypeLabel.setBounds(95, 35, 160, 14);
-		managerLeftPanel.add(selectTypeLabel);
-		
+			selectTypeLabel.setBounds(95, 35, 160, 14);
+			managerLeftPanel.add(selectTypeLabel);
 		JLabel selectNameLabel = new JLabel("Select an Ingredient Name:");
-		selectNameLabel.setBounds(310, 36, 200, 14);
-		managerLeftPanel.add(selectNameLabel);
-		
+			selectNameLabel.setBounds(310, 36, 200, 14);
+			managerLeftPanel.add(selectNameLabel);
 		JLabel selectQuantityLabel = new JLabel("Enter quantity:");
-		selectQuantityLabel.setBounds(310, 92, 144, 35);
-		managerLeftPanel.add(selectQuantityLabel);
-		
+			selectQuantityLabel.setBounds(310, 92, 144, 35);
+			managerLeftPanel.add(selectQuantityLabel);
 		JLabel selectPriceLabel = new JLabel("Enter price:");
-		selectPriceLabel.setBounds(310, 130, 126, 35);
-		managerLeftPanel.add(selectPriceLabel);
-		
+			selectPriceLabel.setBounds(310, 130, 126, 35);
+			managerLeftPanel.add(selectPriceLabel);
 		JLabel priceLogo = new JLabel("$");
-		priceLogo.setHorizontalAlignment(SwingConstants.CENTER);
-		priceLogo.setBounds(445, 131, 18, 35);
+			priceLogo.setHorizontalAlignment(SwingConstants.CENTER);
+			priceLogo.setBounds(445, 131, 18, 35);
 		managerLeftPanel.add(priceLogo);
-		
-		// Renders all the ingredient type buttons
-		renderTypeButtons();
-
-
+	}
+	
+	//Create input fields for quantity
+	private void createNumericInputs() {
 		quantitySelector = new JSpinner();
 		quantitySelector
 				.setModel(new SpinnerNumberModel(Integer.valueOf(1), Integer.valueOf(1), null, Integer.valueOf(1)));
@@ -274,7 +349,11 @@ public class ManagerPage extends JFrame implements ActionListener {
 		quantitySelector.setForeground(Color.BLACK);
 		quantitySelector.setBounds(464, 92, 46, 35);
 		managerLeftPanel.add(quantitySelector);
-		
+		createIncByTen(); createDecByTen(); createPriceField();
+	}
+	
+	//QUANTITY HELPER: create 10 incrementor for qty
+	private void createIncByTen() { 
 		incrementByTenButton = new JButton("+10");
 		incrementByTenButton.setOpaque(false);
 		incrementByTenButton.setBackground(new Color(192, 192, 192));
@@ -287,7 +366,10 @@ public class ManagerPage extends JFrame implements ActionListener {
 		incrementByTenButton.setLocation(520, 92);
 		incrementByTenButton.setSize(55, 17);
 		managerLeftPanel.add(incrementByTenButton);
-		
+	}
+
+	//QUANTITY HELPER: create 10 decremetor for qty
+	private void createDecByTen() {
 		decrementByTenButton = new JButton("-10");
 		decrementByTenButton.setBackground(new Color(192, 192, 192));
 		decrementByTenButton.setOpaque(false);
@@ -303,12 +385,24 @@ public class ManagerPage extends JFrame implements ActionListener {
 			}
 		});
 		managerLeftPanel.add(decrementByTenButton);
-		
+	}
+	
+	//Create PRICE INPUT FIELD
+	private void createPriceField() {
 		priceField = new JTextField("0.0");
 		priceField.setLocation(464, 138);
 		priceField.setSize(46, 20);
 		managerLeftPanel.add(priceField);
-		
+	}
+	
+	//Create buttons
+	private void createButtons() {
+		createSubmitButton();
+		createBackButton();
+	}
+	
+	//Create buttons HELPER: Create Submit button
+	private void createSubmitButton() {
 		JButton submitBtn = new JButton("Submit Change");
 		submitBtn.setFont(new Font("Tahoma", Font.BOLD, 13));
 		submitBtn.setForeground(new Color(255, 255, 255));
@@ -317,39 +411,14 @@ public class ManagerPage extends JFrame implements ActionListener {
 		submitBtn.setBorder(null);
 		submitBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					switch(selectedProcess) {
-					case "add":
-						submitAddHandler();
-						break;
-					case "addExisting":
-						submitAddExistingHandler();
-						break;
-					case "delete":
-						submitDeleteHandler();
-						break;
-					case "updatePrice":
-						submitUpdatePriceHandler();
-						break;
-					default:
-						break;
-					}
-					updateInventoryDisplay();
-					clearSelections();
-				} catch(SQLException e1) {
-					managerMessageLabel.setText("Please FILL the required fields.");
-				} catch(NumberFormatException ee) {
-					managerMessageLabel.setText("Only VALID numeric PRICE please!");
-				}
+				submitForm();
 			}
 		});
 		managerLeftPanel.add(submitBtn);
-		
-		managerMessageLabel = new JLabel("");
-		managerMessageLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		managerMessageLabel.setBounds(95, 210, 423, 68);
-		managerLeftPanel.add(managerMessageLabel);
-		
+	}
+	
+	//Create buttons HELPER: Create Back button
+	private void createBackButton() {
 		JButton backBtn = new JButton("< Back to Home");
 		backBtn.setBounds(10, 466, 170, 23);
 		contentPane.add(backBtn);
@@ -357,64 +426,106 @@ public class ManagerPage extends JFrame implements ActionListener {
 		backBtn.setFont(new Font("Tahoma", Font.BOLD, 13));
 		backBtn.setBorder(null);
 		backBtn.setBackground(Color.BLACK);
+		backBtn.addActionListener(new ActionListener() {
+			// Trigger on back button.
+			public void actionPerformed(ActionEvent e) {
+				goToPrevPage();
+				
+			}
+		});
 		
+	}
+	
+	// Back button HELPER: Back dialogue
+	private void goToPrevPage() {
+		// Prompts USER to confirm going back, as this will lose current CART.
+		int confirmed = JOptionPane.showConfirmDialog(null,
+				"Are you sure you want to exit the Inventory Manager...", "Going back to home page",
+				JOptionPane.YES_NO_OPTION);
+		
+		//If User confirms then will be taken back to HOMPAGE
+		if (confirmed == JOptionPane.YES_OPTION) {
+			new HomePage().setVisible(true);
+			dispose(); //Kill current frame
+		}
+	}
+	
+	//Submit HELPER: Submit current form state
+	private void submitForm() {
+		try {
+			runHandler();
+			updateInventoryDisplay();
+			clearSelections();
+		} catch(SQLException e1) {
+			managerMessageLabel.setText("Please FILL the required fields.");
+		} catch(NumberFormatException ee) {
+			managerMessageLabel.setText("Only VALID numeric PRICE please!");
+		}
+	}
+	
+	//Submit HELPER: run corresponding handler
+	private void runHandler() throws SQLException {
+		switch(selectedProcess) {
+		case "add":
+			submitAddHandler();
+			break;
+		case "addExisting":
+			submitAddExistingHandler();
+			break;
+		case "delete":
+			submitDeleteHandler();
+			break;
+		case "updatePrice":
+			submitUpdatePriceHandler();
+			break;
+		default:
+			break;
+		}
+	}
+	
+	//Create message display for inventory
+	private void createMessageDisplay() {
+		managerMessageLabel = new JLabel("");
+		managerMessageLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		managerMessageLabel.setBounds(95, 210, 423, 68);
+		managerLeftPanel.add(managerMessageLabel);
+	}
+	
+	//Generate textarea to showcase current inventory
+	private void createInventoryShowcase() {
 		inventoryShowcaseLabel = new JTextArea("Beef                           meat                           62                             $99.00                          \nBread                          bread                          69                             $99.00                          \nChicken                        meat                           4                              $2.00                           \n");
 		inventoryShowcaseLabel.setEditable(false);
 		JScrollPane scrollPane = new JScrollPane(inventoryShowcaseLabel);
 		scrollPane.setBounds(200, 403, 595, 86);
-
 		contentPane.add(scrollPane);
-		
+		createInventoryLabels();
+	}
+	
+	//Inventory showcase HELPER: Inventory labels
+	private void createInventoryLabels() {
 		JLabel showcaseLabel = new JLabel("Current Inventory:");
-		showcaseLabel.setFont(new Font("Tahoma", Font.BOLD, 11));
-		showcaseLabel.setBounds(26, 386, 160, 14);
-		contentPane.add(showcaseLabel);
-		
+			showcaseLabel.setFont(new Font("Tahoma", Font.BOLD, 11));
+			showcaseLabel.setBounds(26, 386, 160, 14);
+			contentPane.add(showcaseLabel);
 		JLabel invName = new JLabel("Name:");
-		invName.setFont(new Font("Tahoma", Font.BOLD, 11));
-		invName.setBounds(200, 385, 139, 14);
-		contentPane.add(invName);
-		
+			invName.setFont(new Font("Tahoma", Font.BOLD, 11));
+			invName.setBounds(200, 385, 139, 14);
+			contentPane.add(invName);
+		createInventoryLabels2();
+	}
+	private void createInventoryLabels2() {
 		JLabel lblIngredientType = new JLabel("Type:");
-		lblIngredientType.setFont(new Font("Tahoma", Font.BOLD, 11));
-		lblIngredientType.setBounds(312, 385, 111, 14);
-		contentPane.add(lblIngredientType);
-		
+			lblIngredientType.setFont(new Font("Tahoma", Font.BOLD, 11));
+			lblIngredientType.setBounds(312, 385, 111, 14);
+			contentPane.add(lblIngredientType);
 		JLabel lblIngredientQty = new JLabel("Qty:");
-		lblIngredientQty.setFont(new Font("Tahoma", Font.BOLD, 11));
-		lblIngredientQty.setBounds(433, 385, 71, 14);
-		contentPane.add(lblIngredientQty);
-		
+			lblIngredientQty.setFont(new Font("Tahoma", Font.BOLD, 11));
+			lblIngredientQty.setBounds(433, 385, 71, 14);
+			contentPane.add(lblIngredientQty);
 		JLabel lblPrice = new JLabel("Price:");
-		lblPrice.setFont(new Font("Tahoma", Font.BOLD, 11));
-		lblPrice.setBounds(528, 385, 111, 14);
-		contentPane.add(lblPrice);
-		backBtn.addActionListener(new ActionListener() {
-			
-			// Trigger on back button.
-			public void actionPerformed(ActionEvent e) {
-				
-				// Prompts USER to confirm going back, as this will lose current CART.
-				int confirmed = JOptionPane.showConfirmDialog(null,
-						"Are you sure you want to exit the Inventory Manager...", "Going back to home page",
-						JOptionPane.YES_NO_OPTION);
-				
-				//If User confirms then will be taken back to HOMPAGE
-				if (confirmed == JOptionPane.YES_OPTION) {
-					new HomePage().setVisible(true);
-					dispose(); //Kill current frame
-				}
-			}
-		});
-		
-		try {
-			updateInventoryDisplay();
-		} catch (SQLException e2) {
-			managerMessageLabel.setText("Inventory is empty");
-			e2.printStackTrace();
-		}
-		
-		setLocationRelativeTo(null);
+			lblPrice.setFont(new Font("Tahoma", Font.BOLD, 11));
+			lblPrice.setBounds(528, 385, 111, 14);
+			contentPane.add(lblPrice);
 	}
 	
 	/**
@@ -473,25 +584,36 @@ public class ManagerPage extends JFrame implements ActionListener {
 		managerMessageLabel.setText("");
 		
         // Determine which radio button was clicked
-		
 		String name = ((JRadioButton)e.getSource()).getName();
 		if(name.contains("Choice")) {
 			resetInput();
-			if(name.equals("addChoice")) {
-				selectedProcess = "add";
-			} else if (name.equals("deleteChoice")) {
-				selectedProcess = "delete";
-				setInputDelete();
-			} else if (name.equals("addExistingChoice")) {
-				selectedProcess = "addExisting";
-				setInputAddExisting();
-			} else if (name.equals("updatePriceChoice")) {
-				selectedProcess = "updatePrice";
-				setInputPrice();
-			} 
+			setChoice(name);
 			return;
 		}
-        if ( name.equals("Bread")) {
+		setIngredientDropdown(name);
+    }
+	
+	//PROCESS SELECTION HELPER METHDSW -----------------
+	
+	//Set the process according to name
+	private void setChoice(String name) {
+		if(name.equals("addChoice")) {
+			selectedProcess = "add";
+		} else if (name.equals("deleteChoice")) {
+			selectedProcess = "delete";
+			setInputDelete();
+		} else if (name.equals("addExistingChoice")) {
+			selectedProcess = "addExisting";
+			setInputAddExisting();
+		} else if (name.equals("updatePriceChoice")) {
+			selectedProcess = "updatePrice";
+			setInputPrice();
+		} 	
+	}
+	
+	//Set the dropdown according to the Type
+	private void setIngredientDropdown(String name){
+		if ( name.equals("Bread")) {
         	selectedType = "Bread";
         	ingredientDropdown.setModel(new DefaultComboBoxModel<String>(breadOptions));
         } else if (name.equals("Meat")) {
@@ -509,7 +631,7 @@ public class ManagerPage extends JFrame implements ActionListener {
         } else {
         	return;
         }
-    }
+	}
 	
 	/*
 	 * INPUT RESTRICTING METHODS
