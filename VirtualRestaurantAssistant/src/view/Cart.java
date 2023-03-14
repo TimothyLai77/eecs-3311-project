@@ -21,7 +21,7 @@ public class Cart {
 	 * Cart constructor initializes a LinkedList
 	 * used to represent the Cart.
 	 * */
-	Cart(){
+	public Cart(){
 		itemList = new LinkedList<>();
 		this.cartID = generateID();
 		this.orderDate = LocalDate.now().toString();
@@ -47,27 +47,26 @@ public class Cart {
 	 * 
 	 * @param A CartItem Object
 	 * */ 
-	void add(CartItem CartItem) {
+	public void add(CartItem CartItem) {
 		
-		// if(this.getSize() > 0) {
-		// 	for(CartItem i : itemList) {
-		// 		if(i.getName().equals(CartItem.getName())) {
-		// 			i.setQuantity(CartItem.getQuantity() + i.getQuantity());
-		// 			return;
-		// 		}
-		// 	}
-		// 	itemList.add(CartItem);
-		// } else {
-		// 	itemList.add(CartItem);
-		// }
-		itemList.add(CartItem);
+		 if(this.getSize() > 0) {
+		 	for(CartItem i : itemList) {
+		 		if(i.getName().equals(CartItem.getName()) && i.getAddedOptions().containsAll(CartItem.getAddedOptions())) {
+		 			i.setQuantity(CartItem.getQuantity() + i.getQuantity());
+		 			return;
+		 		}
+		 	}
+		 	itemList.add(CartItem);
+		 } else {
+		 	itemList.add(CartItem);
+		 }
 	}
 	
 	/**
 	 * Return the Cart LinkedList.
 	 * @return LinkedList<CartItem> - The Contents of the cart as a LinkedList
 	 * */
-	LinkedList<CartItem> getCartContent(){
+	public LinkedList<CartItem> getCartContent(){
 		return this.itemList;
 	}
 	
@@ -75,7 +74,7 @@ public class Cart {
 	 * Returns the size of the cart.
 	 * @return int - size of the list
 	 * */
-	int getSize() {
+	public int getSize() {
 		return this.itemList.size();
 	}
 	

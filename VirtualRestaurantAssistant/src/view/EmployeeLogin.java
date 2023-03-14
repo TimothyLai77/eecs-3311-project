@@ -1,4 +1,5 @@
 package view;
+
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,49 +15,62 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.SwingConstants;
 import javax.swing.JPasswordField;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
+
 import java.awt.Font;
 
 public class EmployeeLogin extends JFrame {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-	
 	private JPanel contentPane;
-
-	
-	//Frame feature variables (Dragging, Closing Etc...)
 	private int mouseX, mouseY;
-
 	private JPasswordField txtPass;
 
-	/**
-	 * Create the frame.
-	 */
+	/*
+	 * Employee login page constructor
+	 * */
 	public EmployeeLogin() {
+		initializeWindowProperties();
+		initializeContentPane();
+		createDraggableToolbar();
+		createMinimizeScreenButton();
+		createPanel();
+		createCloseButton();
+		createTitleImage();
+		createPasswordField();
+		createLoginButton();
+		createBackButton();
+		
+	}
+
+	private void initializeWindowProperties() {
 		setIconImage(ImageImports.frameLogo);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setUndecorated(true);
 		setBounds(100, 100, 707, 374);
+		
+		//Deafulting Position to the Center
+		setLocationRelativeTo(null);
+	}
+
+	// Initializes the content pane required to add all components
+	private void initializeContentPane() {
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(64, 64, 64));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
-		
-		
-		// Custom Draggable Toolbar
+	}
+
+	//Creates custom toolbar that is draggable
+	private void createDraggableToolbar() {
 		JPanel dragBar = new JPanel();
 		dragBar.addMouseMotionListener(new MouseMotionAdapter() {
 			@Override
 			public void mouseDragged(MouseEvent e) {
-				setLocation(getX()+ e.getX() - mouseX, getY() + e.getY() - mouseY);
+				setLocation(getX() + e.getX() - mouseX, getY() + e.getY() - mouseY);
 			}
 		});
 		dragBar.addMouseListener(new MouseAdapter() {
@@ -66,8 +80,15 @@ public class EmployeeLogin extends JFrame {
 				mouseY = e.getY();
 			}
 		});
-		
-		//Custom Minimize Screen Button
+
+		dragBar.setBackground(Color.BLACK);
+		dragBar.setBorder(null);
+		dragBar.setBounds(0, 0, 602, 20);
+		contentPane.add(dragBar);
+	}
+
+	//Creates functioning minimize buttons
+	private void createMinimizeScreenButton() {
 		JButton minBtn = new JButton("_");
 		minBtn.setBounds(600, 0, 45, 20);
 		contentPane.add(minBtn);
@@ -79,26 +100,26 @@ public class EmployeeLogin extends JFrame {
 		minBtn.setForeground(Color.WHITE);
 		minBtn.setBorder(null);
 		minBtn.setBackground(Color.BLACK);
-		dragBar.setBackground(Color.BLACK);
-		dragBar.setBorder(null);
-		dragBar.setBounds(0, 0, 602, 20);
-		contentPane.add(dragBar);
-		
+	}
+
+	//Creates a background panel
+	private void createPanel() {
 		JPanel panel = new JPanel();
 		panel.setBackground(Color.ORANGE);
 		panel.setBounds(370, 0, 241, 374);
 		contentPane.add(panel);
 		panel.setLayout(null);
-		
-		
+
 		JLabel restrImgLabel = new JLabel("");
 		restrImgLabel.setBounds(0, 217, 308, 200);
 		panel.add(restrImgLabel);
 		restrImgLabel.setForeground(Color.WHITE);
 		restrImgLabel.setBackground(Color.DARK_GRAY);
 		restrImgLabel.setIcon(new ImageIcon(ImageImports.img_restr));
-		
-		//Custom Close Button
+	}
+
+	//Creates a custom exit button
+	private void createCloseButton() {
 		JButton closeBtn = new JButton("E X I T");
 		closeBtn.setBounds(645, 0, 60, 20);
 		contentPane.add(closeBtn);
@@ -111,17 +132,41 @@ public class EmployeeLogin extends JFrame {
 			}
 		});
 		closeBtn.setBorder(null);
-		closeBtn.setForeground(Color.WHITE);
-		closeBtn.setBackground(Color.BLACK);
-		
-		
+	    closeBtn.setForeground(Color.WHITE);
+	    closeBtn.setBackground(Color.BLACK);
+	}
+	
+	//Creates title image label
+	private void createTitleImage() {
 		// TITLE IMAGE DISPLAY
 		JLabel appTitleLbl = new JLabel("");
 		appTitleLbl.setBounds(97, 31, 170, 138);
 		appTitleLbl.setIcon(new ImageIcon(ImageImports.imgTitle));
 		contentPane.add(appTitleLbl);
+	}
+	
+	//Creates back button
+	private void createBackButton() {
+		// BACK TO PREVIOUS SCREEN
 		
-				
+		JButton backBtn = new JButton("");
+		backBtn.setFont(new Font("Teko SemiBold", Font.PLAIN, 19));
+		backBtn.setBorderPainted(false);
+		backBtn.setBackground(new Color(255, 255, 255));
+		backBtn.setBounds(145, 298, 80, 40);
+		backBtn.setIcon(new ImageIcon(ImageImports.imgBack));
+		contentPane.add(backBtn);
+		backBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+							new HomePage().setVisible(true);
+							dispose();
+					}
+				});
+
+	}
+	
+	//Creates password field for login
+	private void createPasswordField() {
 		//PASSWORD PANEL AND FIELDS
 		JPanel passPanel = new JPanel();
 		passPanel.setLayout(null);
@@ -153,7 +198,11 @@ public class EmployeeLogin extends JFrame {
 		passIcon.setBounds(185, 5, 35, 35);
 		passIcon.setIcon(new ImageIcon(ImageImports.img_key));
 		passPanel.add(passIcon);
-		
+
+	}
+	
+	//Creates login button 
+	private void createLoginButton() {
 		// Log in to Manager UI
 		JButton loginBtn = new JButton("LOG IN");
 		loginBtn.setFont(new Font("Tahoma", Font.PLAIN, 16));
@@ -168,61 +217,6 @@ public class EmployeeLogin extends JFrame {
 			}
 		});
 		contentPane.add(loginBtn);
-		
-		// BACK TO PREVIOUS SCREEN
-		
-		JButton backBtn = new JButton("");
-		backBtn.setFont(new Font("Teko SemiBold", Font.PLAIN, 19));
-		backBtn.setBorderPainted(false);
-		backBtn.setBackground(new Color(255, 255, 255));
-		backBtn.setBounds(145, 298, 80, 40);
-		backBtn.setIcon(new ImageIcon(ImageImports.imgBack));
-		contentPane.add(backBtn);
-		backBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-							new HomePage().setVisible(true);
-							dispose();
-					}
-				});
-		
-		//Deafulting Position to the Center
-		setLocationRelativeTo(null);
+
 	}
-}
-
-/**
-//USER ID PANEL AND FIELDS BACK UP
-		JPanel userPanel = new JPanel();
-		userPanel.setBackground(new Color(0, 0, 0));
-		userPanel.setBounds(70, 178, 225, 45);
-		contentPane.add(userPanel);
-		userPanel.setLayout(null);
-		
-		txtUserid = new JTextField();
-		txtUserid.setHorizontalAlignment(SwingConstants.CENTER);
-		txtUserid.setText("Enter 9 - digit Manager ID");
-		txtUserid.setBounds(5, 5, 175, 35);
-		txtUserid.setBorder(null);
-		userPanel.add(txtUserid);
-		txtUserid.setColumns(10);
-		txtUserid.addFocusListener(new FocusListener(){
-          @Override
-          public void focusGained(FocusEvent e){
-          	txtUserid.setText("");
-          }
-
-			@Override
-			public void focusLost(FocusEvent e) {
-				if(txtUserid.getText().length() == 0) txtUserid.setText("Enter 9-digit Account No");
-			}
-      });
-		
-		JLabel userIcon = new JLabel("New label");
-		userIcon.setBounds(185, 7, 40, 30);
-		userIcon.setIcon(new ImageIcon(img_user));
-		userPanel.add(userIcon);
-		*/
-
-// ADD FOLLOWING AT LINE 81 HOMPAGE 
-
-
+}				

@@ -1,7 +1,5 @@
 package model;
 
-import java.util.*;
-
 import model.Ingredients.Ingredient;
 
 
@@ -32,42 +30,6 @@ public interface Inventory {
 	
 	public abstract boolean searchIngredient(String ingredientName);
 	
-	
-	/**
-	 * This methods removes ingredient list on position of the key in the map and returns removed value  
-	 * @param :- ingredientName
-	 * ingredientName is a key.
-	 * 
-	 * @return:- List<Ingredient>
-	 * a list of ingredients that is removed from the map
-	 * 
-	 */
-	
-	//public abstract List<Ingredient> removeAllIngredients(String ingredientName);
-	
-	
-	/**
-	 * This methods puts specific ingredients in the map, the new ingredient will be added at the end of linked list
-	 * @param:- ingredientName
-	 *  ingredientName is a key.
-	 *  
-	 * @param:- Ingredient i
-	 * i is a ingredient to be added 
-	 *
-	 * @return:- boolean value
-	 * returns a boolean value accordingly ie: on successful addition of the ingredient it returns true else it returns false
-	*/
-	//public abstract boolean putIngredient(String ingredientName,Ingredient i);
-	
-	/**
-	 * This method adds new type of ingredient in the map
-	 * @param:- ingredientName 
-	 * ingredientName is a key.
-	 * 
-	 * @return:- List<ingredient>
-	 * returns new list added in the map
-	 */
-	//public abstract List<Ingredient> addIngredient(String ingredientName,LinkedList<Ingredient> list);
 	
 	/**
 	 * 
