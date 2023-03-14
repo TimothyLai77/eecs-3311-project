@@ -27,9 +27,12 @@ public class OrderUIController {
 		}
 		else if(name.equals("Meatball")) {
 			return new MeatballSandwichCreator();
+		}		
+		else if(name.equals("Veggiepatty")) {
+			return new VeggiepattySandwichCreator();
 		}
 		else {
-			return new VeggiepattySandwichCreator();
+			return null;
 		}
 	}
 	
