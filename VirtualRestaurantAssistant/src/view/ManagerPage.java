@@ -499,6 +499,7 @@ public class ManagerPage extends JFrame implements ActionListener {
 		scrollPane.setBounds(200, 403, 595, 86);
 		contentPane.add(scrollPane);
 		createInventoryLabels();
+		createRefreshButton();
 	}
 	
 	//Inventory showcase HELPER: Inventory labels
@@ -526,6 +527,27 @@ public class ManagerPage extends JFrame implements ActionListener {
 			lblPrice.setFont(new Font("Tahoma", Font.BOLD, 11));
 			lblPrice.setBounds(528, 385, 111, 14);
 			contentPane.add(lblPrice);
+			
+			
+	}
+	//Creates a "Refresh" button to rerender the inventory's state
+	private void createRefreshButton() {
+		JButton refreshInventoryShowcaseBtn = new JButton("Refresh Inventory View");
+		refreshInventoryShowcaseBtn.setBounds(805, 405, 153, 23);
+		refreshInventoryShowcaseBtn.setForeground(Color.black);
+		refreshInventoryShowcaseBtn.setBackground(Color.orange);
+		refreshInventoryShowcaseBtn.setBorder(null);
+		contentPane.add(refreshInventoryShowcaseBtn);	
+		refreshInventoryShowcaseBtn.addActionListener(new ActionListener() {
+			@Override 
+			public void actionPerformed(ActionEvent e) {
+				try {
+					updateInventoryDisplay();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
 	}
 	
 	/**
