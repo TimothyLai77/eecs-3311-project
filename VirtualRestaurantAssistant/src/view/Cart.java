@@ -48,18 +48,7 @@ public class Cart {
 	 * @param A CartItem Object
 	 * */ 
 	public void add(CartItem CartItem) {
-		
-		 if(this.getSize() > 0) {
-		 	for(CartItem i : itemList) {
-		 		if(i.getName().equals(CartItem.getName())) {
-		 			i.setQuantity(CartItem.getQuantity() + i.getQuantity());
-		 			return;
-		 		}
-		 	}
-		 	itemList.add(CartItem);
-		 } else {
-		 	itemList.add(CartItem);
-		 }
+		 itemList.add(CartItem);
 	}
 	
 	/**
