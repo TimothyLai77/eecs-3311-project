@@ -28,6 +28,13 @@ create table favourites (
     counts                INT         NOT NULL    DEFAULT 0
 );
 
+create table ratings (
+    score		INT		NOT NULL,
+    feedback	VARCHAR(300),
+    ROrder_id	VARCHAR(9)		NOT NULL 	PRIMARY KEY
+)
+
+
 INSERT INTO INGREDIENTS(ingredient_name, ingredient_type, quantity, price) VALUES('Bread','bread',100,3);
 INSERT INTO INGREDIENTS(ingredient_name, ingredient_type, quantity, price) VALUES('Beef','meat',100,6.9);
 INSERT INTO INGREDIENTS(ingredient_name, ingredient_type, quantity, price) VALUES('Chicken','meat',100,4.25);
