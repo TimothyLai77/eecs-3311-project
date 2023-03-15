@@ -18,7 +18,6 @@ public class ManagerUIController {
 	
 	public ManagerUIController(boolean flag) {
 		ms = new ManagerSales();
-		
 	}
 	
 	//Update sales history methods to manager sales
@@ -52,5 +51,9 @@ public class ManagerUIController {
 	// Views the current inventory
 	public String viewInventory() throws SQLException{
 		return mg.viewInventory();
+	}
+	// Views the current sales
+	public String viewSales() throws SQLException {
+		return ms.displaySales();
 	}
 }
