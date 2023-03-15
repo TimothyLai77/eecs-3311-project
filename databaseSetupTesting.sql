@@ -28,3 +28,10 @@ create table favourites (
     counts                INT         NOT NULL    DEFAULT 0
 );
 
+create table ratings (
+    score		INT		NOT NULL,
+    feedback	VARCHAR(300),
+    ROrder_id	VARCHAR(9)		NOT NULL 	PRIMARY KEY
+)
+
+
