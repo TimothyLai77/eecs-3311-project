@@ -64,7 +64,7 @@ public class ManagerSales {
 		String dateSt = "Date";
 		String columns = String.format("%-22s %-24s %-22s\n", orderSt, amountSt, dateSt);
 		String separator = "--";
-		String ret = columns + separator.repeat(33) + "\n";
+		String ret = "";//columns + separator.repeat(33) + "\n"
 		
 		while (rs.next()) {
 			String id = rs.getString("order_id");
