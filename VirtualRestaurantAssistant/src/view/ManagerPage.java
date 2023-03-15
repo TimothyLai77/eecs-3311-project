@@ -5,8 +5,6 @@ import java.awt.event.*;
 import java.sql.SQLException;
 
 import javax.swing.*;
-
-import model.ManagerMain;
 import javax.swing.border.LineBorder;
 
 import controller.ManagerUIController;
