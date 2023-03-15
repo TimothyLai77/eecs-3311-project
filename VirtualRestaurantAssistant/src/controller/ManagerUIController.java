@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import model.ManagerMain;
+import model.ManagerRatings;
 import model.ManagerSales;
 import view.CartItem;
 
@@ -11,6 +12,7 @@ public class ManagerUIController {
 	
 	private static ManagerMain mg;
 	private static ManagerSales ms;
+	private static ManagerRatings rt;
 	
 	public ManagerUIController() {
 		mg = new ManagerMain();
@@ -18,7 +20,25 @@ public class ManagerUIController {
 	
 	public ManagerUIController(boolean flag) {
 		ms = new ManagerSales();
-		
+	}
+	
+	public ManagerUIController(String toggle) {
+		rt = new ManagerRatings();
+	}
+	
+	// Submit feedback and rating provided by customers
+	public boolean submitFeedback(String orderID, int score, String message) throws SQLException {
+		return rt.submitFeedback(orderID, score, message);
+	}
+	
+	// Get the average rating score from db
+	public double getAvgRating() throws SQLException {
+		return rt.calculateAvgRating();
+	}
+	
+	// Display ratings and feedback
+	public String displayRatings() throws SQLException {
+		return rt.displayRatings();
 	}
 	
 	//Update sales history methods to manager sales
