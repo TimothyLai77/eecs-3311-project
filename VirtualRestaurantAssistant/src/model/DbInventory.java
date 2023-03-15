@@ -5,6 +5,7 @@
  */
 package model;
 
+import java.lang.reflect.Constructor;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -35,10 +36,31 @@ public class DbInventory implements Inventory{
     private DbInventory(){
         try{
             getConnection();
+            initializeIngredientMap();
         }
         catch(Exception e){
             e.printStackTrace();
         }
+    }
+    
+    //Static FINAL instance of all the Ingredients that can be created at this time.
+    private static final Map<String, Class<? extends Ingredient>> INGREDIENT_MAP = new HashMap<>();
+    
+    /**
+     * Initializes the Ingredients base state, containing all compatible Ingredients with DB.
+     */
+    private void initializeIngredientMap() {
+    	 INGREDIENT_MAP.put("Beef", Beef.class);
+    	 INGREDIENT_MAP.put("Chicken", Chicken.class);
+    	 INGREDIENT_MAP.put("Meatball", Meatball.class);
+    	 INGREDIENT_MAP.put("Veggiepatty", Veggiepatty.class);
+    	 INGREDIENT_MAP.put("Bread", Bread.class);
+    	 INGREDIENT_MAP.put("Tomato", Tomato.class);
+    	 INGREDIENT_MAP.put("Lettuce", Lettuce.class);
+    	 INGREDIENT_MAP.put("Ketchup", Ketchup.class);
+    	 INGREDIENT_MAP.put("Mayo", Mayonnaise.class);
+    	 INGREDIENT_MAP.put("American", AmericanCheese.class);
+    	 INGREDIENT_MAP.put("Cheddar", Cheddar.class);
     }
     
     /**
@@ -64,9 +86,7 @@ public class DbInventory implements Inventory{
             System.out.println(e.getMessage());
             e.printStackTrace();
         }
-        
         return null;
-        
     }
 
     /**
@@ -77,26 +97,24 @@ public class DbInventory implements Inventory{
      * @return boolean
      */
       public boolean takeIngredient(String ingredientName,int amount){
-        try{
-        Statement st = con.createStatement();
-        String querry = "SELECT quantity FROM INGREDIENTS WHERE ingredient_name = '"+ingredientName+"';";
-        ResultSet rs = st.executeQuery(querry);
-         if(rs.next()){
-            int currentQuantity = rs.getInt("quantity");
-            if(currentQuantity >= amount){
-                int newQuantity = currentQuantity - amount;
-                Statement stu = con.createStatement();
-			    String command = "UPDATE INGREDIENTS SET quantity = '" + newQuantity + "' WHERE ingredient_name = '" + ingredientName + "';";
-                int updatedRows = stu.executeUpdate(command);
-                if(updatedRows>0){
-                    return true;
-                }}}}
-         catch(Exception e) {
+        
+        int quantity = checkQuantity(ingredientName);
+        if(quantity >= amount) {
+        	int newQuantity = quantity - amount;
+			try {
+				Statement stu = con.createStatement();
+				String command = "UPDATE INGREDIENTS SET quantity = '" + newQuantity + "' WHERE ingredient_name = '" + ingredientName + "';";
+	            int updatedRows = stu.executeUpdate(command);
+	            if(updatedRows>0){
+	                return true;
+	            }
+			} catch (SQLException e) {
 				e.printStackTrace();
-                System.out.println("Failed to get ingredient or error connecting database");
-			}
-            return false;
+			}   
+        }
+		return false;
       }
+      
       
     /**
      * This method checks the quantity to help us know whether ingredients are sufficient.
@@ -104,20 +122,20 @@ public class DbInventory implements Inventory{
      * @return quantity 
      */
      public int checkQuantity(String ingredientName){
-        int qu = 0;
+        int quantity = 0;
         try{
             Statement st = con.createStatement();
-            String querry = "SELECT quantity FROM INGREDIENTS WHERE ingredient_name = '"+ingredientName+"';";
-            ResultSet rs = st.executeQuery(querry);
+            String query = "SELECT quantity FROM INGREDIENTS WHERE ingredient_name = '"+ingredientName+"';";
+            ResultSet rs = st.executeQuery(query);
             if(rs.next()){
-                qu = rs.getInt("quantity");
+            	quantity = rs.getInt("quantity");
             }
         }
         catch(Exception e) {
             e.printStackTrace();
             System.out.println("Failed to check quantity or error connecting database");
         }
-        return qu;
+        return quantity;
      }
 
     /**
@@ -135,11 +153,13 @@ public class DbInventory implements Inventory{
             if(rs.next() && rs.getInt("quantity")>0){
                 flag = true;
             }
-        }
-        catch(Exception e) {
-            e.printStackTrace();
-            System.out.println("Failed to search or error connecting database");
-        }
+        } catch (SQLException e) {
+	        e.printStackTrace();
+	        System.out.println("Error connecting database");
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        System.out.println("Error occured in search. Please try again.");
+	    }
         return flag;
       }
       
@@ -150,40 +170,56 @@ public class DbInventory implements Inventory{
        * @return Ingredient
        */
       @Override
-  
-      
       public Ingredient getIngredient(String ingredientName) {
     	    double price = 0;
     	    int quantityInInventory = 0;
     	    try {
-    	        Statement st = con.createStatement();
-    	        String querry_2 = "SELECT price, quantity FROM INGREDIENTS WHERE ingredient_name = '"+ingredientName+"';";
-    	        ResultSet rs2 = st.executeQuery(querry_2);
+    	        ResultSet rs2 = getIngredientQuantityAndPrice(ingredientName);
     	        if(rs2.next()) { 
     	            price = rs2.getDouble("price");
     	            quantityInInventory = rs2.getInt("quantity");
     	        }
     	        updateQuantity(ingredientName, quantityInInventory-1);//calls a method to update the database with new quantity
-
-    	        Map<String, Ingredient> ingredientMap = new HashMap<>();
-    	        ingredientMap.put("Beef", new Beef(ingredientName, price, "Meat"));
-    	        ingredientMap.put("American", new AmericanCheese(ingredientName, price, "Cheese"));
-    	        ingredientMap.put("Bread", new Bread(ingredientName, price, "Bread"));
-    	        ingredientMap.put("Cheddar", new Cheddar(ingredientName, price, "Cheese"));
-    	        ingredientMap.put("Chicken", new Chicken(ingredientName, price, "Meat"));
-    	        ingredientMap.put("Ketchup", new Ketchup(ingredientName, price, "Sauce"));
-    	        ingredientMap.put("Lettuce", new Lettuce(ingredientName, price, "Vegetable"));
-    	        ingredientMap.put("Mayo", new Mayonnaise(ingredientName, price, "Sauce"));
-    	        ingredientMap.put("Meatball", new Meatball(ingredientName, price, "Meat"));
-    	        ingredientMap.put("Tomato", new Tomato(ingredientName, price, "Vegetable"));
-    	        ingredientMap.put("Veggiepatty", new Veggiepatty(ingredientName, price, "Vegetable"));
-
-    	        return ingredientMap.getOrDefault(ingredientName, null);
+    	        return generateIngredient(ingredientName, price);
+    	    
+    	    } catch (SQLException e) {
+    	        e.printStackTrace();
+    	        System.out.println("Error connecting to database");
     	    } catch (Exception e) {
     	        e.printStackTrace();
-    	        System.out.println("Failed to search or error connecting database");
+    	        System.out.println("Error occured in search. Please try again.");
     	    }
     	    return null;// Handle exception here
+    	}
+      /**
+       * 
+       * @param ingredientName
+       * @return The result set holding the price and quantity from the DB
+       * @throws SQLException
+       */
+      private ResultSet getIngredientQuantityAndPrice(String ingredientName) throws SQLException {
+    	  Statement st = con.createStatement();
+	      String querry_2 = "SELECT price, quantity FROM INGREDIENTS WHERE ingredient_name = '"+ingredientName+"';";
+	      return st.executeQuery(querry_2);
+      }
+      
+      /**
+       * 
+       * @param ingredientName
+       * @param price
+       * @return Corresponding Ingredient Object to the IngredientName, with its price
+       */
+      private Ingredient generateIngredient(String ingredientName, double price) {
+    	    Class<? extends Ingredient> ingredientClass = INGREDIENT_MAP.get(ingredientName);
+    	    if (ingredientClass != null) {
+    	        try {
+    	            Constructor<? extends Ingredient> constructor = ingredientClass.getConstructor(String.class, double.class, String.class);
+    	            return constructor.newInstance(ingredientName, price, "unknown");
+    	        } catch (Exception e) {
+    	            e.printStackTrace();
+    	        }
+    	    }
+    	    return null;
     	}
       
       /**
@@ -197,10 +233,13 @@ public class DbInventory implements Inventory{
               String querry = "UPDATE INGREDIENTS SET quantity = " + newQuantity + " WHERE ingredient_name = '"+ingredient+"';";
               st.executeUpdate(querry);
 
-    	  }catch(Exception e) {
-              e.printStackTrace();
-              System.out.println("Failed to search or error connecting database");
-          }
+    	  } catch (SQLException e) {
+  	        e.printStackTrace();
+  	        System.out.println("Error connecting to database");
+  	    } catch (Exception e) {
+  	        e.printStackTrace();
+  	        System.out.println("Error occured in search. Please try again.");
+  	    }
       }
       
 /** 
