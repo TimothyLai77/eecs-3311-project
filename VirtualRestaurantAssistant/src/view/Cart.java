@@ -51,7 +51,12 @@ public class Cart {
 		
 		 if(this.getSize() > 0) {
 		 	for(CartItem i : itemList) {
-		 		if(i.getName().equals(CartItem.getName()) && i.getAddedOptions().containsAll(CartItem.getAddedOptions())) {
+		 		if(
+		 			i.getName().equals(CartItem.getName()) 
+		 			&& i.getAddedOptions().containsAll(CartItem.getAddedOptions()) 
+		 			&& i.getAddedOptions().size() == CartItem.getAddedOptions().size()) 
+		 		{
+		 			
 		 			i.setQuantity(CartItem.getQuantity() + i.getQuantity());
 		 			return;
 		 		}
