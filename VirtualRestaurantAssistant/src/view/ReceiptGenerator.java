@@ -48,6 +48,7 @@ public class ReceiptGenerator {
 	// Variables used throughout this UI
 	private static String currTime = "";	// Holds formatted date and time string.
 	static LocalDateTime now = LocalDateTime.now(); // Fetched current data and time.
+	String orderID = "";
 	
 	//Item Display Panel
 	private JPanel itemDisplayPanel;
@@ -60,7 +61,7 @@ public class ReceiptGenerator {
 	 * @param LinkedList<CartItem> cartContent
 	 * @param List<Double> costs
 	 * */
-	public ReceiptGenerator(LinkedList<CartItem> cartContent, List<Double> costs) {
+	public ReceiptGenerator(LinkedList<CartItem> cartContent, List<Double> costs, String orderID) {
 		
 		currTime = now.format(formatter);		// Setting current time and date to currTime to be used throughout RECEIPT UI
 		generateFrame(); //Generate frame
@@ -70,6 +71,7 @@ public class ReceiptGenerator {
 		createCloseButton(); //Close button
 		generateItemDisplay(); //Generate display for order
 		
+		this.orderID = orderID;
 		double total = populateItemDisplay(cartContent, costs); //Add labels into order display
 		frame.validate(); // Refresh the visual state.
 		
@@ -167,6 +169,7 @@ public class ReceiptGenerator {
 		frame.dispose(); //Otherwise kill the current frame.
 		// Upon placing order the user is sent back to the home page
 		new HomePage().setVisible(true);
+		new FeedbackPrompt(this.orderID).setVisible(true);
 	}
 	
 	// ReceiptStyling HELPER: receipt title
