@@ -57,7 +57,7 @@ public class ManagerSales {
 	 * */
 	public String displaySales() throws SQLException {
 		Statement st = connection.createStatement();
-		String query = "SELECT * FROM ORDERS;";
+		String query = "SELECT * FROM ORDERS ORDER BY order_date;";
 		ResultSet rs = st.executeQuery(query);
 		String orderSt = "Order ID";
 		String amountSt = "Amount";
