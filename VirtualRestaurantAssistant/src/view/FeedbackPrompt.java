@@ -5,6 +5,8 @@ import java.awt.EventQueue;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
@@ -14,6 +16,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.JLabel;
@@ -32,6 +35,8 @@ public class FeedbackPrompt extends JFrame {
 	private JPanel contentPane;
 	private JButton[] starButtons;
 	private JLabel numRating;
+	private JTextArea feedbackArea;
+	private JLabel errorLabel;
 	
 	//Frame coordinates, fetched at runtime.
 	private int mouseX, mouseY;
@@ -70,14 +75,13 @@ public class FeedbackPrompt extends JFrame {
 	private void setupStarRatings() {
 		createStars();
 		createStarPanel();
-		handleFormSubmit();
 		createNumericLabel();
 	}
 	
 	//Set up the base frame and content pane
 	private void setupFrame() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 450, 350);
 		setIconImage(ImageImports.frameLogo);
 		setResizable(false);
 		setUndecorated(true);
@@ -90,6 +94,8 @@ public class FeedbackPrompt extends JFrame {
 		setupToolbar();
 		createTitle();
 		createSubtitle();
+		createSubmitButton();
+		createTextArea();
 	}
 	
 	//Create title for frame
@@ -101,6 +107,7 @@ public class FeedbackPrompt extends JFrame {
 	    feedbackTitle.setBackground(Color.ORANGE);
 	    feedbackTitle.setBounds(1, 20, 448, 36);
 	    contentPane.add(feedbackTitle);
+		createErrorLabel();
 	}
 	
 	//Create subtitle for frame
@@ -181,14 +188,13 @@ public class FeedbackPrompt extends JFrame {
 		numRating = new JLabel("");
 		numRating.setHorizontalAlignment(SwingConstants.CENTER);
 		numRating.setFont(new Font("Tahoma", Font.BOLD, 19));
-		numRating.setBounds(335, 107, 28, 36);
+		numRating.setBounds(330, 128, 28, 36);
 		contentPane.add(numRating);
-		JLabel maxRating = new JLabel("/5");
+		JLabel maxRating = new JLabel("/ 5");
 		maxRating.setVerticalAlignment(SwingConstants.BOTTOM);
-		maxRating.setBounds(360, 107, 54, 30);
+		maxRating.setBounds(360, 130, 54, 30);
 		maxRating.setFont(new Font("Tahoma", Font.BOLD, 15));
 		contentPane.add(maxRating);
-		
 	}
 	
 	//Star rating component HELPER: Creates the individual starRating buttons
@@ -220,11 +226,12 @@ public class FeedbackPrompt extends JFrame {
 	    for (int i = 0; i < starButtons.length; i++) {
 	    	starPanel.add(starButtons[i]);
 	    }
-	    starPanel.setBounds(119, 98, 200, 50);
+	    starPanel.setBounds(119, 120, 200, 50);
 	    contentPane.add(starPanel);
 	}
 	//Star rating component HELPER: Set Star rating and highlight
 	private void setRating(ActionEvent e) {
+		errorLabel.setText("");
 		// Update rating based on number of stars clicked
 	    for (int i = 0; i < starButtons.length; i++) {
 	    	if (e.getSource() == starButtons[i]) {
@@ -241,9 +248,71 @@ public class FeedbackPrompt extends JFrame {
 	    }
 	}
 
+	//Create submit button
+	private void createSubmitButton() {
+		JButton submit = new JButton("Submit Feedback");
+		submit.setBorder(null);
+		submit.setBackground(Color.black);
+		submit.setForeground(Color.white);
+		submit.setBounds(119, 316, 200, 23);
+		submit.addActionListener(new ActionListener() {
+			// This event trigger closes the Application.
+			public void actionPerformed(ActionEvent e) {
+				handleFormSubmit();	
+			}
+		});
+		contentPane.add(submit);
+	}
+	
+	//Create text Area to hold text feedback
+	private void createTextArea() {
+		feedbackArea = new JTextArea("Share your thoughts here!");
+		feedbackArea.setLineWrap(true);
+		feedbackArea.setBorder(new LineBorder(new Color(0, 0, 0), 1));
+    	feedbackArea.setFont(new Font("Tahoma", Font.BOLD, 12));
+		JScrollPane scroll = new JScrollPane(feedbackArea);
+		scroll.setBounds(85, 205, 280, 84);
+		contentPane.add(scroll);
+		attachFocusFunction();
+	}
+	
+	//Create a error label
+	private void createErrorLabel() {
+		errorLabel = new JLabel("");
+		errorLabel.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		errorLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		errorLabel.setBounds(119, 180, 200, 14);
+		errorLabel.setForeground(Color.RED);
+		contentPane.add(errorLabel);
+	}
+	
+	//Add placeholder functionality to the text area
+	private void attachFocusFunction() {
+		feedbackArea.addFocusListener(new FocusListener() {  
+		    @Override  
+		    public void focusGained(FocusEvent e) {  
+		    	feedbackArea.setText("");  
+		    	feedbackArea.setForeground(Color.black);  
+		    	feedbackArea.setFont(new Font("Tahoma", Font.BOLD, 12));
+		    }  
+		    @Override  
+		    public void focusLost(FocusEvent e) { 
+		        if (feedbackArea.getText().length() == 0) {  
+		        	feedbackArea.setText("Share your thoughts here!");  
+		        	feedbackArea.setForeground(Color.gray); 
+		        	feedbackArea.setFont(new Font("Tahoma",Font.PLAIN, 12));
+		        }  
+		    }  
+		});
+	}
+
 	//Handle the submit
 	private void handleFormSubmit() {
-		
-		System.out.println(this.orderID + " " + rating);
+		if(rating != 0) {
+			textFeedback = feedbackArea.getText();
+			System.out.println(this.orderID + " " + rating + "\nMessage: " + textFeedback);
+		} else {
+			errorLabel.setText("Rating is required for feedback");
+		}
 	}
 }
