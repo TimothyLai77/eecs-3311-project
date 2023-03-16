@@ -11,7 +11,6 @@ import javax.swing.border.EmptyBorder;
 
 import controller.ManagerUIController;
 import controller.OrderUIController;
-import model.ManagerSales;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -395,7 +394,6 @@ public class OrderSelectionPage extends JFrame {
 		sandwichPanel.setBounds(20, 70, 435, 315);
 		sandwichPanel.setBorder(null);
 		sandwichPanel.setLayout(null);
-		sandwichPanel.setVisible(false);
 		contentPane.add(sandwichPanel);
 	}
 	
@@ -407,7 +405,7 @@ public class OrderSelectionPage extends JFrame {
 		toppingsCheckoutPanel.setBounds(20, 69, 435, 315);
 		toppingsCheckoutPanel.setBorder(null);
 		toppingsCheckoutPanel.setLayout(null);
-//		toppingsCheckoutPanel.setVisible(false);
+		toppingsCheckoutPanel.setVisible(false);
 		contentPane.add(toppingsCheckoutPanel);
 		createClearToppingsPanel();
 	}
@@ -422,7 +420,7 @@ public class OrderSelectionPage extends JFrame {
 		toppingsCheckoutPanel.add(clearPanel);
 		createClearGrid( clearPanel);
 	}
-	//HELPER: create clear button
+	//CLEAR FUNCTION HELPER: create clear button
 	private void createClearGrid(JPanel clearPanel) {
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.gridx = 0;
@@ -437,7 +435,7 @@ public class OrderSelectionPage extends JFrame {
 		gbc.gridy = 2;
 		clearPanel.add(generateClearBtn("clearc"), gbc);
 	}
-	//HELPER TO STYLE AND RETURN READY MADE BUTTON to GRID
+	//CLEAR FUNCTION HELPER:  TO STYLE AND RETURN READY MADE BUTTON to GRID
 	private JButton generateClearBtn(String name) {
 		JButton jb = new JButton("clear");
 		jb.setName(name);
@@ -447,7 +445,7 @@ public class OrderSelectionPage extends JFrame {
 		addClearListener(jb);
 		return jb;
 	}
-	//Attach listener
+	//CLEAR FUNCTION HELPER: attach listener
 	private void addClearListener(JButton jb) {
 		jb.addActionListener(new ActionListener() {
             @Override
@@ -459,7 +457,7 @@ public class OrderSelectionPage extends JFrame {
             }
         });
 	}
-	//Handle clearchoice
+	//CLEAR FUNCTION HELPER: Handle clearchoice
 	private void handleClearChoice(String name) {
 		switch(name.charAt(name.length()-1)) {
         case 'v':
@@ -475,7 +473,8 @@ public class OrderSelectionPage extends JFrame {
         	return;
         }
 	}
-	//Clear topping selections
+	
+	//CLEAR FUNCTION HELPER: Clear topping selections
 	private void clearToppings(int i) {
 		JPanel jp = null;
 		if(i == 0) {jp = veggiesPanel;}
