@@ -11,11 +11,12 @@ import javax.swing.border.EmptyBorder;
 
 import controller.ManagerUIController;
 import controller.OrderUIController;
-import model.ManagerSales;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -33,6 +34,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import java.awt.GridLayout;
+import java.awt.Insets;
 
 public class OrderSelectionPage extends JFrame {
 
@@ -405,6 +407,92 @@ public class OrderSelectionPage extends JFrame {
 		toppingsCheckoutPanel.setLayout(null);
 		toppingsCheckoutPanel.setVisible(false);
 		contentPane.add(toppingsCheckoutPanel);
+		createClearToppingsPanel();
+	}
+	
+	//Generates ToppingClear panel
+	private void createClearToppingsPanel() {
+		JPanel clearPanel = new JPanel();
+		clearPanel.setBackground(Color.black);
+		clearPanel.setFocusable(false);
+		clearPanel.setLayout(new GridBagLayout());
+		clearPanel.setBounds(341, 36, 79, 222);
+		toppingsCheckoutPanel.add(clearPanel);
+		createClearGrid( clearPanel);
+	}
+	//CLEAR FUNCTION HELPER: create clear button
+	private void createClearGrid(JPanel clearPanel) {
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.gridx = 0;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.weightx = 1.0;
+		gbc.weighty = 1.0;
+		gbc.insets = new Insets(10, 10, 10, 10);
+		gbc.gridy = 0;
+		clearPanel.add(generateClearBtn("clearv"), gbc);
+		gbc.gridy = 1;
+		clearPanel.add(generateClearBtn("clears"), gbc);
+		gbc.gridy = 2;
+		clearPanel.add(generateClearBtn("clearc"), gbc);
+	}
+	//CLEAR FUNCTION HELPER:  TO STYLE AND RETURN READY MADE BUTTON to GRID
+	private JButton generateClearBtn(String name) {
+		JButton jb = new JButton("clear");
+		jb.setName(name);
+		jb.setBackground(Color.red);
+		jb.setForeground(Color.black);
+		jb.setBorder(null);
+		addClearListener(jb);
+		return jb;
+	}
+	//CLEAR FUNCTION HELPER: attach listener
+	private void addClearListener(JButton jb) {
+		jb.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Get the button that was clicked
+                JButton clickedButton = (JButton) e.getSource();
+                String name = clickedButton.getName();
+                handleClearChoice(name);
+            }
+        });
+	}
+	//CLEAR FUNCTION HELPER: Handle clearchoice
+	private void handleClearChoice(String name) {
+		switch(name.charAt(name.length()-1)) {
+        case 'v':
+        	clearToppings(0);
+        	break;
+        case 's':
+        	clearToppings(1);
+        	break;
+        case 'c':
+        	clearToppings(2);
+        	break;
+        default: 
+        	return;
+        }
+	}
+	
+	//CLEAR FUNCTION HELPER: Clear topping selections
+	private void clearToppings(int i) {
+		JPanel jp = null;
+		if(i == 0) {jp = veggiesPanel;}
+		else if(i == 1) {jp = saucesPanel;}
+		else if(i == 2) {jp = cheesePanel;}
+		else return;
+	
+		for (Component component : jp.getComponents()) {
+			
+			//Sets to "DISABLED" state.
+	        if (component instanceof JButton) {
+	            JButton button = (JButton) component;
+	            if(!button.getName().equals("addToCart")) {
+		            button.setBackground(Color.white);
+		            button.setEnabled(true);	
+	            }
+	        }
+		}
 	}
 	
 	//Creates icons for the toppings
@@ -430,19 +518,19 @@ public class OrderSelectionPage extends JFrame {
 	private void createToppingTypePanels() {
 		veggiesPanel = new JPanel();
 		veggiesPanel.setBackground(Color.black);
-		veggiesPanel.setBounds(80, 55, 310, 30);
+		veggiesPanel.setBounds(80, 55, 250, 30);
 		toppingsCheckoutPanel.add(veggiesPanel);
 		veggiesPanel.setLayout(new GridLayout(1, 0, 30, 0));
 		
 		saucesPanel = new JPanel();
 		saucesPanel.setBackground(Color.black);
-		saucesPanel.setBounds(80, 130, 310, 30);
+		saucesPanel.setBounds(80, 130, 250, 30);
 		toppingsCheckoutPanel.add(saucesPanel);
 		saucesPanel.setLayout(new GridLayout(1, 0, 30, 0));
 		
 		cheesePanel = new JPanel();
 		cheesePanel.setBackground(Color.black);
-		cheesePanel.setBounds(80, 205, 310, 30);
+		cheesePanel.setBounds(80, 205, 250, 30);
 		toppingsCheckoutPanel.add(cheesePanel);
 		cheesePanel.setLayout(new GridLayout(1, 0, 30, 0));
 	}
@@ -635,23 +723,17 @@ public class OrderSelectionPage extends JFrame {
 		addLabelToCart(newItem);
 				
 		//Ask user for another addition
-		promptAnotheroneDialogue();
+		backToBase();
 	}
 	
-	//CartHelper - create another sandwich dialogue
-	private void promptAnotheroneDialogue() {
-		// Prompt user if they need a RECEIPT
-		int anotherOne = JOptionPane.showConfirmDialog(null, "Would you like to add another?", "Never enough sandwiches!",
-				JOptionPane.YES_NO_OPTION);
-
+	//CartHelper - go back to create another
+	private void backToBase() {
+		
 		// Reset all selections, ready for the next CartItem
 		clearAllSelections();
-		
-		if(anotherOne == JOptionPane.YES_NO_OPTION) {
-			sandwichPanel.setVisible(true);
-			toppingsCheckoutPanel.setVisible(false);
-			pageLabel.setText("Sandwich Station");
-		}
+		sandwichPanel.setVisible(true);
+		toppingsCheckoutPanel.setVisible(false);
+		pageLabel.setText("Sandwich Station");
 	}
 	
 	//Create Topping labels
