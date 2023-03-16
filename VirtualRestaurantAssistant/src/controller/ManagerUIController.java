@@ -73,4 +73,8 @@ public class ManagerUIController {
 	public String viewInventory() throws SQLException{
 		return mg.viewInventory();
 	}
+	// Views the current sales
+	public String viewSales() throws SQLException {
+		return ms.displaySales();
+	}
 }

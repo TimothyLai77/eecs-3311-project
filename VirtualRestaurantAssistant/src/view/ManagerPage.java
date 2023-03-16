@@ -18,6 +18,7 @@ public class ManagerPage extends JFrame implements ActionListener {
 
 	//Controller instance
 	ManagerUIController controller;
+	ManagerUIController salesController;
 	
 	//Frame coordinates, fetched at runtime.
 	private int mouseX, mouseY;
@@ -38,6 +39,7 @@ public class ManagerPage extends JFrame implements ActionListener {
 	
 	//Inventory Label
 	private JTextArea inventoryShowcaseLabel;
+	private JTextArea managerSalesLabel;
 	
 	// Panel and Component references
 	private JComboBox<String> ingredientDropdown; //Dropdown list of names
@@ -47,7 +49,9 @@ public class ManagerPage extends JFrame implements ActionListener {
 	private ButtonGroup typeGroup;
 	
 	//Individual buttons
-	JRadioButton addChoiceBtn;
+	private JRadioButton addChoiceBtn;
+	private JButton showInventoryBtn;
+	private JButton showSalesBtn;
 	
 	//Quantity and price
 	private JSpinner quantitySelector;
@@ -63,7 +67,9 @@ public class ManagerPage extends JFrame implements ActionListener {
 	private static double selectedPrice = 0;
 	
 	private JPanel managerLeftPanel;
-	
+	private JPanel bottomDisplayPanel;
+	private JPanel showcaseTriggerPanel;
+
 
 	/**
 	 * Launch the application.
@@ -88,10 +94,13 @@ public class ManagerPage extends JFrame implements ActionListener {
 		
 		//Establishing Manager Connection with Controller
 		controller = new ManagerUIController();
+		salesController = new ManagerUIController(true);
+		
 		generateManagerPage(); //Sets up the neccessary basis of the page
 		renderChoiceButtons(); //Render possible proccesses for on the Inventory
 		preSelect(); //Selects add as the pre-selecred process
 		createManagerPanel(); //Creates the base panel to house components
+		createBottomDisplayPanel(); //Creates the bottom display panel
 		createButtons(); //Creates all extra required buttons
 		createMessageDisplay(); //Creates label to show message to user
 		createInventoryShowcase(); //Invenotry display
@@ -124,7 +133,7 @@ public class ManagerPage extends JFrame implements ActionListener {
 		setIconImage(ImageImports.frameLogo);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setUndecorated(true);
-		setBounds(100, 100, 995, 500);
+		setBounds(100, 100, 995, 600);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(255, 255, 255));
 		contentPane.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -236,6 +245,7 @@ public class ManagerPage extends JFrame implements ActionListener {
 	private void renderChoiceButtons() {
 		renderChoiceButtonsFirstSet();
 		renderChoiceButtonsSecondSet();
+		createShowcaseChoiceTrigger();
 	}
 	private void renderChoiceButtonsFirstSet(){
 		//ADD NEW PROCESS
@@ -289,6 +299,16 @@ public class ManagerPage extends JFrame implements ActionListener {
 		managerLeftPanel.setLayout(null);
 		contentPane.add(managerLeftPanel);
 		generateManagerPanelComponents();
+	}
+	
+	//Create BottomDisplay Panel
+	private void createBottomDisplayPanel() {
+		bottomDisplayPanel = new JPanel();
+		bottomDisplayPanel.setBorder(null);
+		bottomDisplayPanel.setBackground(Color.white);
+		bottomDisplayPanel.setBounds(32, 419, 936, 139);
+		bottomDisplayPanel.setLayout(null);
+		contentPane.add(bottomDisplayPanel);
 	}
 	
 	//Creates all nested components in this panel
@@ -418,7 +438,7 @@ public class ManagerPage extends JFrame implements ActionListener {
 	//Create buttons HELPER: Create Back button
 	private void createBackButton() {
 		JButton backBtn = new JButton("< Back to Home");
-		backBtn.setBounds(10, 466, 170, 23);
+		backBtn.setBounds(10, 566, 170, 23);
 		contentPane.add(backBtn);
 		backBtn.setForeground(Color.WHITE);
 		backBtn.setFont(new Font("Tahoma", Font.BOLD, 13));
@@ -428,11 +448,11 @@ public class ManagerPage extends JFrame implements ActionListener {
 			// Trigger on back button.
 			public void actionPerformed(ActionEvent e) {
 				goToPrevPage();
-				
 			}
 		});
 		
 	}
+	
 	
 	// Back button HELPER: Back dialogue
 	private void goToPrevPage() {
@@ -445,6 +465,97 @@ public class ManagerPage extends JFrame implements ActionListener {
 		if (confirmed == JOptionPane.YES_OPTION) {
 			new HomePage().setVisible(true);
 			dispose(); //Kill current frame
+		}
+	}
+	
+	//Create showcase trigger 
+	private void createShowcaseChoiceTrigger() {
+		showcaseTriggerPanel = new JPanel();
+		showcaseTriggerPanel.setBounds(323, 378, 350, 35);
+		contentPane.add(showcaseTriggerPanel);
+		showcaseTriggerPanel.setLayout(new GridLayout(0, 2, 0, 0));
+		createShowcaseButtons();
+	}
+	
+	//Showcase Trigger buttons
+	private void createShowcaseButtons() {
+		createInventoryButton(); //Create inventory choice
+		createSalesButton(); //Create sales choice
+	}
+	//Showcase Trigger buttons: HELPER create show inventory button
+	private void createInventoryButton() {
+		showInventoryBtn = new JButton("Showing Inventory");
+		showcaseTriggerPanel.add(showInventoryBtn);
+		showInventoryBtn.setForeground(Color.black);
+		showInventoryBtn.setBackground(Color.orange);
+		showInventoryBtn.setEnabled(false);
+		showInventoryBtn.setBorder(null);
+		showInventoryBtn.setName("inv");
+		showInventoryBtn.addActionListener(new ActionListener() {
+			@Override 
+			public void actionPerformed(ActionEvent e) {
+				setView("inv");
+			}
+		});
+	}
+	
+	//Showcase Trigger buttons: HELPER create show sales button
+	private void createSalesButton() {
+		showSalesBtn = new JButton("Show Sales");
+		showcaseTriggerPanel.add(showSalesBtn);
+		showSalesBtn.setForeground(Color.orange);
+		showSalesBtn.setBackground(Color.black);
+		showSalesBtn.setBorder(null);
+		showSalesBtn.setName("sales");
+		showSalesBtn.addActionListener(new ActionListener() {
+			@Override 
+			public void actionPerformed(ActionEvent e) {
+				setView("sales");
+			}
+		});
+	}
+	
+	//Showcase Trigger buttons: HELPER handle view change on click
+	private void setView(String view) {
+		if(view.equals("inv")) {
+			createInventoryShowcase();
+			
+		} else {
+			createManagerSalesShowcase();
+		}
+		changeViewSelection(view);
+	}
+	
+	//Handle the button change restriction for view buttons
+	private void changeViewSelection(String view) {
+		boolean i = true;
+		if(view.equals("inv")) {
+			showInventoryBtn.setText("Showing Inventory");
+			showInventoryBtn.setEnabled(false);
+			showSalesBtn.setText("Show Sales");
+			showSalesBtn.setEnabled(true);
+		} else {
+			i = false;
+			showInventoryBtn.setText("Show Inventory");
+			showInventoryBtn.setEnabled(true);
+			showSalesBtn.setText("Showing Sales");
+			showSalesBtn.setEnabled(false);
+		}
+		switchButtonStyling(i);
+	}
+	
+	//HELPER change button styling
+	private void switchButtonStyling(boolean i) {
+		if(i) {
+			showInventoryBtn.setBackground(Color.ORANGE);
+			showInventoryBtn.setForeground(Color.black);
+			showSalesBtn.setBackground(Color.black);
+			showSalesBtn.setForeground(Color.ORANGE);
+		} else {
+			showInventoryBtn.setBackground(Color.black);
+			showInventoryBtn.setForeground(Color.ORANGE);
+			showSalesBtn.setBackground(Color.ORANGE);
+			showSalesBtn.setForeground(Color.black);
 		}
 	}
 	
@@ -489,58 +600,95 @@ public class ManagerPage extends JFrame implements ActionListener {
 		managerLeftPanel.add(managerMessageLabel);
 	}
 	
-	//Generate textarea to showcase current inventory
+	//Generate Inventory Display
 	private void createInventoryShowcase() {
+		clearPanel();
 		inventoryShowcaseLabel = new JTextArea("Beef                           meat                           62                             $99.00                          \nBread                          bread                          69                             $99.00                          \nChicken                        meat                           4                              $2.00                           \n");
 		inventoryShowcaseLabel.setEditable(false);
 		JScrollPane scrollPane = new JScrollPane(inventoryShowcaseLabel);
-		scrollPane.setBounds(200, 403, 595, 86);
-		contentPane.add(scrollPane);
-		createInventoryLabels();
-		createRefreshButton();
+		scrollPane.setBounds(176, 36, 580, 102);
+		try {
+			updateInventoryDisplay();
+		} catch (SQLException e) {
+			managerMessageLabel.setText("Could not fetch inventory.");
+			e.printStackTrace();
+		}
+		bottomDisplayPanel.add(scrollPane);
+		createLabels("Current Inventory:", "Name:");
+		createLabels2( "Type:", "Qty:", "Price:" );
+		createRefreshButton("Refresh Inventory View");
+	}
+	
+	//Generate ManagerSales Display
+	private void createManagerSalesShowcase() {
+		clearPanel();
+		managerSalesLabel = new JTextArea("");
+		managerSalesLabel.setEditable(false);
+		JScrollPane scrollPane = new JScrollPane(managerSalesLabel);
+		scrollPane.setBounds(176, 36, 580, 102);
+		try {
+			updateSalesDisplay();
+		} catch (SQLException e) {
+			managerMessageLabel.setText("Could not fetch sales.");
+			e.printStackTrace();
+		}
+		createLabels("Sales data:", "OrderID:");
+		createLabels2("Order Total:", "Date:", "");
+		createRefreshButton("Refresh Sales View");
+		bottomDisplayPanel.add(scrollPane);
+	}
+	
+	//Clear panel
+	private void clearPanel() {
+		bottomDisplayPanel.removeAll();
+		bottomDisplayPanel.revalidate();
+		bottomDisplayPanel.repaint();
 	}
 	
 	//Inventory showcase HELPER: Inventory labels
-	private void createInventoryLabels() {
-		JLabel showcaseLabel = new JLabel("Current Inventory:");
+	private void createLabels(String lb1, String lb2) {
+		JLabel showcaseLabel = new JLabel(lb1);
+			showcaseLabel.setBounds(10, 11, 160, 14);
+			bottomDisplayPanel.add(showcaseLabel);
 			showcaseLabel.setFont(new Font("Tahoma", Font.BOLD, 11));
-			showcaseLabel.setBounds(26, 386, 160, 14);
-			contentPane.add(showcaseLabel);
-		JLabel invName = new JLabel("Name:");
+		JLabel invName = new JLabel(lb2);
+			invName.setBounds(176, 11, 139, 14);
+			bottomDisplayPanel.add(invName);
 			invName.setFont(new Font("Tahoma", Font.BOLD, 11));
-			invName.setBounds(200, 385, 139, 14);
-			contentPane.add(invName);
-		createInventoryLabels2();
 	}
-	private void createInventoryLabels2() {
-		JLabel lblIngredientType = new JLabel("Type:");
+	private void createLabels2(String lb3, String lb4, String lb5) {
+		JLabel lblIngredientType = new JLabel(lb3);
+			lblIngredientType.setBounds(281, 11, 111, 14);
+			bottomDisplayPanel.add(lblIngredientType);
 			lblIngredientType.setFont(new Font("Tahoma", Font.BOLD, 11));
-			lblIngredientType.setBounds(312, 385, 111, 14);
-			contentPane.add(lblIngredientType);
-		JLabel lblIngredientQty = new JLabel("Qty:");
+		JLabel lblIngredientQty = new JLabel(lb4);
+			lblIngredientQty.setBounds(402, 11, 71, 14);
+			bottomDisplayPanel.add(lblIngredientQty);
 			lblIngredientQty.setFont(new Font("Tahoma", Font.BOLD, 11));
-			lblIngredientQty.setBounds(433, 385, 71, 14);
-			contentPane.add(lblIngredientQty);
-		JLabel lblPrice = new JLabel("Price:");
+		JLabel lblPrice = new JLabel(lb5);
+			lblPrice.setBounds(517, 11, 111, 14);
+			bottomDisplayPanel.add(lblPrice);
 			lblPrice.setFont(new Font("Tahoma", Font.BOLD, 11));
-			lblPrice.setBounds(528, 385, 111, 14);
-			contentPane.add(lblPrice);
-			
-			
 	}
+	
 	//Creates a "Refresh" button to rerender the inventory's state
-	private void createRefreshButton() {
-		JButton refreshInventoryShowcaseBtn = new JButton("Refresh Inventory View");
-		refreshInventoryShowcaseBtn.setBounds(805, 405, 153, 23);
-		refreshInventoryShowcaseBtn.setForeground(Color.black);
-		refreshInventoryShowcaseBtn.setBackground(Color.orange);
-		refreshInventoryShowcaseBtn.setBorder(null);
-		contentPane.add(refreshInventoryShowcaseBtn);	
-		refreshInventoryShowcaseBtn.addActionListener(new ActionListener() {
+	private void createRefreshButton(String task) {
+		JButton refreshShowcaseButton = new JButton(task);
+		refreshShowcaseButton.setBounds(773, 7, 153, 23);
+		bottomDisplayPanel.add(refreshShowcaseButton);
+		refreshShowcaseButton.setForeground(Color.black);
+		refreshShowcaseButton.setBackground(Color.orange);
+		refreshShowcaseButton.setBorder(null);
+		refreshShowcaseButton.addActionListener(new ActionListener() {
 			@Override 
 			public void actionPerformed(ActionEvent e) {
 				try {
-					updateInventoryDisplay();
+					if(task.contains("Inventory")) {
+						updateInventoryDisplay();
+					} else {
+						updateSalesDisplay();
+					}
+					
 				} catch (SQLException e1) {
 					e1.printStackTrace();
 				}
@@ -592,9 +740,12 @@ public class ManagerPage extends JFrame implements ActionListener {
 		selectedPrice = Double.parseDouble(priceField.getText());
 		managerMessageLabel.setText(controller.updatePrice(selectedName, selectedPrice));
 	}
-	//UPDATE INVENTORY DISPLAY
+	//UPDATE BOTTOM DISPLAY
 	private void updateInventoryDisplay() throws SQLException {
 		inventoryShowcaseLabel.setText(controller.viewInventory());
+	}
+	private void updateSalesDisplay() throws SQLException {
+		managerSalesLabel.setText(salesController.viewSales());
 	}
 	
 	@Override

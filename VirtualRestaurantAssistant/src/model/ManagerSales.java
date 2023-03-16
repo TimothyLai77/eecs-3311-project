@@ -57,14 +57,14 @@ public class ManagerSales {
 	 * */
 	public String displaySales() throws SQLException {
 		Statement st = connection.createStatement();
-		String query = "SELECT * FROM ORDERS;";
+		String query = "SELECT * FROM ORDERS ORDER BY order_date;";
 		ResultSet rs = st.executeQuery(query);
 		String orderSt = "Order ID";
 		String amountSt = "Amount";
 		String dateSt = "Date";
 		String columns = String.format("%-22s %-24s %-22s\n", orderSt, amountSt, dateSt);
 		String separator = "--";
-		String ret = columns + separator.repeat(33) + "\n";
+		String ret = "";//columns + separator.repeat(33) + "\n"
 		
 		while (rs.next()) {
 			String id = rs.getString("order_id");
