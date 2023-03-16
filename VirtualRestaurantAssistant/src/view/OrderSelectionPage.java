@@ -723,23 +723,17 @@ public class OrderSelectionPage extends JFrame {
 		addLabelToCart(newItem);
 				
 		//Ask user for another addition
-		promptAnotheroneDialogue();
+		backToBase();
 	}
 	
-	//CartHelper - create another sandwich dialogue
-	private void promptAnotheroneDialogue() {
-		// Prompt user if they need a RECEIPT
-		int anotherOne = JOptionPane.showConfirmDialog(null, "Would you like to add another?", "Never enough sandwiches!",
-				JOptionPane.YES_NO_OPTION);
-
+	//CartHelper - go back to create another
+	private void backToBase() {
+		
 		// Reset all selections, ready for the next CartItem
 		clearAllSelections();
-		
-		if(anotherOne == JOptionPane.YES_NO_OPTION) {
-			sandwichPanel.setVisible(true);
-			toppingsCheckoutPanel.setVisible(false);
-			pageLabel.setText("Sandwich Station");
-		}
+		sandwichPanel.setVisible(true);
+		toppingsCheckoutPanel.setVisible(false);
+		pageLabel.setText("Sandwich Station");
 	}
 	
 	//Create Topping labels
