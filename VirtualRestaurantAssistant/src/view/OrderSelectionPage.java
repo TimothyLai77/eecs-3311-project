@@ -817,7 +817,6 @@ public class OrderSelectionPage extends JFrame {
 			
 		// If not then USER is taken back to HOMEPAGE.
 		} else {
-			new HomePage().setVisible(true);
 			new FeedbackPrompt(cart.getID()).setVisible(true);
 		}
 		dispose(); // Kill current frame

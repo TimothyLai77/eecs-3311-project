@@ -168,7 +168,6 @@ public class ReceiptGenerator {
 		} 
 		frame.dispose(); //Otherwise kill the current frame.
 		// Upon placing order the user is sent back to the home page
-		new HomePage().setVisible(true);
 		new FeedbackPrompt(this.orderID).setVisible(true);
 	}
 	

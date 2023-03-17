@@ -189,6 +189,7 @@ public class FeedbackPrompt extends JFrame {
 		
 	//Close Helper: frame exit method
 	private void exitApp() {
+		new HomePage().setVisible(true);
 		dispose();
 	}
 	
