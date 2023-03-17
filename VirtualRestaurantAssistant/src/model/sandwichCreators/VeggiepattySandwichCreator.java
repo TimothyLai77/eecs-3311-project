@@ -1,8 +1,9 @@
-package model;
+package model.sandwichCreators;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import model.Sandwich;
 import model.Ingredients.Ingredient;
 import model.Sandwiches.VeggiepattySandwich;
 
