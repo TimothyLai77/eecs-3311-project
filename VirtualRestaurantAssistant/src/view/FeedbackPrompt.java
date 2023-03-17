@@ -42,6 +42,8 @@ public class FeedbackPrompt extends JFrame {
 	private JPanel starPanel;
 	private JButton submit;
 	private JScrollPane scroll;
+	private JLabel poorLabel;
+	private JLabel greatLabel;
 	
 	//Frame coordinates, fetched at runtime.
 	private int mouseX, mouseY;
@@ -205,6 +207,18 @@ public class FeedbackPrompt extends JFrame {
 		maxRating.setBounds(360, 130, 54, 30);
 		maxRating.setFont(new Font("Tahoma", Font.BOLD, 15));
 		contentPane.add(maxRating);
+		createStarLabels();
+		
+	}
+	//Labels to show poor and great
+	private void createStarLabels() {
+			poorLabel = new JLabel("poor");
+			poorLabel.setBounds(119, 103, 46, 14);
+			contentPane.add(poorLabel);
+			greatLabel = new JLabel("great");
+			greatLabel.setHorizontalAlignment(SwingConstants.TRAILING);
+			greatLabel.setBounds(273, 103, 46, 14);
+			contentPane.add(greatLabel);
 	}
 	
 	//Star rating component HELPER: Creates the individual starRating buttons
@@ -327,6 +341,8 @@ public class FeedbackPrompt extends JFrame {
 		errorLabel.setForeground(Color.black);
 		errorLabel.setText("You may close this frame. (top right)");
 		errorLabel.setBounds(110, 250, 230, 14);
+		poorLabel.setVisible(false);
+		greatLabel.setVisible(false);
 		createConfirmationPanel(flag);
 	}
 	
