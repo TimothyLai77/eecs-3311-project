@@ -1,6 +1,9 @@
-package model;
+package model.sandwichCreators;
 import java.util.List;
 
+import model.DbInventory;
+import model.Inventory;
+import model.Sandwich;
 import model.Ingredients.Ingredient;
 
 import java.util.ArrayList;

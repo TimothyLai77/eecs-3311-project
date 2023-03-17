@@ -4,13 +4,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import model.SandwichCreator;
-import model.ChickenSandwichCreator;
-import model.BeefSandwichCreator;
-import model.VeggiepattySandwichCreator;
-import model.MeatballSandwichCreator;
+
 import model.Sandwich;
 import model.Sandwiches.*;
+import model.sandwichCreators.BeefSandwichCreator;
+import model.sandwichCreators.ChickenSandwichCreator;
+import model.sandwichCreators.MeatballSandwichCreator;
+import model.sandwichCreators.SandwichCreator;
+import model.sandwichCreators.VeggiepattySandwichCreator;
 
 class SandwichCreatorTests {
 
