@@ -458,7 +458,7 @@ public class ManagerPage extends JFrame implements ActionListener {
 	private void goToPrevPage() {
 		// Prompts USER to confirm going back, as this will lose current CART.
 		int confirmed = JOptionPane.showConfirmDialog(null,
-				"Are you sure you want to exit the Inventory Manager...", "Going back to home page",
+				"Are you sure you want to exit the Inventory Manager.", "Going back to home page",
 				JOptionPane.YES_NO_OPTION);
 		
 		//If User confirms then will be taken back to HOMPAGE

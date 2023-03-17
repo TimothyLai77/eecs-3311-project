@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import model.Ingredients.*;
+import view.ErrorPrompt;
 
 public class DbInventory implements Inventory{
     private static DbInventory instance;
@@ -83,8 +84,10 @@ public class DbInventory implements Inventory{
             return con;
         }
         catch(Exception e){
-            System.out.println(e.getMessage());
-            e.printStackTrace();
+        	String message = e.getMessage().split("\n", 2)[0].toLowerCase().replaceAll(" ", "");
+			if(message.equals("communicationslinkfailure")) {
+				new ErrorPrompt("<html>No Local Server found. Please start a<br>local MySQL Server to run this app.</html>").setVisible(true);;
+			}
         }
         return null;
     }
