@@ -32,7 +32,7 @@ create table ratings (
     score		INT		NOT NULL,
     feedback	VARCHAR(300),
     ROrder_id	VARCHAR(9)		NOT NULL 	PRIMARY KEY
-)
+);
 
 
 INSERT INTO INGREDIENTS(ingredient_name, ingredient_type, quantity, price) VALUES('Bread','bread',100,3);
