@@ -813,11 +813,11 @@ public class OrderSelectionPage extends JFrame {
 		
 		// If USER selects YES, PUSH TO GENERATE A RECIEPT.
 		if (confirmed == JOptionPane.YES_OPTION) {
-			new ReceiptGenerator(cart.getCartContent(), costs);
+			new ReceiptGenerator(cart.getCartContent(), costs, cart.getID());
 			
 		// If not then USER is taken back to HOMEPAGE.
 		} else {
-			new HomePage().setVisible(true);
+			new FeedbackPrompt(cart.getID()).setVisible(true);
 		}
 		dispose(); // Kill current frame
 	}
