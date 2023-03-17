@@ -10,15 +10,17 @@ import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.util.UUID;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+
+import controller.ManagerUIController;
+
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import java.awt.Font;
@@ -34,9 +36,12 @@ public class FeedbackPrompt extends JFrame {
 	 */
 	private JPanel contentPane;
 	private JButton[] starButtons;
-	private JLabel numRating;
+	private JLabel numRating, maxRating;
 	private JTextArea feedbackArea;
 	private JLabel errorLabel;
+	private JPanel starPanel;
+	private JButton submit;
+	private JScrollPane scroll;
 	
 	//Frame coordinates, fetched at runtime.
 	private int mouseX, mouseY;
@@ -46,6 +51,9 @@ public class FeedbackPrompt extends JFrame {
 	private String orderID = "";
 	private String textFeedback = "";
 	
+	//Controller to converse data with backend
+	ManagerUIController controller;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -53,7 +61,7 @@ public class FeedbackPrompt extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					FeedbackPrompt frame = new FeedbackPrompt("OR145632");
+					FeedbackPrompt frame = new FeedbackPrompt(UUID.randomUUID().toString().substring(0, 8));
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -66,6 +74,7 @@ public class FeedbackPrompt extends JFrame {
 	 * CREATE FEEDBACK PROMPT
 	 */
 	public FeedbackPrompt(String orderID) {
+		controller = new ManagerUIController("TOGGLE");
 		setupFrame();
 		setupStarRatings();
 		this.orderID = orderID;
@@ -190,7 +199,7 @@ public class FeedbackPrompt extends JFrame {
 		numRating.setFont(new Font("Tahoma", Font.BOLD, 19));
 		numRating.setBounds(330, 128, 28, 36);
 		contentPane.add(numRating);
-		JLabel maxRating = new JLabel("/ 5");
+		maxRating = new JLabel("/ 5");
 		maxRating.setVerticalAlignment(SwingConstants.BOTTOM);
 		maxRating.setBounds(360, 130, 54, 30);
 		maxRating.setFont(new Font("Tahoma", Font.BOLD, 15));
@@ -221,7 +230,7 @@ public class FeedbackPrompt extends JFrame {
 	//Star rating component HELPER: Create Panel to house starRatings
 	private void createStarPanel() {
 		// Create panel to hold star buttons
-	    JPanel starPanel = new JPanel(new GridLayout(1, 5));
+	    starPanel = new JPanel(new GridLayout(1, 5));
 	    starPanel.setBackground(new Color(255, 255, 255));
 	    for (int i = 0; i < starButtons.length; i++) {
 	    	starPanel.add(starButtons[i]);
@@ -250,7 +259,7 @@ public class FeedbackPrompt extends JFrame {
 
 	//Create submit button
 	private void createSubmitButton() {
-		JButton submit = new JButton("Submit Feedback");
+		submit = new JButton("Submit Feedback");
 		submit.setBorder(null);
 		submit.setBackground(Color.black);
 		submit.setForeground(Color.white);
@@ -270,10 +279,11 @@ public class FeedbackPrompt extends JFrame {
 		feedbackArea.setLineWrap(true);
 		feedbackArea.setBorder(new LineBorder(new Color(0, 0, 0), 1));
     	feedbackArea.setFont(new Font("Tahoma", Font.BOLD, 12));
-		JScrollPane scroll = new JScrollPane(feedbackArea);
+		scroll = new JScrollPane(feedbackArea);
 		scroll.setBounds(85, 205, 280, 84);
 		contentPane.add(scroll);
 		attachFocusFunction();
+		
 	}
 	
 	//Create a error label
@@ -306,13 +316,51 @@ public class FeedbackPrompt extends JFrame {
 		});
 	}
 
+	//Switch to confirmation panel
+	private void toConfirmationPanel(boolean flag) {
+		scroll.setVisible(false);
+		starPanel.setVisible(false);
+		submit.setVisible(false);
+		numRating.setVisible(false);
+		maxRating.setVisible(false);
+		errorLabel.setForeground(Color.black);
+		errorLabel.setText("You may close this frame. (top right)");
+		errorLabel.setBounds(110, 250, 230, 14);
+		createConfirmationPanel(flag);
+	}
+	
+	//Create confirmation Panel
+	private void createConfirmationPanel(boolean flag) {
+		JLabel confirmationLabel;
+		
+		if(flag) {
+			confirmationLabel = new JLabel("Feedback Received ");
+			confirmationLabel.setIcon(new ImageIcon(ImageImports.imgTickMark));
+		} else {
+			confirmationLabel = new JLabel("Sorry, Error occured.");
+			confirmationLabel.setIcon(new ImageIcon(ImageImports.imgCrossMark));
+		}
+		confirmationLabel.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 15));
+		confirmationLabel.setBounds(63, 160, 325, 50);
+		confirmationLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		confirmationLabel.setBackground(new Color(255, 255, 255));
+		contentPane.add(confirmationLabel);
+	}
+	
 	//Handle the submit
 	private void handleFormSubmit() {
 		if(rating != 0) {
 			textFeedback = feedbackArea.getText();
-			System.out.println(this.orderID + " " + rating + "\nMessage: " + textFeedback);
+			if(textFeedback.equals("Share your thoughts here!")) textFeedback = "";
+			boolean flag = true;
+			try {
+				flag = controller.submitFeedback(this.orderID, rating, textFeedback);
+			}catch (Exception e) {
+				e.printStackTrace();
+			} 
+			toConfirmationPanel(flag);
 		} else {
-			errorLabel.setText("Rating is required for feedback");
+			errorLabel.setText("*Rating is required for feedback");
 		}
 	}
 }
