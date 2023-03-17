@@ -56,6 +56,10 @@ public class ReceiptGenerator {
 	//Formats given "now" time and date to a formatter.
 	static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 	
+	//Receipt static variables
+	private static LinkedList<CartItem> cartContent;
+	private static List<Double> costs;
+	
 	/**
 	 * Constructor generates the RECEIPT TEMPLATE
 	 * @param LinkedList<CartItem> cartContent
@@ -72,6 +76,8 @@ public class ReceiptGenerator {
 		generateItemDisplay(); //Generate display for order
 		
 		this.orderID = orderID;
+		ReceiptGenerator.cartContent = cartContent;
+		ReceiptGenerator.costs = costs;
 		double total = populateItemDisplay(cartContent, costs); //Add labels into order display
 		frame.validate(); // Refresh the visual state.
 		
@@ -353,92 +359,132 @@ public class ReceiptGenerator {
 	 * */
 	private static void generate(LinkedList<CartItem> cartContent, List<Double> costs) {
 		
-		
 		// FILE selection and Save INTERFACE 
 		JFileChooser fileChooser = new JFileChooser();
 		int result = fileChooser.showSaveDialog(frame); // PROMPTS SAVE UI
 				
 		//IF USER WISHES TO SAVE IT GENERATES THE RECEIPT TXT
 		if (result == JFileChooser.APPROVE_OPTION) {
-		
 			// Sets save state to true since the file was selected to save
 			SAVED = true;
-					
-			// Save file manipulation
-			File selectedFile = fileChooser.getSelectedFile();
-			PrintWriter writer = null;
-					
-			double total = 0; //Generate the total
-			int itemNum = 1; // Item number tracker
-			
-			try {	
-				
-				/*
-				 * Following is styling and generation of the SAVEABLE Receipt txt.
-				 * */
-				
-				//GENERATE RECEIPT HEADER - Title, Subtitle, Current Data Time
-				writer = new PrintWriter(selectedFile);
-				writer.println("	              Sandwich Savvy");
-				writer.println("	    Thank you for your order, come again!");
-				writer.println("----------------------------------------------------");
-				writer.println("	          "+ now.format(formatter));
-				writer.println("----------------------------------------------------");
-				int index = 0;
-				
-				// ITERATING THROUGH EVERY CART ITEM TO PRINT THEM and CALCULATE TOTAL
-				for(CartItem i: cartContent) {
-					writer.println("Item " + itemNum++ + ":\n\tQty: " + i.getQuantity() + "\t" + i.getName() + "\t Cost: " + currencyFormat(costs.get(index)) );
-					String options = "\tAdded options: ";
-					int ind = 0;
-					for(String ing : i.getAddedOptions()) {
-						if(ind != 0) {
-							options += ", " + ing;							
-						} else {
-							ind++;
-							options += ing;
-						}
-					}
-					if(!options.equals("\tAdded options: ")) writer.println(options);
-					writer.println("");
-					total += (costs.get(index++)*i.getQuantity());
-				}
-				
-				//GENERATE RECEIPT FOOTER - Total, Tax, and Total + Tax
-				writer.println("----------------------------------------------------");
-				writer.println("                             Total        : " + currencyFormat(total));
-				writer.println("                             Tax(13%)     : " + currencyFormat(0.13*total));
-				writer.println("                             Total + tax  : " + currencyFormat(1.13*total));
-						
-				} catch (FileNotFoundException ex) {
-					
-					//Incase file was not found.
-					ex.printStackTrace();
-					
-				}  finally {
-					
-					// Incase writer encountered an error and is null,
-					// do not run the following code.
-					if (writer != null) {
-						
-						//Logic to open txt using file chooser.
-						Desktop desktop = Desktop.getDesktop();
-						try {
-							//If found open file
-							desktop.open(selectedFile);
-						} catch (IOException e1) {
-							
-							//If not found, catch and print error
-							e1.printStackTrace();
-						}
-						
-						//Safely close the writer manually, to break connection 
-						//to file writer.
-						writer.close();
-					}
-					
-				}
+			createFile(fileChooser, cartContent, costs);
+		}
+	}
+	/**
+	 * Begins the processing of the txt receipt
+	 * @param fileChooser
+	 * @param cartContent
+	 * @param costs
+	 */
+	private static void createFile(JFileChooser fileChooser, LinkedList<CartItem> cartContent, List<Double> costs ) {
+		
+		// Save file manipulation
+		File selectedFile = fileChooser.getSelectedFile();
+		PrintWriter writer = null;
+		
+		//LOGIC TO EDIT AND SAVE TXT FILE STEP BY STEP
+			try {
+				writer = new PrintWriter(selectedFile);// FETCH INSTANCE TO WRITE SELECTED SAVE FILE
+				manipulateFile(writer, selectedFile); //MANIPULATE THE FILE USING WRITER
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} 
+	}
+	
+	/**
+	 * Manipulates the file using writer
+	 * @param writer
+	 * @param selectedFile
+	 */
+	private static void manipulateFile(PrintWriter writer, File selectedFile) {
+		try {
+		writeFileHeader(writer); //GENERATE RECEIPT HEADER - Title, Subtitle, Current Data Time
+		double total = writeFileBody(writer);//GENERATE RECEIPT BODY (ORDER LIST, QTY, OPTIONS)
+		writeFileFooter(writer, total);//GENERATE RECEIPT FOOTER - Total, Tax, and Total + Tax
+		}  finally {
+			if (writer != null) { //Only runs the if write was successful, so it doesnt save null file
+				saveToDesktop(selectedFile); //Runs a helper function to save file to the desktop
+				writer.close(); //Safely dispose the connection to File writer
 			}
+			
+		}
+	}
+	/**
+	 * Writes header for the file
+	 * @param writer
+	 */
+	private static void writeFileHeader(PrintWriter writer) {
+		writer.println("	              Sandwich Savvy");
+		writer.println("	    Thank you for your order, come again!");
+		writer.println("----------------------------------------------------");
+		writer.println("	          "+ now.format(formatter));
+		writer.println("----------------------------------------------------");
+		
+	}
+	/**
+	 * Writes body for the file
+	 * @param writer
+	 * @return
+	 */
+	private static double writeFileBody(PrintWriter writer) {
+		int index = 0;
+		double total = 0; //Generate the total
+		int itemNum = 1; // Item number tracker
+		
+		// ITERATING THROUGH EVERY CART ITEM TO PRINT THEM and CALCULATE TOTAL
+		for(CartItem i: cartContent) {
+			writer.println("Item " + itemNum++ + ":\n\tQty: " + i.getQuantity() + "\t" + i.getName() + "\t Cost: " + currencyFormat(costs.get(index)) );
+			
+			String options = "\tAdded options: ";
+			options += appendAddedOptions(i); //Returns the list of added options
+			if(!options.equals("\tAdded options: ")) writer.println(options);
+			
+			writer.println("");
+			total += (costs.get(index++)*i.getQuantity());
+		}
+		return total;
+	}
+	//WRITE BODY HELPER: returns added options
+	private static String appendAddedOptions(CartItem i) {
+		int ind = 0;
+		String options = "";
+		for(String ing : i.getAddedOptions()) {
+			if(ind != 0) {
+				options += ", " + ing;							
+			} else {
+				ind++;
+				options += ing;
+			}
+		}
+		return options;
+	}
+	
+	/**
+	 * Writes footer for the file
+	 * @param writer
+	 * @param total
+	 */
+	private static void writeFileFooter(PrintWriter writer, double total) {
+		writer.println("----------------------------------------------------");
+		writer.println("                             Total        : " + currencyFormat(total));
+		writer.println("                             Tax(13%)     : " + currencyFormat(0.13*total));
+		writer.println("                             Total + tax  : " + currencyFormat(1.13*total));
+	}
+	
+	/**
+	 * Saves the file to desktop, in desired location
+	 * @param selectedFile
+	 */
+	private static void saveToDesktop(File selectedFile) {
+		//Logic to open txt using file chooser.
+		Desktop desktop = Desktop.getDesktop();
+		try {
+			//If found open file
+			desktop.open(selectedFile);
+		} catch (IOException e1) {
+			//If not found, catch and print error
+			e1.printStackTrace();
+		}
 	}
 	
 	/**
