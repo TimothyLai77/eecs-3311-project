@@ -7,6 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import view.ErrorPrompt;
+
 public class ManagerMain {
 
 	public static void main(String[] args) throws Exception {
@@ -47,9 +49,8 @@ public class ManagerMain {
 			catch(Exception e){
 				String message = e.getMessage().split("\n", 2)[0].toLowerCase().replaceAll(" ", "");
 				if(message.equals("communicationslinkfailure")) {
-					System.out.println("No Local Server found. Please start a local MySQL Server to run app.");
+					new ErrorPrompt("<html>No Local Server found. Please start a<br>local MySQL Server to run this app.</html>").setVisible(true);;
 				}
-				System.exit(0);
 			}
 			
 			return null;
