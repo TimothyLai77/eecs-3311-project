@@ -5,6 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * This class handles interactions with the database in terms of customers' ratings and feedback.
+ * */
 public class ManagerRatings {
 	
 	public static Connection con;	// connection to database
@@ -44,6 +47,11 @@ public class ManagerRatings {
 	 * */
 	public boolean submitFeedback(String orderID, int score, String message) throws SQLException {
 		String command = "";
+		
+		if(score < 1) {
+			return false;
+		}
+		
 		if(message.isEmpty()) {
 			command = "INSERT INTO ratings(score, RORder_id) values('" + score + "','" + orderID + "');";
 		}
