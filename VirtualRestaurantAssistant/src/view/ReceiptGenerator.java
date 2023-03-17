@@ -389,6 +389,17 @@ public class ReceiptGenerator {
 				// ITERATING THROUGH EVERY CART ITEM TO PRINT THEM and CALCULATE TOTAL
 				for(CartItem i: cartContent) {
 					writer.println("Item " + itemNum++ + ":\n\tQty: " + i.getQuantity() + "\t" + i.getName() + "\t Cost: " + currencyFormat(costs.get(index)) );
+					String options = "\tAdded options: ";
+					int ind = 0;
+					for(String ing : i.getAddedOptions()) {
+						if(ind != 0) {
+							options += ", " + ing;							
+						} else {
+							ind++;
+							options += ing;
+						}
+					}
+					if(!options.equals("\tAdded options: ")) writer.println(options);
 					writer.println("");
 					total += (costs.get(index++)*i.getQuantity());
 				}
