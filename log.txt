@@ -121,3 +121,12 @@ User Story Changes:
 * Removed the ability to filter by dietary restrictions + show nutritional details (calories) 
 	* Stories were changed because of time lost due to university midterms.
 		* Also needed time to implement testing for this iteration. 
+
+
+--------------- ITERATION 3 ----------------------
+
+Mar 16:
+* Did QA for the other group, submitted issues on their Github.
+	* Didn't get too much time, they only gave us their repo on the 15th. 
+
+
