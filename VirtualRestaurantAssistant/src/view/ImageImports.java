@@ -28,7 +28,8 @@ public class ImageImports {
 	protected static Image img_restr = new ImageIcon(HomePage.class.getResource("/res/restrRed.png")).getImage().getScaledInstance(250, 210, Image.SCALE_SMOOTH);
 	protected static Image img_key = new ImageIcon(HomePage.class.getResource("/res/key.png")).getImage().getScaledInstance(35,35, Image.SCALE_SMOOTH);
 	protected static Image img_user = new ImageIcon(HomePage.class.getResource("/res/person.png")).getImage().getScaledInstance(35,  35,  Image.SCALE_SMOOTH);
-		
+	protected static Image img_re = new ImageIcon(HomePage.class.getResource("/res/re.png")).getImage().getScaledInstance(35,35, Image.SCALE_SMOOTH);
+	
 	// MESC image imports
 	protected static Image imgBack = new ImageIcon(HomePage.class.getResource("/res/backIcon.png")).getImage();
 
