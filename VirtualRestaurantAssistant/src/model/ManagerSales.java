@@ -55,27 +55,23 @@ public class ManagerSales {
 	/**
 	 * Display sales history 
 	 * */
-	public String displaySales() throws SQLException {
+	public ArrayList<ArrayList<String>> displaySales() throws SQLException {
 		Statement st = connection.createStatement();
-		String query = "SELECT * FROM ORDERS ORDER BY order_date;";
+		String query = "SELECT * FROM ORDERS ORDER BY order_date DESC;";
 		ResultSet rs = st.executeQuery(query);
-		String orderSt = "Order ID";
-		String amountSt = "Amount";
-		String dateSt = "Date";
-		String columns = String.format("%-22s %-24s %-22s\n", orderSt, amountSt, dateSt);
-		String separator = "--";
-		String ret = "";//columns + separator.repeat(33) + "\n"
+		ArrayList<ArrayList<String>> rows = new ArrayList<>();
 		
 		while (rs.next()) {
+			ArrayList<String> row = new ArrayList<>();
 			String id = rs.getString("order_id");
+			row.add(id);
 			String total = rs.getString("order_total");
+			row.add(total);
 			String date = rs.getString("order_date");
-			
-			String format = String.format("%-22s $%-22s %-22s\n", id, total, date);
-			ret += format;
+			row.add(date);
+			rows.add(row);
 		}
-		
-		return ret;
+		return rows;
 	}
 	
 	/**

@@ -1,6 +1,7 @@
 package controller;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import model.ManagerMain;
@@ -70,11 +71,27 @@ public class ManagerUIController {
 		return mg.updatePrice(name, price);
 	}
 	// Views the current inventory
-	public String viewInventory() throws SQLException{
+	public ArrayList<ArrayList<String>> viewInventory() throws SQLException{
 		return mg.viewInventory();
 	}
 	// Views the current sales
-	public String viewSales() throws SQLException {
+	public ArrayList<ArrayList<String>> viewSales() throws SQLException {
 		return ms.displaySales();
+	}
+	
+	//Checks if account is present
+	public boolean checkForExistingAccount() throws SQLException {
+		return mg.accountExists();
+	}
+	
+	//Authenticates incoming request
+	public boolean AuthenticateManager(String enteredPasscode) throws SQLException {
+		String fetchPass = mg.getPasscode();
+		if(enteredPasscode.equals(fetchPass)) return true;
+		else return false;
+	}
+	
+	public boolean setPasscode(String enteredPasscode) throws SQLException {
+		return mg.setPasscode(enteredPasscode);
 	}
 }
