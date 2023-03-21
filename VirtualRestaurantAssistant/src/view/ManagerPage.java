@@ -3,9 +3,12 @@ package view;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
+import javax.swing.table.DefaultTableModel;
 
 import controller.ManagerUIController;
 
@@ -37,9 +40,9 @@ public class ManagerPage extends JFrame implements ActionListener {
 	//Message Label
 	private JLabel managerMessageLabel;
 	
-	//Inventory Label
-	private JTextArea inventoryShowcaseLabel;
-	private JTextArea managerSalesLabel;
+	//Tables
+	private DefaultTableModel invModel;
+	private DefaultTableModel salesModel;
 	
 	// Panel and Component references
 	private JComboBox<String> ingredientDropdown; //Dropdown list of names
@@ -70,9 +73,10 @@ public class ManagerPage extends JFrame implements ActionListener {
 	private JPanel bottomDisplayPanel;
 	private JPanel showcaseTriggerPanel;
 
-
+	private JScrollPane scrollPane;
+	
 	/**
-	 * Launch the application.
+	 * Launch the manager page -- Utilized for testing only.
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -526,6 +530,77 @@ public class ManagerPage extends JFrame implements ActionListener {
 		changeViewSelection(view);
 	}
 	
+	/**
+	 * Create the inventory showcase panel components,
+	 * as a default or if the view changes.
+	 */
+	private void createInventoryShowcase() {
+		clearPanel();
+		createInventoryTable();
+		try {
+			updateInventoryDisplay();
+		} catch (SQLException e) {
+			managerMessageLabel.setText("Could not fetch sales.");
+			e.printStackTrace();
+		}
+		createRefreshButton("Refresh Inventory View");
+	}
+	
+	/**
+	 * Create the Managers showcase panel components,
+	 * when the view changes.
+	 */
+	private void createManagerSalesShowcase() {
+		clearPanel();
+		createSalesTable();
+		try {
+			updateSalesDisplay();
+		} catch (SQLException e) {
+			managerMessageLabel.setText("Could not fetch sales.");
+			e.printStackTrace();
+		}
+		createRefreshButton("Refresh Sales View");
+		createTotalSales();
+	}
+	private void createTotalSales() {
+		
+	}
+	
+	/**
+	 * Fetches the INVENTORY and SALES 2D lists, and calls respective
+	 * setDisplay methods, so it can render the correct table.
+	 * @throws SQLException
+	 */
+	private void updateInventoryDisplay() throws SQLException {
+		setInventoryDisplay(controller.viewInventory());
+	}
+	private void updateSalesDisplay() throws SQLException {
+		setSalesDisplay(salesController.viewSales());
+	}
+	
+	/**
+	 * Gets the Inventory 2D list and adds to the inventory table.
+	 * @param rows
+	 */
+	private void setInventoryDisplay(ArrayList<ArrayList<String>> rows) {
+		invModel.setRowCount(0);
+		for(ArrayList<String> row : rows) {
+			Object[] data = {row.get(0),row.get(1), row.get(2), currencyFormat(Double.parseDouble(row.get(3)))};
+			invModel.addRow(data);
+		}
+	}
+	/**
+	 * Gets the Sales 2D list and adds to the Sales table.
+	 * @param rows
+	 */
+	private void setSalesDisplay(ArrayList<ArrayList<String>> rows) {
+		salesModel.setRowCount(0);
+		for(ArrayList<String> row : rows) {
+			Object[] data = {row.get(0),currencyFormat(Double.parseDouble(row.get(1))), row.get(2)};
+			salesModel.addRow(data);
+		}
+	}	
+	
 	//Handle the button change restriction for view buttons
 	private void changeViewSelection(String view) {
 		boolean i = true;
@@ -600,41 +675,24 @@ public class ManagerPage extends JFrame implements ActionListener {
 		managerLeftPanel.add(managerMessageLabel);
 	}
 	
-	//Generate Inventory Display
-	private void createInventoryShowcase() {
-		clearPanel();
-		inventoryShowcaseLabel = new JTextArea("Beef                           meat                           62                             $99.00                          \nBread                          bread                          69                             $99.00                          \nChicken                        meat                           4                              $2.00                           \n");
-		inventoryShowcaseLabel.setEditable(false);
-		JScrollPane scrollPane = new JScrollPane(inventoryShowcaseLabel);
-		scrollPane.setBounds(176, 36, 580, 102);
-		try {
-			updateInventoryDisplay();
-		} catch (SQLException e) {
-			managerMessageLabel.setText("Could not fetch inventory.");
-			e.printStackTrace();
-		}
-		bottomDisplayPanel.add(scrollPane);
-		createLabels("Current Inventory:", "Name:");
-		createLabels2( "Type:", "Qty:", "Price:" );
-		createRefreshButton("Refresh Inventory View");
-	}
+	/**
+	 * Create each table with same config as schema
+	 */
 	
-	//Generate ManagerSales Display
-	private void createManagerSalesShowcase() {
-		clearPanel();
-		managerSalesLabel = new JTextArea("");
-		managerSalesLabel.setEditable(false);
-		JScrollPane scrollPane = new JScrollPane(managerSalesLabel);
+	private void createInventoryTable() {
+		String col[] = {"Name", "Type", "Quantity", "Price"};
+		invModel = new DefaultTableModel(col, 0);
+		JTable invTable = new JTable(invModel);
+		scrollPane = new JScrollPane(invTable);
 		scrollPane.setBounds(176, 36, 580, 102);
-		try {
-			updateSalesDisplay();
-		} catch (SQLException e) {
-			managerMessageLabel.setText("Could not fetch sales.");
-			e.printStackTrace();
-		}
-		createLabels("Sales data:", "OrderID:");
-		createLabels2("Order Total:", "Date:", "");
-		createRefreshButton("Refresh Sales View");
+		bottomDisplayPanel.add(scrollPane);
+	}
+	private void createSalesTable() {
+		String col[] = {"Order ID", "Total", "Order Date"};
+		salesModel = new DefaultTableModel(col, 0);
+		JTable salesTable = new JTable(salesModel);
+		scrollPane = new JScrollPane(salesTable);
+		scrollPane.setBounds(176, 36, 580, 102);
 		bottomDisplayPanel.add(scrollPane);
 	}
 	
@@ -645,31 +703,6 @@ public class ManagerPage extends JFrame implements ActionListener {
 		bottomDisplayPanel.repaint();
 	}
 	
-	//Inventory showcase HELPER: Inventory labels
-	private void createLabels(String lb1, String lb2) {
-		JLabel showcaseLabel = new JLabel(lb1);
-			showcaseLabel.setBounds(10, 11, 160, 14);
-			bottomDisplayPanel.add(showcaseLabel);
-			showcaseLabel.setFont(new Font("Tahoma", Font.BOLD, 11));
-		JLabel invName = new JLabel(lb2);
-			invName.setBounds(176, 11, 139, 14);
-			bottomDisplayPanel.add(invName);
-			invName.setFont(new Font("Tahoma", Font.BOLD, 11));
-	}
-	private void createLabels2(String lb3, String lb4, String lb5) {
-		JLabel lblIngredientType = new JLabel(lb3);
-			lblIngredientType.setBounds(281, 11, 111, 14);
-			bottomDisplayPanel.add(lblIngredientType);
-			lblIngredientType.setFont(new Font("Tahoma", Font.BOLD, 11));
-		JLabel lblIngredientQty = new JLabel(lb4);
-			lblIngredientQty.setBounds(402, 11, 71, 14);
-			bottomDisplayPanel.add(lblIngredientQty);
-			lblIngredientQty.setFont(new Font("Tahoma", Font.BOLD, 11));
-		JLabel lblPrice = new JLabel(lb5);
-			lblPrice.setBounds(517, 11, 111, 14);
-			bottomDisplayPanel.add(lblPrice);
-			lblPrice.setFont(new Font("Tahoma", Font.BOLD, 11));
-	}
 	
 	//Creates a "Refresh" button to rerender the inventory's state
 	private void createRefreshButton(String task) {
@@ -682,20 +715,22 @@ public class ManagerPage extends JFrame implements ActionListener {
 		refreshShowcaseButton.addActionListener(new ActionListener() {
 			@Override 
 			public void actionPerformed(ActionEvent e) {
-				try {
-					if(task.contains("Inventory")) {
-						updateInventoryDisplay();
-					} else {
-						updateSalesDisplay();
-					}
-					
-				} catch (SQLException e1) {
-					e1.printStackTrace();
-				}
+				updateTask(task);
 			}
 		});
 	}
-	
+	//Helper for method above, to check what refresh is needed.
+	private void updateTask(String task) {
+		try {
+			if(task.contains("Inventory")) {
+				updateInventoryDisplay();
+			} else {
+				updateSalesDisplay();
+			}
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+	}
 	/**
 	 * Render the radio buttons dynamically
 	 * */
@@ -740,14 +775,6 @@ public class ManagerPage extends JFrame implements ActionListener {
 		selectedPrice = Double.parseDouble(priceField.getText());
 		managerMessageLabel.setText(controller.updatePrice(selectedName, selectedPrice));
 	}
-	//UPDATE BOTTOM DISPLAY
-	private void updateInventoryDisplay() throws SQLException {
-		inventoryShowcaseLabel.setText(controller.viewInventory());
-	}
-	private void updateSalesDisplay() throws SQLException {
-		managerSalesLabel.setText(salesController.viewSales());
-	}
-	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		
@@ -845,5 +872,16 @@ public class ManagerPage extends JFrame implements ActionListener {
 	        	break;
 			}
 		}
+	}
+	
+	/**
+	 * CONVERT double INPUT TO CURRENCY 2dp FORMAT
+	 * @param double input
+	 * @return String - price formatted to currency (2dp)
+	 * */
+	private static String currencyFormat(double input) {
+		
+		// Returns the input E.g. 9.475 as "$9.48"
+		return new DecimalFormat("$#,##0.00").format(input);
 	}
 }
