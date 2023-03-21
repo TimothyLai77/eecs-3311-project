@@ -86,7 +86,7 @@ public class DbInventory implements Inventory{
         catch(Exception e){
         	String message = e.getMessage().split("\n", 2)[0].toLowerCase().replaceAll(" ", "");
 			if(message.equals("communicationslinkfailure")) {
-				new ErrorPrompt("<html>No Local Server found. Please start a<br>local MySQL Server to run this app.</html>").setVisible(true);;
+				new ErrorPrompt("<html>No Local Server found. Please start a<br>local MySQL Server to run this app.</html>", true).setVisible(true);;
 			}
         }
         return null;

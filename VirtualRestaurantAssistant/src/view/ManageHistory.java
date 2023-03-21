@@ -96,7 +96,7 @@ public class ManageHistory extends JFrame {
 			@Override
 			// refresh the frame to update entries
 			public void actionPerformed(ActionEvent e) {
-				showSales();
+//				showSales();
 				showTotal();
 				showCounts();
 			}
@@ -108,23 +108,23 @@ public class ManageHistory extends JFrame {
 		salesAmount.setBounds(505, 587, 162, 23);
 		contentPane.add(salesAmount);
 		
-		showSales();
+//		showSales();
 		showTotal();
 		showCounts();
 	}
 	
-	
-	/**
-	 * Show all orders placed by customers
-	 * */
-	public void showSales() {
-		try {
-			displayArea.setText(mg.displaySales());
-		}
-		catch(Exception ex) {
-			ex.printStackTrace();
-		}
-	}
+//	
+//	/**
+//	 * Show all orders placed by customers
+//	 * */
+//	public void showSales() {
+//		try {
+//			displayArea.setText(mg.displaySales());
+//		}
+//		catch(Exception ex) {
+//			ex.printStackTrace();
+//		}
+//	}
 	
 	/**
 	 * Show the total money made from all sales up till now

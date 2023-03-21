@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import view.ErrorPrompt;
 
@@ -49,7 +50,7 @@ public class ManagerMain {
 			catch(Exception e){
 				String message = e.getMessage().split("\n", 2)[0].toLowerCase().replaceAll(" ", "");
 				if(message.equals("communicationslinkfailure")) {
-					new ErrorPrompt("<html>No Local Server found. Please start a<br>local MySQL Server to run this app.</html>").setVisible(true);;
+					new ErrorPrompt("<html>No Local Server found. Please start a<br>local MySQL Server to run this app.</html>", true).setVisible(true);;
 				}
 			}
 			
@@ -190,23 +191,67 @@ public class ManagerMain {
 	
 	
 	/* If there's any update to the database, display all entries in the inventory */
-	public String viewInventory() throws SQLException {
+	public ArrayList<ArrayList<String>> viewInventory() throws SQLException {
 		Statement st = con.createStatement();
 		String query = "SELECT * FROM INGREDIENTS;";
 		ResultSet rs = st.executeQuery(query);
-		String ret = "";
+		ArrayList<ArrayList<String>> rows = new ArrayList<>();
 		
 		while (rs.next()) {
+			ArrayList<String> row = new ArrayList<>();
 			String name = rs.getString("ingredient_name");
+			row.add(name);
 			String type = rs.getString("ingredient_type");
+			row.add(type);
 			String quantity = rs.getString("quantity");
+			row.add(quantity);
 			String price = rs.getString("price");
-			
-			String format = String.format("%-30s %-30s %-30s $%-30s \n", name, type, quantity, price);
-			ret += format;
+			row.add(price);
+			rows.add(row);
 		}
 		
-		return ret;
+		return rows;
+	}
+	
+	/**
+	 * Retrieves the passcode from the manager db
+	 * 
+	 * @return String - passcode
+	 * @throws SQLException
+	 */
+	public String getPasscode() throws SQLException {
+		String command = "SELECT passcode FROM manager;";
+		String response = "";
+		PreparedStatement st = con.prepareStatement(command);
+		ResultSet rs = st.executeQuery(command);
+		if(rs.next()) {
+			response = 	rs.getString("passcode");
+		}
+		System.out.println(response);
+		return response;
+	}
+	
+	/**
+	 * Sets the DB passcode value to user selected value
+	 * @param passcode
+	 * @return whether it was successfully set. Useful in debugging
+	 * @throws SQLException
+	 */
+	public boolean setPasscode(String passcode) throws SQLException {
+		String command = "INSERT INTO manager(passcode) VALUES('" + passcode + "');";
+		PreparedStatement st = con.prepareStatement(command);
+		int affected = st.executeUpdate(command);
+		if(affected > 0) return true;
+		return false;
+	}
+	
+	/**
+	 * Checks whether an account exists inside this.
+	 * @return True if exists, false if not.
+	 * @throws SQLException
+	 */
+	public boolean accountExists() throws SQLException {
+		return getPasscode().length() != 0;
 	}
 	
 }
