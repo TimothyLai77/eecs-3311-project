@@ -33,6 +33,7 @@ public class ErrorPrompt extends JFrame {
 	//Frame coordinates, fetched at runtime.
 	private int mouseX, mouseY;
 
+	private boolean reopen;
 	
 	//Controller to converse data with backend
 	ManagerUIController controller;
@@ -44,7 +45,7 @@ public class ErrorPrompt extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ErrorPrompt frame = new ErrorPrompt("Database error");
+					ErrorPrompt frame = new ErrorPrompt("Database error", true);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -56,15 +57,17 @@ public class ErrorPrompt extends JFrame {
 	/**
 	 * CREATE FEEDBACK PROMPT
 	 */
-	public ErrorPrompt(String errorMessage) {
+	public ErrorPrompt(String errorMessage, boolean reopen) {
 
 		this.errorMessage = errorMessage;
+		this.reopen = reopen;
 		setupFrame();
 	}
 	
 	
 	//Set up the base frame and content pane
 	private void setupFrame() {
+		setAlwaysOnTop(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 350);
 		setIconImage(ImageImports.frameLogo);
@@ -161,7 +164,7 @@ public class ErrorPrompt extends JFrame {
 		
 	//Close Helper: frame exit method
 	private void exitApp() {
-		new HomePage().setVisible(true);
+		if(reopen)new HomePage().setVisible(true);
 		dispose();
 	}
 	
