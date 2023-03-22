@@ -40,20 +40,26 @@ class DBTestsSales {
 		assertDoesNotThrow(() -> sales.updateSalesHistory("123456", 12.12, "2023-03-08"));
 	}
 
-//	@Test ------------------------------------ MUST CHANGE 
-//	void testDisplaySales() throws SQLException {
-//		sales.updateSalesHistory("123456", 12.12, "2023-03-08");
-//		String ret = "";
-//		try {
-//			ret = sales.displaySales();
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		}
-//		
-//		assertTrue(ret.contains("123456"));
-//		assertTrue(ret.contains("12.12"));
-//		assertTrue(ret.contains("2023-03-08"));
-//	}
+	@Test
+	void testDisplaySales() throws SQLException {
+		sales.updateSalesHistory("123456", 14.12, "2023-03-08");
+		sales.updateSalesHistory("123457", 44.08, "2023-03-14");
+		ArrayList<ArrayList<String>> sa = sales.displaySales();
+		
+		ArrayList<String> o1 = new ArrayList<>();
+		ArrayList<String> o2 = new ArrayList<>();
+		
+		o1.add("123456");
+		o1.add("14.12");
+		o1.add("2023-03-08");
+		
+		o2.add("123457");
+		o2.add("44.08");
+		o2.add("2023-03-14");
+		
+		assertTrue(sa.contains(o1));
+		assertTrue(sa.contains(o2));
+	}
 
 	@Test
 	void testGetTotalSales() throws SQLException {

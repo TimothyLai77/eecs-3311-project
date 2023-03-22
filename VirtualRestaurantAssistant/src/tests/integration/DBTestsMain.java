@@ -89,17 +89,26 @@ class DBTestsMain {
 		assertEquals(ex2, main.deleteEntry(name2));
 	}
 
-//	@Test ------------------------------------ MUST CHANGE 
-//	void testViewInventory() throws SQLException {
-//		String ret = main.viewInventory();  // --> should be empty
-//		assertTrue(ret.isEmpty());
-//		
-//		main.addIngredient("Chicken", "meat", 34, 2.47);
-//		main.addIngredient("Tomato", "vegetable", 100, 0.81);
-//		String newRet = main.viewInventory();
-//		
-//		assertTrue(newRet.contains("Chicken"));
-//		assertTrue(newRet.contains("Tomato"));
-//	}
-
+	@Test
+	void testViewInventory() throws SQLException {
+		main.addIngredient("Beef", "meat", 12, 2.4);
+		main.addIngredient("Chicken", "meat", 21, 1.8);
+		ArrayList<ArrayList<String>> inv = main.viewInventory();
+		
+		ArrayList<String> beef = new ArrayList<>();
+		beef.add("Beef");
+		beef.add("meat");
+		beef.add("12");
+		beef.add("2.40");	// String parsed to Double
+		
+		ArrayList<String> chicken = new ArrayList<>();
+		chicken.add("Chicken");
+		chicken.add("meat");
+		chicken.add("21");
+		chicken.add("1.80");	// String parsed to Double
+		
+		assertTrue(inv.contains(chicken));
+		assertTrue(inv.contains(beef));
+	}
+	
 }
