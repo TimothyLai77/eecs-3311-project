@@ -35,3 +35,6 @@ create table ratings (
 );
 
 
+create table manager (
+    passcode VARCHAR(9) NOT NULL UNIQUE
+);

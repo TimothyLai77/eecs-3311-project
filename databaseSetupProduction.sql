@@ -34,6 +34,9 @@ create table ratings (
     ROrder_id	VARCHAR(9)		NOT NULL 	PRIMARY KEY
 );
 
+create table manager (
+    passcode VARCHAR(9) NOT NULL UNIQUE
+);
 
 INSERT INTO INGREDIENTS(ingredient_name, ingredient_type, quantity, price) VALUES('Bread','bread',100,3);
 INSERT INTO INGREDIENTS(ingredient_name, ingredient_type, quantity, price) VALUES('Beef','meat',100,6.9);
