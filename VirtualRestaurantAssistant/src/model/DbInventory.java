@@ -8,6 +8,7 @@ package model;
 import java.lang.reflect.Constructor;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -124,42 +125,38 @@ public class DbInventory implements Inventory{
      * @param ingredientName
      * @return quantity 
      */
-     public int checkQuantity(String ingredientName){
-        int quantity = 0;
+     public int checkQuantity(String ingredientName){   
         try{
-            Statement st = con.createStatement();
-            String query = "SELECT quantity FROM INGREDIENTS WHERE ingredient_name = '"+ingredientName+"';";
-            ResultSet rs = st.executeQuery(query);
-            if(rs.next()){
-            	quantity = rs.getInt("quantity");
-            }
+        	String command = "SELECT quantity FROM INGREDIENTS WHERE ingredient_name ='" + ingredientName + "';";
+     		PreparedStatement st = con.prepareStatement(command);
+     		ResultSet rs = st.executeQuery(command);
+     		if (rs.next()) {
+     		    return rs.getInt("quantity");
+     		} else {
+     			return 0;
+     		}
         }
         catch(Exception e) {
             e.printStackTrace();
             System.out.println("Failed to check quantity or error connecting database");
+            return -1;
         }
-        return quantity;
      }
+    
 
     /**
      * This method checks if the ingredient exists in the database and has the quantity more than 0.
      * @param ingredientName
      * @return boolean
      */
-      public boolean searchIngredient(String ingredientName){
-    	
+      public boolean searchIngredient(String ingredientName){  	
         boolean flag = false;
         try {
-            Statement st = con.createStatement();
-            String querry = "SELECT quantity FROM INGREDIENTS WHERE ingredient_name = '"+ingredientName+"';";
-            ResultSet rs = st.executeQuery(querry);
-            if(rs.next() && rs.getInt("quantity")>0){
+        	int quantity = checkQuantity(ingredientName);
+            if(quantity>0){
                 flag = true;
             }
-        } catch (SQLException e) {
-	        e.printStackTrace();
-	        System.out.println("Error connecting database");
-	    } catch (Exception e) {
+        } catch (Exception e) {
 	        e.printStackTrace();
 	        System.out.println("Error occured in search. Please try again.");
 	    }
@@ -258,4 +255,5 @@ public class DbInventory implements Inventory{
 		return DbInventory.instance;
 	}
 
+     
 }
