@@ -38,6 +38,12 @@ create table manager (
     passcode VARCHAR(9) NOT NULL UNIQUE
 );
 
+create table coupon (
+    isActive		BIT(1)		default 0,	
+    discountValue	DECIMAL(10,2)	NOT NULL   unique
+);
+
+
 INSERT INTO INGREDIENTS(ingredient_name, ingredient_type, quantity, price) VALUES('Bread','bread',100,3);
 INSERT INTO INGREDIENTS(ingredient_name, ingredient_type, quantity, price) VALUES('Beef','meat',100,6.9);
 INSERT INTO INGREDIENTS(ingredient_name, ingredient_type, quantity, price) VALUES('Chicken','meat',100,4.25);

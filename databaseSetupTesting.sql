@@ -38,3 +38,8 @@ create table ratings (
 create table manager (
     passcode VARCHAR(9) NOT NULL UNIQUE
 );
+
+create table coupon (
+    isActive		BIT(1)		default 0,	
+    discountValue	DECIMAL(10,2)	NOT NULL   unique
+);
