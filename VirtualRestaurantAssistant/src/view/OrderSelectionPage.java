@@ -24,7 +24,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.SwingConstants;
 import javax.swing.JSpinner;
@@ -559,17 +561,17 @@ public class OrderSelectionPage extends JFrame {
 	private void createErrorMessageLabels() {
 		// DISPLAY ERROR MESSAGE BACK TO USER --- NOT TECHNICAL ERROR.
 		errorMessageLbl = new JLabel("");
-		errorMessageLbl.setFont(new Font("Tahoma", Font.BOLD, 14));
+		errorMessageLbl.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		errorMessageLbl.setHorizontalAlignment(SwingConstants.CENTER);
 		errorMessageLbl.setForeground(new Color(255, 0, 0));
-		errorMessageLbl.setBounds(116, 240, 201, 20);
+		errorMessageLbl.setBounds(55, 240, 300, 20);
 		sandwichPanel.add(errorMessageLbl);
 				
 		ingredientsError = new JLabel("");
-		ingredientsError.setFont(new Font("Tahoma", Font.BOLD, 12));
+		ingredientsError.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		ingredientsError.setHorizontalAlignment(SwingConstants.CENTER);
 		ingredientsError.setForeground(new Color(255, 0, 0));
-		ingredientsError.setBounds(116, 240, 201, 20);
+		ingredientsError.setBounds(55, 240, 291, 20);
 		toppingsCheckoutPanel.add(ingredientsError);
 	}
 	
@@ -627,10 +629,10 @@ public class OrderSelectionPage extends JFrame {
 		// Place Order Button- ADDING TO CART AND QUANTITY and its styling
 		JButton nextButton = new JButton("To Toppings >");
 		nextButton.setName("addToCart");
-		nextButton.setFont(new Font("Serif", Font.PLAIN, 19));
+		nextButton.setFont(new Font("Serif", Font.PLAIN, 17));
 		nextButton.setBorderPainted(false);
 		nextButton.setBackground(Color.ORANGE);
-		nextButton.setBounds(130, 267, 170, 33);
+		nextButton.setBounds(130, 275, 170, 30);
 		sandwichPanel.add(nextButton);
 		nextButton.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
@@ -795,14 +797,16 @@ public class OrderSelectionPage extends JFrame {
 	}
 	
 	//PlaceOrderHelper - OutofIngredients
-	private boolean OutOfIngredients(int costs, int num) {
-		if(costs != num) {
-			// PROMPT USER ORDER COULD NOT BE MADE
-			errorMessageLbl.setText("Out of Ingredients");
-			ingredientsError.setText("Out of Ingredients");
-			return true;
+	private Object[] OutOfIngredients(List<Double> costs, List<CartItem> order) {
+		boolean allFound = true;
+		List<Integer> checker = new ArrayList<>();
+		for(int i = 0 ; i < costs.size(); i++) {
+			if(costs.get(i) == null) {
+				allFound = false;
+				checker.add(i);
+			}
 		}
-		return false;
+		return new Object[]{allFound, checker};
 	}
 	
 	//PlaceOrderHelper - Receipt generation
@@ -823,23 +827,45 @@ public class OrderSelectionPage extends JFrame {
 	}
 	
 	//PlaceOrderHelper - PlaceOrder Flow
+	/*
+	 * Sends a request to get the order made by calling 
+	 * getSandwichOrder via the controller using the Order initialized above.
+	 * 
+	 * Then fetches the costs associated with each Order Item,
+	 * storing them to a costs list.
+	 * */
+	@SuppressWarnings("unchecked")
 	private void placeOrder() {
 		// Initializes an Order using the Cart's content.
 		List<CartItem> order = cart.getCartContent(); 
-		/*
-		 * Sends a request to get the order made by calling 
-		 * getSandwichOrder via the controller using the Order initialized above.
-		 * 
-		 * Then fetches the costs associated with each Order Item,
-		 * storing them to a costs list.
-		 * */
+		
 		List<Double> costs = OrderUIController.getSandwichOrder(order);
 		//todo: Tim, add order ui contoller for topping stuff here.
 
 		// Checks whether the returned value was valid, if NOT then order was not made.
-		if(OutOfIngredients(costs.size(), getNumberOfSandwiches(order))) return;
+		Object[] ret = OutOfIngredients(costs, order);
+		if(!(boolean)ret[0]) {
+			String error = "<html>Out of Order Items#'s " + findMissingCosts((ArrayList<Integer>) ret[1]) + "</html>";
+			errorMessageLbl.setText(error);
+			ingredientsError.setText(error);
+			return;
+		}
 		sendOrderSaleToController(order, costs);
 		promptUserForReceipt(costs);
+	}
+	
+	/**
+	 * 
+	 * @param checker
+	 * @return outofingredient sandwich number in a list
+	 */
+	private String findMissingCosts(ArrayList<Integer> checker) {
+		String ret = "";
+		for(int i = 0 ; i < checker.size() ; i++) {
+			ret += checker.get(i)+1;
+			if(i+1 < checker.size()) ret += ", ";
+		}
+		return ret;
 	}
 	
 	//PlaceOrderHelper - Send to Controller to Store in DB
