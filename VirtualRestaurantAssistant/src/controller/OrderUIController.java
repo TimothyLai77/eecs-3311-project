@@ -62,14 +62,20 @@ public class OrderUIController {
 						orderBag.add(sandwichWithToppings);
 					}
 					// otherwise don't add anything to the bag, and UI will show error
-				} 
+				} else {
+					orderBag.add(null);
+				}
 			}
 		}
 		
 		// populate list of prices
 		List<Double> costs = new ArrayList<>();
 		for(Sandwich sandwich : orderBag) {
-			costs.add(sandwich.getCost());
+			if(sandwich != null) {
+				costs.add(sandwich.getCost());
+			} else {
+				costs.add(null);
+			}
 		}
 		return costs;
 	}
