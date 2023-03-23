@@ -683,6 +683,7 @@ public class ManagerPage extends JFrame implements ActionListener {
 		String col[] = {"Name", "Type", "Quantity", "Price"};
 		invModel = new DefaultTableModel(col, 0);
 		JTable invTable = new JTable(invModel);
+		invTable.setEnabled(false);
 		scrollPane = new JScrollPane(invTable);
 		scrollPane.setBounds(176, 36, 580, 102);
 		bottomDisplayPanel.add(scrollPane);
@@ -691,6 +692,7 @@ public class ManagerPage extends JFrame implements ActionListener {
 		String col[] = {"Order ID", "Total", "Order Date"};
 		salesModel = new DefaultTableModel(col, 0);
 		JTable salesTable = new JTable(salesModel);
+		salesTable.setEnabled(false);
 		scrollPane = new JScrollPane(salesTable);
 		scrollPane.setBounds(176, 36, 580, 102);
 		bottomDisplayPanel.add(scrollPane);
