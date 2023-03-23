@@ -16,7 +16,7 @@ public class Coupons {
 	public static void main(String[] args) {
 		Coupons cp = new Coupons();
 		try {
-			System.out.println(cp.removeCoupon("25"));
+			System.out.println(cp.activateCoupon("10"));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -24,12 +24,14 @@ public class Coupons {
 	}
 	
 	public static Connection connection;
+	public static double activeCouponValue;
 	
 	// get connection to production database
 	public Coupons() {
 		try {
 			connection = ManagerMain.getConnection();
 			System.out.println("Connected successfully!");
+			// TODO: set the activeCouponValue
 		}	
 		catch(Exception e) {
 			e.printStackTrace();
@@ -39,6 +41,7 @@ public class Coupons {
 	// get connection to test database
 	public Coupons(Connection c) {
 		connection = c;
+		// TODO: set the activeCouponValue
 	}
 	
 	/**
@@ -68,7 +71,7 @@ public class Coupons {
 	
 	/**
 	 * Remove a coupon from database.
-	 * @param discountValue		the coupon String value to be deleted.
+	 * @param discountValue		the coupon String value in percentage to be deleted.
 	 * @return String message.
 	 * */
 	public String removeCoupon(String discountValue) throws SQLException {
@@ -99,6 +102,47 @@ public class Coupons {
 		}
 		
 		return count > 0;
+	}
+	
+	/**
+	 * Activate a coupon value.
+	 * Toggle on the coupon feature. 
+	 * <p>Also, deactivate all other coupon values that are not the current coupon.</p>
+	 * @param discount		String percentage discount value.
+	 * */
+	public boolean activateCoupon(String discount) throws SQLException {
+		double value = (double) (Double.parseDouble(discount) / 100);
+		if(couponExists(value)) {
+			String command1 = "update coupon set isActive = 1 where discountValue = " + value + ";";
+			String command2 = "update coupon set isActive = 0 where discountValue != " + value + ";";
+			try {
+				PreparedStatement st = connection.prepareStatement(command1);
+				PreparedStatement st2 = connection.prepareStatement(command2);
+				st.executeUpdate(command1);
+				st2.executeUpdate(command2);
+				return true;
+			}
+			catch(Exception e) {
+				e.printStackTrace();
+				return false;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Get the currently active coupon value to calculate the new order total.
+	 * */
+	public double getActiveCoupon() throws SQLException{
+		//TODO: query the db to get the active one and return it.
+		return 0.0;
+	}
+	
+	/**
+	 * Toggle off the coupon feature. Deactivate all available coupons.
+	 * */
+	public void disableCoupons() throws SQLException {
+		
 	}
 
 }
