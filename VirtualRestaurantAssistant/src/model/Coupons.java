@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  * This class manages coupon functionalities in the Manager view.
@@ -12,26 +13,14 @@ import java.sql.SQLException;
  * </p>
  * */
 public class Coupons {
-
-	public static void main(String[] args) {
-		Coupons cp = new Coupons();
-		try {
-			System.out.println(cp.activateCoupon("10"));
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-	}
 	
 	public static Connection connection;
-	public static double activeCouponValue;
 	
 	// get connection to production database
 	public Coupons() {
 		try {
 			connection = ManagerMain.getConnection();
 			System.out.println("Connected successfully!");
-			// TODO: set the activeCouponValue
 		}	
 		catch(Exception e) {
 			e.printStackTrace();
@@ -41,7 +30,6 @@ public class Coupons {
 	// get connection to test database
 	public Coupons(Connection c) {
 		connection = c;
-		// TODO: set the activeCouponValue
 	}
 	
 	/**
@@ -132,17 +120,48 @@ public class Coupons {
 	
 	/**
 	 * Get the currently active coupon value to calculate the new order total.
+	 * @return double
 	 * */
 	public double getActiveCoupon() throws SQLException{
-		//TODO: query the db to get the active one and return it.
-		return 0.0;
+		String command = "select discountValue from coupon where isActive = 1;";
+		double ret = 0.0;
+		PreparedStatement st = connection.prepareStatement(command);
+		ResultSet res = st.executeQuery(command);
+		while(res.next()) {
+			ret = res.getDouble("discountValue");
+		}
+		if(ret == 0.0) {
+			return 0.0;
+		}
+		return ret;
 	}
 	
 	/**
 	 * Toggle off the coupon feature. Deactivate all available coupons.
 	 * */
 	public void disableCoupons() throws SQLException {
-		
+		String command = "update coupon set isActive = 0;";
+		PreparedStatement st = connection.prepareStatement(command);
+		st.executeUpdate(command);
 	}
-
+	
+	/**
+	 * Display available coupon
+	 * */
+	public ArrayList<ArrayList<String>> displayCoupons() throws SQLException {
+		String command = "select * from coupon;";
+		PreparedStatement st = connection.prepareStatement(command);
+		ArrayList<ArrayList<String>> ret = new ArrayList<>();
+		ResultSet set = st.executeQuery(command);
+		while(set.next()) {
+			ArrayList<String> row = new ArrayList<>();
+			String value = set.getString("discountValue");
+			String isActive = set.getString("isActive");
+			row.add(value);
+			row.add(isActive);
+			ret.add(row);
+		}
+		
+		return ret;
+	}
 }
