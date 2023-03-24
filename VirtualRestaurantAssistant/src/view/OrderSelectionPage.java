@@ -891,7 +891,6 @@ public class OrderSelectionPage extends JFrame {
 	 * Then fetches the costs associated with each Order Item,
 	 * storing them to a costs list.
 	 * */
-	@SuppressWarnings("unchecked")
 	private void placeOrder() {
 		// Initializes an Order using the Cart's content.
 		List<CartItem> order = cart.getCartContent(); 
@@ -900,15 +899,16 @@ public class OrderSelectionPage extends JFrame {
 		//todo: Tim, add order ui contoller for topping stuff here.
 
 		// Checks whether the returned value was valid, if NOT then order was not made.
-		Object[] ret = OutOfIngredients(costs, order);
-		if(!(boolean)ret[0]) {
-			String error = "<html>Out of Order Items#'s " + findMissingCosts((ArrayList<Integer>) ret[1]) + "</html>";
-			errorMessageLbl.setText(error);
-			ingredientsError.setText(error);
+		if(!orderReady(costs, order)) {
+			errorMessageLbl.setText("Not enough Ingredients, check again later.");
+			ingredientsError.setText("Not enough Ingredients, check again later.");
 			return;
 		}
 		sendOrderSaleToController(order, costs);
 		promptUserForReceipt(costs);
+	}
+	private boolean orderReady(List<Double> costs, List<CartItem> order) {
+		return costs.size() == getNumberOfSandwiches(order);
 	}
 	
 	/**

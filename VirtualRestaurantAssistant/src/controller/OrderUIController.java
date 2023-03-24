@@ -62,8 +62,6 @@ public class OrderUIController {
 						orderBag.add(sandwichWithToppings);
 					}
 					// otherwise don't add anything to the bag, and UI will show error
-				} else {
-					orderBag.add(null);
 				}
 			}
 		}
@@ -73,8 +71,6 @@ public class OrderUIController {
 		for(Sandwich sandwich : orderBag) {
 			if(sandwich != null) {
 				costs.add(sandwich.getCost());
-			} else {
-				costs.add(null);
 			}
 		}
 		return costs;
