@@ -39,6 +39,16 @@ public class ImageImports {
 	protected static Image imgTickMark = new ImageIcon(HomePage.class.getResource("/res/tickMark.png")).getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
 	protected static Image imgCrossMark = new ImageIcon(HomePage.class.getResource("/res/crossMark.png")).getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
 	
+	//Dietary Icons
+	protected static Image imgHalal = new ImageIcon(HomePage.class.getResource("/res/halal.png")).getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+	protected static Image imgVeg = new ImageIcon(HomePage.class.getResource("/res/vegan.png")).getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+	protected static Image imgKosher = new ImageIcon(HomePage.class.getResource("/res/kosher.png")).getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+
+	//Diet Legend
+	protected static Image imgHLegend = new ImageIcon(HomePage.class.getResource("/res/halalLegend.png")).getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+	protected static Image imgKLegend = new ImageIcon(HomePage.class.getResource("/res/kosherLegend.png")).getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+	protected static Image imgVLegend = new ImageIcon(HomePage.class.getResource("/res/veganLegend.png")).getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+
 	//Images for topping pane
 //	protected static Image imgToToppings = new ImageIcon(HomePage.class.getResource("/res/next.png")).getImage().getScaledInstance(200, 50, Image.SCALE_SMOOTH);
 

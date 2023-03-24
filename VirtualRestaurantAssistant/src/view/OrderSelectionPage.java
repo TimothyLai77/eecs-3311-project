@@ -8,6 +8,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 
 import controller.ManagerUIController;
 import controller.OrderUIController;
@@ -35,6 +36,8 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.Icon;
+
 import java.awt.GridLayout;
 import java.awt.Insets;
 
@@ -71,8 +74,8 @@ public class OrderSelectionPage extends JFrame {
 	//Static list to hold sandwich types --- THIS IS TEMPORARY SINCE
 	//										 IT SHOULD EVENTUALLY BE 
 	// 										 FETCHED FROM THE DB.
-	private static Object[] sandwichTypes;
-	private static Object[][] toppingTypes; 
+	private static String[] sandwichTypes;
+	private static String[][] toppingTypes; 
 	
 	JLabel errorMessageLbl, ingredientsError;
 	private static JPanel veggiesPanel, saucesPanel, cheesePanel;
@@ -114,7 +117,7 @@ public class OrderSelectionPage extends JFrame {
 	//Initialize static variables and arrays to be used in this page.
 	private void initializeBaseVariables() {
 		//This should fetch arrayList of base sandwiches.
-		sandwichTypes = new String[]{"Chicken", "Beef", "Meatball", "Veggiepatty"};
+		sandwichTypes = new String[]{"Chicken-110", "Beef-110", "Meatball-011", "Veggiepatty-111"};
 				
 		// 2D array in the form Toppings[Vegetables[] , Sauces[] , Cheeses[] ]
 		toppingTypes = new String[][] {{"Tomato-v", "Lettuce-v"},{"Ketchup-s", "Mayo-s"},{"Cheddar-c", "American-c"} };
@@ -223,18 +226,35 @@ public class OrderSelectionPage extends JFrame {
 	private void createSandwichButton(int i ,String favorite, int xVal, int yVal, int btnWidth) {
 		//Create button flow.
 		JButton newBtn = null;
-		if(favorite.equals(sandwichTypes[i])) {
-			newBtn = new JButton(""+ sandwichTypes[i] + " (popular)");
+		String name = sandwichTypes[i].substring(0, sandwichTypes[i].length()-4);
+		if(favorite.equals(name)) {
+			newBtn = new MultiIconJButton(""+ name + " (popular)", returnIcons(sandwichTypes[i]));
 		}else {
-			newBtn = new JButton(""+ sandwichTypes[i]);
+			newBtn = new MultiIconJButton( name, returnIcons(sandwichTypes[i]));
 		}
-		newBtn.setName(""+ (sandwichTypes[i]));
+		newBtn.setHorizontalAlignment(SwingConstants.LEFT);
+		newBtn.setName(name);
 		newBtn.setBounds(xVal, yVal, btnWidth, 35);
 		newBtn.setBackground(Color.WHITE);
-		newBtn.setBorder(null);
+		newBtn.setBorder( new LineBorder(Color.WHITE, 3));
 		
 		sandwichPanel.add(newBtn);
 	}
+	
+	/**
+	 * Returns the dietary icons respective to sandwich name
+	 * @param name
+	 * @return
+	 */
+	private Icon[] returnIcons(String name) {
+		ArrayList<Icon> dietIcons = new ArrayList<>();
+		String dietCode = name.substring(name.length()-3, name.length());
+		if(dietCode.charAt(0) == '1') dietIcons.add(new ImageIcon(ImageImports.imgHalal));
+		if(dietCode.charAt(1) == '1') dietIcons.add(new ImageIcon(ImageImports.imgKosher));
+		if(dietCode.charAt(2) == '1') dietIcons.add(new ImageIcon(ImageImports.imgVeg));
+		return dietIcons.toArray(new Icon[0]);
+	}
+	
 	
 	//  PAGE RENDERING METHODS to HELP SETUP 
 	
@@ -397,6 +417,43 @@ public class OrderSelectionPage extends JFrame {
 		sandwichPanel.setBorder(null);
 		sandwichPanel.setLayout(null);
 		contentPane.add(sandwichPanel);
+		createDietaryLegend();
+	}
+	
+	/**
+	 * Creates Dietary Legend
+	 */
+	private void createDietaryLegend() {
+		JPanel dietaryLegend = new JPanel();
+		dietaryLegend.setBounds(5, 0, 77, 119);
+		sandwichPanel.add(dietaryLegend);
+		dietaryLegend.setBackground(Color.black);
+		dietaryLegend.setLayout(new BoxLayout(dietaryLegend, BoxLayout.Y_AXIS));
+		dietaryLegend.setBorder(new LineBorder(Color.BLACK, 1));
+		populateLegend(dietaryLegend);
+	}
+	
+	/**
+	 * Helper for creating dietary restriction legend
+	 * @param dietaryLegend
+	 */
+	private void populateLegend(JPanel dietaryLegend) {
+		JLabel jHalal = new JLabel("Halal");
+		jHalal.setIcon(new ImageIcon(ImageImports.imgHLegend));
+		jHalal.setForeground(Color.white);
+		JLabel jKosher = new JLabel("Kosher");
+		jKosher.setIcon(new ImageIcon(ImageImports.imgKLegend));
+		jKosher.setForeground(Color.white);
+		JLabel jVeg = new JLabel("Veg");
+		jVeg.setIcon(new ImageIcon(ImageImports.imgVLegend));
+		jVeg.setForeground(Color.white);
+		
+		dietaryLegend.add(Box.createVerticalStrut(10));
+		dietaryLegend.add(jVeg);
+		dietaryLegend.add(Box.createVerticalStrut(10));
+		dietaryLegend.add(jHalal);
+		dietaryLegend.add(Box.createVerticalStrut(10));
+		dietaryLegend.add(jKosher);
 	}
 	
 	//Generates Toppings panel
@@ -1005,10 +1062,13 @@ public class OrderSelectionPage extends JFrame {
 	            if (button.getName().equals(selectedSandwich)) {
 	                button.setBackground(selectedColor);
 	                button.setEnabled(false);
+	                button.setBorder( new LineBorder(Color.orange, 3));
+
 	            } else {
 	            	if(button.getName().equals("addToCart")) continue;
 	                button.setBackground(Color.WHITE);
 	                button.setEnabled(true);
+	                button.setBorder( new LineBorder(Color.white, 3));
 	            }
 	        }
 	    }
