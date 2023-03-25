@@ -62,10 +62,12 @@ public class DBTests {
 			Statement st2 = con.createStatement();
 			Statement st3 = con.createStatement();
 			Statement st4 = con.createStatement();
+			Statement st5 = con.createStatement();
 			st1.executeUpdate("delete from orders;");
 			st2.executeUpdate("delete from favourites;");
 			st3.executeUpdate("delete from INGREDIENTS;");
 			st4.executeUpdate("delete from ratings;");
+			st5.executeUpdate("delete from coupon;");
 		}
 	}
 }
