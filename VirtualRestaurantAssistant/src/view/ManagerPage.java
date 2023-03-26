@@ -22,6 +22,7 @@ public class ManagerPage extends JFrame implements ActionListener {
 	//Controller instance
 	ManagerUIController controller;
 	ManagerUIController salesController;
+	ManagerUIController ratingsController;
 	
 	//Frame coordinates, fetched at runtime.
 	private int mouseX, mouseY;
@@ -55,6 +56,7 @@ public class ManagerPage extends JFrame implements ActionListener {
 	private JRadioButton addChoiceBtn;
 	private JButton showInventoryBtn;
 	private JButton showSalesBtn;
+	private JButton showRestBtn;
 	
 	//Quantity and price
 	private JSpinner quantitySelector;
@@ -99,6 +101,7 @@ public class ManagerPage extends JFrame implements ActionListener {
 		//Establishing Manager Connection with Controller
 		controller = new ManagerUIController();
 		salesController = new ManagerUIController(true);
+		ratingsController = new ManagerUIController("TOGGLE");
 		
 		generateManagerPage(); //Sets up the neccessary basis of the page
 		renderChoiceButtons(); //Render possible proccesses for on the Inventory
@@ -310,7 +313,7 @@ public class ManagerPage extends JFrame implements ActionListener {
 		bottomDisplayPanel = new JPanel();
 		bottomDisplayPanel.setBorder(null);
 		bottomDisplayPanel.setBackground(Color.white);
-		bottomDisplayPanel.setBounds(32, 419, 936, 139);
+		bottomDisplayPanel.setBounds(32, 419, 936, 150);
 		bottomDisplayPanel.setLayout(null);
 		contentPane.add(bottomDisplayPanel);
 	}
@@ -475,9 +478,9 @@ public class ManagerPage extends JFrame implements ActionListener {
 	//Create showcase trigger 
 	private void createShowcaseChoiceTrigger() {
 		showcaseTriggerPanel = new JPanel();
-		showcaseTriggerPanel.setBounds(323, 378, 350, 35);
+		showcaseTriggerPanel.setBounds(290, 378, 403, 35);
 		contentPane.add(showcaseTriggerPanel);
-		showcaseTriggerPanel.setLayout(new GridLayout(0, 2, 0, 0));
+		showcaseTriggerPanel.setLayout(new GridLayout(0, 3, 0, 0));
 		createShowcaseButtons();
 	}
 	
@@ -485,6 +488,7 @@ public class ManagerPage extends JFrame implements ActionListener {
 	private void createShowcaseButtons() {
 		createInventoryButton(); //Create inventory choice
 		createSalesButton(); //Create sales choice
+		createRestButton(); //Creates the restaurant choice
 	}
 	//Showcase Trigger buttons: HELPER create show inventory button
 	private void createInventoryButton() {
@@ -519,13 +523,30 @@ public class ManagerPage extends JFrame implements ActionListener {
 		});
 	}
 	
+	private void createRestButton() {
+		showRestBtn = new JButton("Show Restaurant");
+		showcaseTriggerPanel.add(showRestBtn);
+		showRestBtn.setForeground(Color.orange);
+		showRestBtn.setBackground(Color.black);
+		showRestBtn.setBorder(null);
+		showRestBtn.setName("sales");
+		showRestBtn.addActionListener(new ActionListener() {
+			@Override 
+			public void actionPerformed(ActionEvent e) {
+				setView("rest");
+			}
+		});
+	}
+	
 	//Showcase Trigger buttons: HELPER handle view change on click
 	private void setView(String view) {
 		if(view.equals("inv")) {
 			createInventoryShowcase();
 			
-		} else {
+		} else if(view.equals("sales")){
 			createManagerSalesShowcase();
+		} else {
+			createRestaurantShowcase();
 		}
 		changeViewSelection(view);
 	}
@@ -560,11 +581,81 @@ public class ManagerPage extends JFrame implements ActionListener {
 			e.printStackTrace();
 		}
 		createRefreshButton("Refresh Sales View");
-		createTotalSales();
 	}
-	private void createTotalSales() {
+
+	/**
+	 * Creates the Restaurant overview panel
+	 */
+	private void createRestaurantShowcase() {
+		clearPanel();
+		createRestComponent();
+		createCouponsComponent();
+	}
+	
+	/**
+	 * Creates the Restaurant component
+	 */
+	private void createRestComponent() {
+		JPanel restHistory = new JPanel();
+		restHistory.setLayout(new GridLayout(3, 2, 0, 0));
+		restHistory.setBounds(170,0,375, 145);
+		restHistory.setBackground(Color.white);
+		restHistory.setBorder(new LineBorder(Color.black, 1));
+		bottomDisplayPanel.add(restHistory);
+		addRestHistoryLabels(restHistory);
 		
 	}
+	
+	/**
+	 * RESTAURANT HISTORY HELPER to create labels
+	 * @param restHistory
+	 */
+	private void addRestHistoryLabels(JPanel restHistory) {
+		try {
+			JLabel totalSales = new JLabel("TOTAL SALES: ");
+			totalSales.setFont(new Font("Tahoma", Font.PLAIN, 13));
+			restHistory.add(totalSales);
+			totalSales.setBorder(new LineBorder(Color.WHITE, 10));
+			JLabel salesVal = new JLabel(currencyFormat(salesController.getTotalSales()));
+			salesVal.setFont(new Font("Tahoma", Font.PLAIN, 13));
+			restHistory.add(salesVal);
+			
+			JLabel currentFavorite = new JLabel("CURRENT POPULAR: ");
+			currentFavorite.setFont(new Font("Tahoma", Font.PLAIN, 13));
+			restHistory.add(currentFavorite);
+			currentFavorite.setBorder(new LineBorder(Color.WHITE, 10));
+			JLabel favVal = new JLabel(salesController.getFavourite() + " Sandwich");
+			favVal.setFont(new Font("Tahoma", Font.PLAIN, 13));
+			restHistory.add(favVal);
+			
+			JLabel ratingLabel = new JLabel("RESTAURANT RATING: "  );
+			ratingLabel.setFont(new Font("Tahoma", Font.PLAIN, 13));
+			restHistory.add(ratingLabel);
+			ratingLabel.setBorder(new LineBorder(Color.WHITE, 10));
+			JLabel countsVal = new JLabel("<html>"+ratingsController.getAvgRating() + " / 5.0</html>");
+			countsVal.setFont(new Font("Tahoma", Font.PLAIN, 13));
+			restHistory.add(countsVal);
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Creates the Coupons component
+	 */
+	private void createCouponsComponent() {
+		JPanel couponPanel = new JPanel();
+		couponPanel.setBounds(560,0,205,145);
+		couponPanel.setBackground(Color.white);
+		couponPanel.setBorder(new LineBorder(Color.black, 1));
+		JLabel couponTitle = new JLabel("Set Coupons");
+		couponPanel.add(couponTitle);
+		JLabel toBeAdded = new JLabel("Coupons coming soon...");
+		couponPanel.add(toBeAdded);
+		bottomDisplayPanel.add(couponPanel);
+		
+	} 
 	
 	/**
 	 * Fetches the INVENTORY and SALES 2D lists, and calls respective
@@ -603,34 +694,57 @@ public class ManagerPage extends JFrame implements ActionListener {
 	
 	//Handle the button change restriction for view buttons
 	private void changeViewSelection(String view) {
-		boolean i = true;
+		int i = 0;
 		if(view.equals("inv")) {
 			showInventoryBtn.setText("Showing Inventory");
 			showInventoryBtn.setEnabled(false);
 			showSalesBtn.setText("Show Sales");
 			showSalesBtn.setEnabled(true);
-		} else {
-			i = false;
+			showRestBtn.setText("Show Restaurant");
+			showRestBtn.setEnabled(true);
+		} else if(view.equals("sales")){
+			i = 1;
 			showInventoryBtn.setText("Show Inventory");
 			showInventoryBtn.setEnabled(true);
 			showSalesBtn.setText("Showing Sales");
 			showSalesBtn.setEnabled(false);
+			showRestBtn.setText("Show Restaurant");
+			showRestBtn.setEnabled(true);
+		} else {
+			i = 2;
+			showInventoryBtn.setText("Show Inventory");
+			showInventoryBtn.setEnabled(true);
+			showSalesBtn.setText("Show Sales");
+			showSalesBtn.setEnabled(true);
+			showRestBtn.setText("Showing Restaurant");
+			showRestBtn.setEnabled(false);
 		}
 		switchButtonStyling(i);
 	}
 	
 	//HELPER change button styling
-	private void switchButtonStyling(boolean i) {
-		if(i) {
+	private void switchButtonStyling(int i) {
+		if(i == 0) {
 			showInventoryBtn.setBackground(Color.ORANGE);
 			showInventoryBtn.setForeground(Color.black);
 			showSalesBtn.setBackground(Color.black);
 			showSalesBtn.setForeground(Color.ORANGE);
-		} else {
+			showRestBtn.setBackground(Color.black);
+			showRestBtn.setForeground(Color.ORANGE);
+		} else if( i == 1) {
 			showInventoryBtn.setBackground(Color.black);
 			showInventoryBtn.setForeground(Color.ORANGE);
 			showSalesBtn.setBackground(Color.ORANGE);
 			showSalesBtn.setForeground(Color.black);
+			showRestBtn.setBackground(Color.black);
+			showRestBtn.setForeground(Color.ORANGE);
+		} else {
+			showInventoryBtn.setBackground(Color.black);
+			showInventoryBtn.setForeground(Color.ORANGE);
+			showSalesBtn.setBackground(Color.black);
+			showSalesBtn.setForeground(Color.ORANGE);
+			showRestBtn.setBackground(Color.ORANGE);
+			showRestBtn.setForeground(Color.BLACK);
 		}
 	}
 	
