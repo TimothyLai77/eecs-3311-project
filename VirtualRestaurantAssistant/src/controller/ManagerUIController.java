@@ -94,6 +94,15 @@ public class ManagerUIController {
 	public String getFavourite() throws SQLException {
 		return ms.getFavourite();
 	}
+	//Fetch total sales
+	public double getTotalSales() throws SQLException {
+		return ms.getTotalSales();
+	}
+	//Fetches sales breakdown
+	public String getSalesBreakdown() throws SQLException {
+		return ms.getCounts();
+	}
+	
 	// Add ingredient method
 	public String addIngredient(String name, String type, int qty, double price) throws SQLException {
 		return mg.addIngredient(name, type, qty, price);

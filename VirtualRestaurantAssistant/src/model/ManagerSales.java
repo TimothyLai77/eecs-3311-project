@@ -1,6 +1,7 @@
 package model;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -77,17 +78,16 @@ public class ManagerSales {
 	/**
 	 * Display up-to-date total sales
 	 * */
-	public String getTotalSales() throws SQLException {
-		String returnRes = "$";
-		Statement st = connection.createStatement();
+	public double getTotalSales() throws SQLException {
 		String command = "SELECT SUM(order_total) AS total_sales FROM ORDERS;";
-		ResultSet rs = st.executeQuery(command);
-		
+		PreparedStatement st = connection.prepareStatement(command);
+		ResultSet rs = st.executeQuery();
+		double totalSales = 0;
 		while(rs.next()) {
-			returnRes += rs.getString("total_sales");
+			totalSales = rs.getDouble("total_sales");
 		}
 		
-		return returnRes;
+		return totalSales;
 	}
 	
 	/**
@@ -135,14 +135,14 @@ public class ManagerSales {
 	 * */
 	public String getCounts() throws SQLException {
 		Statement st = connection.createStatement();
-		String query = "select * from favourites ORDER BY counts DESC;";
+		String query = "select * from favourites ORDER BY counts DESC LIMIT 3;";
 		ResultSet rs = st.executeQuery(query);
 		String res = "";
 		
 		while(rs.next()) {
 			String name = rs.getString("sandwichBase");
 			String count = rs.getString("counts");
-			res += name + ": " + count + "\n";
+			res += name + " (" + count + " sales)<br>\n";
 		}
 		
 		return res;
