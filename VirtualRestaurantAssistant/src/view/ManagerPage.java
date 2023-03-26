@@ -445,7 +445,7 @@ public class ManagerPage extends JFrame implements ActionListener {
 	//Create buttons HELPER: Create Back button
 	private void createBackButton() {
 		JButton backBtn = new JButton("< Back to Home");
-		backBtn.setBounds(10, 566, 170, 23);
+		backBtn.setBounds(10, 52, 170, 23);
 		contentPane.add(backBtn);
 		backBtn.setForeground(Color.WHITE);
 		backBtn.setFont(new Font("Tahoma", Font.BOLD, 13));
@@ -612,35 +612,44 @@ public class ManagerPage extends JFrame implements ActionListener {
 	 */
 	private void addRestHistoryLabels(JPanel restHistory) {
 		try {
-			JLabel totalSales = new JLabel("TOTAL SALES: ");
-			totalSales.setFont(new Font("Tahoma", Font.PLAIN, 13));
-			restHistory.add(totalSales);
-			totalSales.setBorder(new LineBorder(Color.WHITE, 10));
-			JLabel salesVal = new JLabel(currencyFormat(salesController.getTotalSales()));
-			salesVal.setFont(new Font("Tahoma", Font.PLAIN, 13));
-			restHistory.add(salesVal);
-			
-			JLabel currentFavorite = new JLabel("CURRENT POPULAR: ");
-			currentFavorite.setFont(new Font("Tahoma", Font.PLAIN, 13));
-			restHistory.add(currentFavorite);
-			currentFavorite.setBorder(new LineBorder(Color.WHITE, 10));
-			JLabel favVal = new JLabel(salesController.getFavourite() + " Sandwich");
-			favVal.setFont(new Font("Tahoma", Font.PLAIN, 13));
-			restHistory.add(favVal);
-			
-			JLabel ratingLabel = new JLabel("RESTAURANT RATING: "  );
-			ratingLabel.setFont(new Font("Tahoma", Font.PLAIN, 13));
-			restHistory.add(ratingLabel);
-			ratingLabel.setBorder(new LineBorder(Color.WHITE, 10));
-			JLabel countsVal = new JLabel("<html>"+ratingsController.getAvgRating() + " / 5.0</html>");
-			countsVal.setFont(new Font("Tahoma", Font.PLAIN, 13));
-			restHistory.add(countsVal);
-			
+			addSalesLabel(restHistory);
+			addPopularLabel(restHistory);
+			addRatingsLabel(restHistory);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
-	
+	private void addSalesLabel(JPanel restHistory) throws SQLException {
+		JLabel totalSales = new JLabel("TOTAL SALES: ");
+		totalSales.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		restHistory.add(totalSales);
+		totalSales.setBorder(new LineBorder(Color.WHITE, 10));
+		JLabel salesVal = new JLabel(currencyFormat(salesController.getTotalSales()));
+		salesVal.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		restHistory.add(salesVal);
+	}
+	private void addPopularLabel(JPanel restHistory) throws SQLException {
+
+		JLabel currentFavorite = new JLabel("CURRENT POPULAR: ");
+		currentFavorite.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		restHistory.add(currentFavorite);
+		currentFavorite.setBorder(new LineBorder(Color.WHITE, 10));
+		JLabel favVal = new JLabel(salesController.getFavourite() + " Sandwich");
+		favVal.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		restHistory.add(favVal);
+		
+	}
+	private void addRatingsLabel(JPanel restHistory) throws SQLException {
+		JLabel ratingLabel = new JLabel("RESTAURANT RATING: "  );
+		ratingLabel.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		restHistory.add(ratingLabel);
+		ratingLabel.setBorder(new LineBorder(Color.WHITE, 10));
+		String value = String.format("%.1f", ratingsController.getAvgRating());
+		JLabel countsVal = new JLabel("<html>"+ value + " / 5.0</html>");
+		countsVal.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		restHistory.add(countsVal);
+		
+	}
 	/**
 	 * Creates the Coupons component
 	 */
