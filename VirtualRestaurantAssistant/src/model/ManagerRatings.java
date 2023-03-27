@@ -81,7 +81,7 @@ public class ManagerRatings {
 		double avg = 0.0;
 		
 		while(res.next()) {
-			avg = Double.parseDouble(res.getString("avg"));
+			avg = res.getDouble("avg");
 		}
 		return avg;
 	}
