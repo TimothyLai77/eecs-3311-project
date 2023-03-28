@@ -684,12 +684,14 @@ public class OrderSelectionPage extends JFrame {
 	//Creates next button to go to the toppings page
 	private void createNextButton() {
 		// Place Order Button- ADDING TO CART AND QUANTITY and its styling
-		JButton nextButton = new JButton("To Toppings >");
+		JButton nextButton = new JButton("");
 		nextButton.setName("addToCart");
+		nextButton.setIcon(new ImageIcon(ImageImports.imgNext));
 		nextButton.setFont(new Font("Serif", Font.PLAIN, 17));
 		nextButton.setBorderPainted(false);
 		nextButton.setBackground(Color.ORANGE);
-		nextButton.setBounds(130, 275, 170, 30);
+		nextButton.setBounds(110, 264, 200, 40);
+		nextButton.setFocusable(false);
 		sandwichPanel.add(nextButton);
 		nextButton.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
@@ -753,10 +755,11 @@ public class OrderSelectionPage extends JFrame {
 	//CartHelper - creates Cart button
 	private void createCartButton() {
 		// Place Order Button- ADDING TO CART AND QUANTITY and its styling
-		JButton addToCartBtn = new JButton("Add to Cart");
+		JButton addToCartBtn = new JButton("");
 		addToCartBtn.setName("addToCart");
 		addToCartBtn.setFont(new Font("Serif", Font.PLAIN, 19));
 		addToCartBtn.setBorderPainted(false);
+		addToCartBtn.setIcon(new ImageIcon(ImageImports.imgCart));
 		addToCartBtn.setBackground(Color.ORANGE);
 		addToCartBtn.setBounds(177, 268, 140, 35);
 		toppingsCheckoutPanel.add(addToCartBtn);
