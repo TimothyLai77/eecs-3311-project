@@ -32,6 +32,8 @@ public class ImageImports {
 	
 	// MESC image imports
 	protected static Image imgBack = new ImageIcon(HomePage.class.getResource("/res/backIcon.png")).getImage();
+	protected static Image imgNext = new ImageIcon(HomePage.class.getResource("/res/next.png")).getImage();
+	protected static Image imgCart = new ImageIcon(HomePage.class.getResource("/res/addToCart.png")).getImage();
 
 	// Rating Star Images
 	protected static Image imgBlackStar = new ImageIcon(HomePage.class.getResource("/res/blackStar.png")).getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
@@ -49,7 +51,5 @@ public class ImageImports {
 	protected static Image imgKLegend = new ImageIcon(HomePage.class.getResource("/res/kosherLegend.png")).getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
 	protected static Image imgVLegend = new ImageIcon(HomePage.class.getResource("/res/veganLegend.png")).getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
 
-	//Images for topping pane
-//	protected static Image imgToToppings = new ImageIcon(HomePage.class.getResource("/res/next.png")).getImage().getScaledInstance(200, 50, Image.SCALE_SMOOTH);
-
+	
 }
