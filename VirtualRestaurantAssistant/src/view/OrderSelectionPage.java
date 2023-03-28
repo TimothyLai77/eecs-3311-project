@@ -25,9 +25,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.swing.SwingConstants;
 import javax.swing.JSpinner;
@@ -765,9 +763,7 @@ public class OrderSelectionPage extends JFrame {
 		toppingsCheckoutPanel.add(addToCartBtn);
 		addToCartBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
 				addToCartFlow();
-				
 				}
 			});
 	}
@@ -856,19 +852,7 @@ public class OrderSelectionPage extends JFrame {
 		}
 	}
 	
-	//PlaceOrderHelper - OutofIngredients
-	private Object[] OutOfIngredients(List<Double> costs, List<CartItem> order) {
-		boolean allFound = true;
-		List<Integer> checker = new ArrayList<>();
-		for(int i = 0 ; i < costs.size(); i++) {
-			if(costs.get(i) == null) {
-				allFound = false;
-				checker.add(i);
-			}
-		}
-		return new Object[]{allFound, checker};
-	}
-	
+
 	//PlaceOrderHelper - Receipt generation
 	private void promptUserForReceipt(List<Double> costs) {
 		// Prompt user if they need a RECEIPT
@@ -913,21 +897,7 @@ public class OrderSelectionPage extends JFrame {
 	private boolean orderReady(List<Double> costs, List<CartItem> order) {
 		return costs.size() == getNumberOfSandwiches(order);
 	}
-	
-	/**
-	 * 
-	 * @param checker
-	 * @return outofingredient sandwich number in a list
-	 */
-	private String findMissingCosts(ArrayList<Integer> checker) {
-		String ret = "";
-		for(int i = 0 ; i < checker.size() ; i++) {
-			ret += checker.get(i)+1;
-			if(i+1 < checker.size()) ret += ", ";
-		}
-		return ret;
-	}
-	
+
 	//PlaceOrderHelper - Send to Controller to Store in DB
 	private void sendOrderSaleToController(List<CartItem> order, List<Double> costs) {
 		// Add order details to database - sales history
