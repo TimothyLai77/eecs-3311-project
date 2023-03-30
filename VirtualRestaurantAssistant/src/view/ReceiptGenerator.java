@@ -322,6 +322,12 @@ public class ReceiptGenerator {
 			couponOutput.setFont(new Font("Tahoma", Font.PLAIN, 11));
 			couponOutput.setBounds(170, 435, 90, 20);
 			panel.add(couponOutput);
+		} else {
+			JLabel altLine = new JLabel();
+			altLine.setBorder(new LineBorder(new Color(0, 0, 0), 2));
+			altLine.setBounds(0, 435, 300, 1);
+			altLine.setBackground(Color.WHITE);
+			panel.add(altLine);
 		}
 		generateFrameTaxLabels(applyCoupon(total)); //generate frame tax labels with adjusted amount
 	}
