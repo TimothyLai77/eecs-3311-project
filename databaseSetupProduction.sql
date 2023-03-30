@@ -44,6 +44,8 @@ create table coupon (
 );
 
 
+
+
 INSERT INTO INGREDIENTS(ingredient_name, ingredient_type, quantity, price) VALUES('Bread','bread',100,3);
 INSERT INTO INGREDIENTS(ingredient_name, ingredient_type, quantity, price) VALUES('Beef','meat',100,6.9);
 INSERT INTO INGREDIENTS(ingredient_name, ingredient_type, quantity, price) VALUES('Chicken','meat',100,4.25);
@@ -56,3 +58,11 @@ INSERT INTO INGREDIENTS(ingredient_name, ingredient_type, quantity, price) VALUE
 INSERT INTO INGREDIENTS(ingredient_name, ingredient_type, quantity, price) VALUES('Mayo','sauce',100,0.75);
 INSERT INTO INGREDIENTS(ingredient_name, ingredient_type, quantity, price) VALUES('Cheddar','cheese',100,5);
 INSERT INTO INGREDIENTS(ingredient_name, ingredient_type, quantity, price) VALUES('American','cheese',100,2.50);
+
+
+INSERT INTO coupon (isActive, discountValue) VALUES
+(true, 0.00),
+(false, 0.10),
+(false, 0.05),
+(false, 0.15),
+(false, 0.20);
