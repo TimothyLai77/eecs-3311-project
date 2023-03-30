@@ -8,7 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import view.CartItem;
+import view.Components.CartItem;
 
 public class ManagerSales {
 	

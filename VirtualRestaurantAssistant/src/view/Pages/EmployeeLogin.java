@@ -1,4 +1,4 @@
-package view;
+package view.Pages;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -21,6 +21,8 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import controller.ManagerUIController;
+import view.Components.ErrorPrompt;
+import view.Components.ImageImports;
 
 import java.awt.Font;
 

@@ -1,4 +1,4 @@
-package view;
+package view.Pages;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -11,6 +11,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 
 import controller.ManagerUIController;
+import view.Components.ImageImports;
 
 public class ManagerPage extends JFrame implements ActionListener {
 

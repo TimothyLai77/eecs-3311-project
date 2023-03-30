@@ -1,4 +1,4 @@
-package view;
+package view.Components;
 
 import java.awt.Color;
 import java.awt.EventQueue;
@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
 import controller.ManagerUIController;
+import view.Pages.HomePage;
 
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;

@@ -6,7 +6,7 @@ import model.sandwichCreators.ChickenSandwichCreator;
 import model.sandwichCreators.MeatballSandwichCreator;
 import model.sandwichCreators.SandwichCreator;
 import model.sandwichCreators.VeggiepattySandwichCreator;
-import view.CartItem;
+import view.Components.CartItem;
 
 import java.util.List;
 import java.util.ArrayList;

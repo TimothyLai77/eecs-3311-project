@@ -1,7 +1,8 @@
 package controller;
 
 import javax.swing.UIManager;
-import view.HomePage;
+
+import view.Pages.HomePage;
 
 public class Main {
 
