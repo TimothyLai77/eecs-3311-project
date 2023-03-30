@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import model.Ingredients.*;
-import view.ErrorPrompt;
+import view.Components.ErrorPrompt;
 
 public class DbInventory implements Inventory{
     private static DbInventory instance;

@@ -1,4 +1,4 @@
-package view;
+package view.Components;
 
 import java.time.LocalDate;
 import java.util.LinkedList;

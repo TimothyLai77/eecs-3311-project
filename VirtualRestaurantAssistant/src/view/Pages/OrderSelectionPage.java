@@ -1,4 +1,4 @@
-package view;
+package view.Pages;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -12,6 +12,11 @@ import javax.swing.border.LineBorder;
 
 import controller.ManagerUIController;
 import controller.OrderUIController;
+import view.Components.Cart;
+import view.Components.CartItem;
+import view.Components.FeedbackPrompt;
+import view.Components.ImageImports;
+import view.Components.MultiIconJButton;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;

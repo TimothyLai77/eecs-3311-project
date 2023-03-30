@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import view.ErrorPrompt;
+import view.Components.ErrorPrompt;
 
 public class ManagerMain {
 

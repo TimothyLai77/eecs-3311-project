@@ -11,7 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import model.ManagerSales;
-import view.CartItem;
+import view.Components.CartItem;
 
 /**
  * This is an integration test class for ManagerSales class.

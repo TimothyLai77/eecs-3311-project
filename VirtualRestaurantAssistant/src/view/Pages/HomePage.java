@@ -1,4 +1,4 @@
-package view;
+package view.Pages;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -16,6 +16,8 @@ import javax.swing.SwingConstants;
 import java.awt.Font;
 
 import javax.swing.border.SoftBevelBorder;
+
+import view.Components.ImageImports;
 
 import javax.swing.border.BevelBorder;
 import java.awt.event.MouseAdapter;

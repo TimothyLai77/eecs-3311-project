@@ -1,4 +1,4 @@
- package view;
+ package view.Pages;
  
  
 import java.awt.event.ActionEvent;
@@ -32,6 +32,9 @@ import java.awt.Desktop;
 import javax.swing.border.LineBorder;
 
 import controller.ManagerUIController;
+import view.Components.CartItem;
+import view.Components.FeedbackPrompt;
+import view.Components.ImageImports;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;

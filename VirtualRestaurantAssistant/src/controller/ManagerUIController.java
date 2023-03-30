@@ -9,7 +9,7 @@ import model.Coupons;
 import model.ManagerMain;
 import model.ManagerRatings;
 import model.ManagerSales;
-import view.CartItem;
+import view.Components.CartItem;
 
 public class ManagerUIController {
 	
