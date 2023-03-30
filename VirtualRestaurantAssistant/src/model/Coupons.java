@@ -155,9 +155,9 @@ public class Coupons {
 		ResultSet set = st.executeQuery(command);
 		while(set.next()) {
 			ArrayList<String> row = new ArrayList<>();
-			String value = set.getString("discountValue");
+			double value = set.getDouble("discountValue");
 			String isActive = set.getString("isActive");
-			row.add(value);
+			row.add(""+ value*100);
 			row.add(isActive);
 			ret.add(row);
 		}
