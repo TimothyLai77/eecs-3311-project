@@ -1,4 +1,6 @@
  package view;
+ 
+ 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -8,6 +10,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -27,6 +30,9 @@ import java.awt.Component;
 import java.awt.Desktop;
 
 import javax.swing.border.LineBorder;
+
+import controller.ManagerUIController;
+
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
@@ -49,6 +55,7 @@ public class ReceiptGenerator {
 	private static String currTime = "";	// Holds formatted date and time string.
 	static LocalDateTime now = LocalDateTime.now(); // Fetched current data and time.
 	String orderID = "";
+	private static double couponValue = 0.0;
 	
 	//Item Display Panel
 	private JPanel itemDisplayPanel;
@@ -59,6 +66,9 @@ public class ReceiptGenerator {
 	//Receipt static variables
 	private static LinkedList<CartItem> cartContent;
 	private static List<Double> costs;
+	
+	//Controller
+	ManagerUIController couponController = new ManagerUIController(5.0);
 	
 	/**
 	 * Constructor generates the RECEIPT TEMPLATE
@@ -93,7 +103,7 @@ public class ReceiptGenerator {
 		frame.setResizable(false);
 		frame.setIconImage(ImageImports.frameLogo);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(300, 500);
+		frame.setSize(300, 550);
 		frame.setVisible(true);
 		frame.setLocationRelativeTo(null);
 		// HORIZONTAL LINE
@@ -114,7 +124,7 @@ public class ReceiptGenerator {
 		btnSave.setForeground(Color.BLACK);
 		btnSave.setBackground(Color.ORANGE);
 		btnSave.setBorder(null);
-		btnSave.setBounds(160, 459, 100, 30);
+		btnSave.setBounds(160, 509, 100, 30);
 		btnSave.setFocusable(false);
 		panel.add(btnSave);	
 		// GENERATING THE SAVEABLE RECEIPT --- This is only Generated when the user wants to save it as a txt. 
@@ -150,7 +160,7 @@ public class ReceiptGenerator {
 		closeBtn.setFocusable(false);
 		closeBtn.setBorder(null);
 		closeBtn.setBackground(Color.BLACK);
-		closeBtn.setBounds(40, 459, 100, 30);
+		closeBtn.setBounds(40, 509, 100, 30);
 		closeBtn.addActionListener(new ActionListener() {
 			// This event trigger closes the Receipt frame.
 			public void actionPerformed(ActionEvent e) {
@@ -270,18 +280,32 @@ public class ReceiptGenerator {
 	private void createFooterLabels() {
 		JLabel totalLbl = new JLabel("Total: ");		//TOTAL LABEL
 		totalLbl.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		totalLbl.setBounds(40, 391, 120, 20);
+		totalLbl.setBounds(40, 400, 120, 20);
 		panel.add(totalLbl);
-		
+		couponCheck();
 		JLabel taxLbl = new JLabel("Tax Amt (13%)");		//TAX LABEL
 		taxLbl.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		taxLbl.setBounds(42, 410, 120, 20);
+		taxLbl.setBounds(40, 455, 120, 20);
 		panel.add(taxLbl);
 		
 		JLabel totalWTaxLbl = new JLabel("Total + Tax: ");		//TOTAL + TAX LABEL
 		totalWTaxLbl.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		totalWTaxLbl.setBounds(40, 430, 120, 20);
+		totalWTaxLbl.setBounds(40, 478, 120, 20);
 		panel.add(totalWTaxLbl);
+	}
+	private void couponCheck(){
+
+		setCouponValue(); //Sets the current applied coupon from the DB
+		if(couponValue == 0.0) return; //Either no coupon was set or they didnt get one
+		JLabel congratulationsLbl = new JLabel("You won a Coupon Discount!"); //Label to let user know they won
+		congratulationsLbl.setHorizontalAlignment(SwingConstants.CENTER);
+		congratulationsLbl.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		congratulationsLbl.setBounds(80, 420, 150, 20);
+		panel.add(congratulationsLbl);
+		JLabel couponLabel = new JLabel("Coupon (" + couponValue*100 + "% off)"); //Coupon Label to show percentage
+		couponLabel.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		couponLabel.setBounds(40, 435, 120, 20);
+		panel.add(couponLabel);
 	}
 	
 	//FOOTER HELPER - Generate output labels for the footer
@@ -289,19 +313,29 @@ public class ReceiptGenerator {
 		JLabel totalOutputLbl = new JLabel(currencyFormat(total));		//TOTAL AMOUNT LABEL
 		totalOutputLbl.setHorizontalAlignment(SwingConstants.RIGHT);
 		totalOutputLbl.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		totalOutputLbl.setBounds(170, 391, 90, 20);
+		totalOutputLbl.setBounds(170, 400, 90, 20);
 		panel.add(totalOutputLbl);
 		
+		if(couponValue != 0.0) { //Only if a coupon is available
+			JLabel couponOutput = new JLabel(" - " + currencyFormat(couponValue*total)); //Label for the coupon amount to be subtracted
+			couponOutput.setHorizontalAlignment(SwingConstants.RIGHT);
+			couponOutput.setFont(new Font("Tahoma", Font.PLAIN, 11));
+			couponOutput.setBounds(170, 435, 90, 20);
+			panel.add(couponOutput);
+		}
+		generateFrameTaxLabels(applyCoupon(total)); //generate frame tax labels with adjusted amount
+	}
+	private void generateFrameTaxLabels(double total) {
 		JLabel taxOutput = new JLabel(currencyFormat(total*0.13));		//TAX AMOUNT LABEL
 		taxOutput.setHorizontalAlignment(SwingConstants.RIGHT);
 		taxOutput.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		taxOutput.setBounds(170, 410, 90, 20);
+		taxOutput.setBounds(170, 455, 90, 20);
 		panel.add(taxOutput);
 		
 		JLabel totalWTax = new JLabel(currencyFormat(total*1.13));		//TOTAL + TAX AMOUNT LABEL
 		totalWTax.setHorizontalAlignment(SwingConstants.RIGHT);
 		totalWTax.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		totalWTax.setBounds(170, 430, 90, 20);
+		totalWTax.setBounds(170, 478, 90, 20);
 		panel.add(totalWTax);
 	}
   
@@ -348,10 +382,10 @@ public class ReceiptGenerator {
 			        
 			// Calculates the total out of each sandwich cost.
 			total += (costs.get(index++)*CartItem.getQuantity());
-		}	
+		}
 		return total;
 	}
-	
+
 	/**
 	 * 	Generates the RECEIPT as a txt file for the USER
 	 *  save in a destination of their choosing.
@@ -414,13 +448,14 @@ public class ReceiptGenerator {
 	 * @param writer
 	 */
 	private static void writeFileHeader(PrintWriter writer) {
-		writer.println("	              Sandwich Savvy");
-		writer.println("	    Thank you for your order, come again!");
-		writer.println("----------------------------------------------------");
-		writer.println("	          "+ now.format(formatter));
-		writer.println("----------------------------------------------------");
+		writer.println("	                Sandwich Savvy");
+		writer.println("	     Thank you for your order, come again!");
+		writer.println("------------------------------------------------------");
+		writer.println("	           "+ now.format(formatter));
+		writer.println("------------------------------------------------------");
 		
 	}
+	
 	/**
 	 * Writes body for the file
 	 * @param writer
@@ -465,10 +500,13 @@ public class ReceiptGenerator {
 	 * @param total
 	 */
 	private static void writeFileFooter(PrintWriter writer, double total) {
-		writer.println("----------------------------------------------------");
-		writer.println("                             Total        : " + currencyFormat(total));
-		writer.println("                             Tax(13%)     : " + currencyFormat(0.13*total));
-		writer.println("                             Total + tax  : " + currencyFormat(1.13*total));
+		writer.println("------------------------------------------------------");
+		writer.println("                             Total        :  " + currencyFormat(total));
+		if(couponValue != 0.0) {		
+			writer.println("                             COUPON       : -" + currencyFormat(couponValue*total));
+		}
+		writer.println("                             Tax(13%)     :  " + currencyFormat(0.13*applyCoupon(total)));
+		writer.println("                             Total + tax  :  " + currencyFormat(1.13*applyCoupon(total)));
 	}
 	
 	/**
@@ -535,6 +573,21 @@ public class ReceiptGenerator {
 		// Returns the input E.g. 9.475 as "$9.48"
 		return new DecimalFormat("$#,##0.00").format(input);
 	}
-
 	
+	/**
+	 * Applies coupons value to the final total
+	 * @param total
+	 * @return
+	 */
+	private static double applyCoupon(double total) {
+		return total*(1-couponValue);
+	}
+	
+	private void setCouponValue() {
+		try {
+			couponValue = couponController.getActiveCoupon();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 }
