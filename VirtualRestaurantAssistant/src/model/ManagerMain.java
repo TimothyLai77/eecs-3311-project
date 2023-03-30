@@ -227,7 +227,6 @@ public class ManagerMain {
 		if(rs.next()) {
 			response = 	rs.getString("passcode");
 		}
-		System.out.println(response);
 		return response;
 	}
 	

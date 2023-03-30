@@ -23,6 +23,7 @@ public class ManagerPage extends JFrame implements ActionListener {
 	ManagerUIController controller;
 	ManagerUIController salesController;
 	ManagerUIController ratingsController;
+	ManagerUIController couponController;
 	
 	//Frame coordinates, fetched at runtime.
 	private int mouseX, mouseY;
@@ -75,6 +76,9 @@ public class ManagerPage extends JFrame implements ActionListener {
 	private JPanel bottomDisplayPanel;
 	private JPanel showcaseTriggerPanel;
 
+	//Coupon button panel
+	JPanel couponsDisplay;
+	
 	private JScrollPane scrollPane;
 	
 	/**
@@ -99,9 +103,7 @@ public class ManagerPage extends JFrame implements ActionListener {
 	public ManagerPage() {
 		
 		//Establishing Manager Connection with Controller
-		controller = new ManagerUIController();
-		salesController = new ManagerUIController(true);
-		ratingsController = new ManagerUIController("TOGGLE");
+		establishControllerConnection();
 		
 		generateManagerPage(); //Sets up the neccessary basis of the page
 		renderChoiceButtons(); //Render possible proccesses for on the Inventory
@@ -117,6 +119,13 @@ public class ManagerPage extends JFrame implements ActionListener {
 			managerMessageLabel.setText("Inventory is empty");
 			e2.printStackTrace();
 		}
+	}
+	
+	private void establishControllerConnection() {
+		controller = new ManagerUIController();
+		salesController = new ManagerUIController(true);
+		ratingsController = new ManagerUIController("TOGGLE");
+		couponController = new ManagerUIController(10.0);
 	}
 	
 	//Initalize basic variables
@@ -619,6 +628,12 @@ public class ManagerPage extends JFrame implements ActionListener {
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * Adds sales label to showcase total sales
+	 * @param restHistory
+	 * @throws SQLException
+	 */
 	private void addSalesLabel(JPanel restHistory) throws SQLException {
 		JLabel totalSales = new JLabel("TOTAL SALES: ");
 		totalSales.setFont(new Font("Tahoma", Font.PLAIN, 13));
@@ -628,6 +643,12 @@ public class ManagerPage extends JFrame implements ActionListener {
 		salesVal.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		restHistory.add(salesVal);
 	}
+	
+	/**
+	 * Adds popular label to show current popular in restaurant
+	 * @param restHistory
+	 * @throws SQLException
+	 */
 	private void addPopularLabel(JPanel restHistory) throws SQLException {
 
 		JLabel currentFavorite = new JLabel("CURRENT POPULAR: ");
@@ -639,6 +660,14 @@ public class ManagerPage extends JFrame implements ActionListener {
 		restHistory.add(favVal);
 		
 	}
+	
+	/**
+	 * Adds Ratings label to showcase current ratings standing
+	 * of the restaurant, rated by the customers
+	 * 
+	 * @param restHistory
+	 * @throws SQLException
+	 */
 	private void addRatingsLabel(JPanel restHistory) throws SQLException {
 		JLabel ratingLabel = new JLabel("RESTAURANT RATING: "  );
 		ratingLabel.setFont(new Font("Tahoma", Font.PLAIN, 13));
@@ -650,6 +679,7 @@ public class ManagerPage extends JFrame implements ActionListener {
 		restHistory.add(countsVal);
 		
 	}
+	
 	/**
 	 * Creates the Coupons component
 	 */
@@ -657,14 +687,136 @@ public class ManagerPage extends JFrame implements ActionListener {
 		JPanel couponPanel = new JPanel();
 		couponPanel.setBounds(560,0,205,145);
 		couponPanel.setBackground(Color.white);
+		couponPanel.setLayout(new BoxLayout(couponPanel, BoxLayout.Y_AXIS));
 		couponPanel.setBorder(new LineBorder(Color.black, 1));
-		JLabel couponTitle = new JLabel("Set Coupons");
-		couponPanel.add(couponTitle);
-		JLabel toBeAdded = new JLabel("Coupons coming soon...");
-		couponPanel.add(toBeAdded);
-		bottomDisplayPanel.add(couponPanel);
 		
+		JLabel couponTitle = new JLabel("Set Coupon (Max 1)");
+		couponTitle.setAlignmentX(CENTER_ALIGNMENT);
+		couponPanel.add(couponTitle);
+		createCouponDisplay(couponPanel);
+		bottomDisplayPanel.add(couponPanel);
 	} 
+	
+	/**
+	 * Create grid view to render all coupon buttons
+	 * @param jp - panel to add display to
+	 */
+	private void createCouponDisplay(JPanel jp) {
+		//Main Coupon display
+		couponsDisplay = new JPanel();
+		if(!populateCouponsDisplay(couponsDisplay)) return;
+		couponsDisplay.setLayout(new GridLayout(0, 1, 0, 0));
+		//Scroll Panel to hold main display
+		JScrollPane scroll = new JScrollPane(couponsDisplay);
+		jp.add(scroll);
+		scroll.setBorder(new LineBorder(Color.white, 5));
+	}
+	
+	/**
+	 * Populates the coupon display with list of coupons
+	 * @param jp
+	 * @return True if done successfully, false otherwise
+	 */
+	private boolean populateCouponsDisplay(JPanel jp){
+		ArrayList<ArrayList<String>> couponList = getCoupons();
+		if(couponList == null) return false;
+		for(ArrayList<String> coupon: couponList) {
+			JButton jb;
+			if(coupon.get(0).equals("0.0")) {
+				jb = new JButton("Disable coupons");
+			}else {
+				jb = new JButton(coupon.get(0) + "% OFF");
+			}
+			jb.setName(coupon.get(0));
+			if(coupon.get(1).equals("1")){
+				if(jb.getName().equals("0.0")) {
+					jb.setText("Coupons Disabled");
+					jb.setBackground(Color.LIGHT_GRAY);
+					jb.setForeground(Color.BLACK);
+				} else {
+					jb.setText(coupon.get(0) + "% OFF (active)");
+					jb.setBackground(Color.ORANGE);
+					jb.setForeground(Color.BLACK);
+				}
+				jb.setEnabled(false);
+			} else {
+				jb.setBackground(Color.BLACK);
+				jb.setForeground(Color.WHITE);
+			}
+			attachCouponListener(jb);
+			jb.setFocusable(false);
+			jp.add(jb);
+		}
+		return true;
+	}
+	
+	/**
+	 * Attach actionlistener to each Coupon button
+	 * @param jb - button to attach listener to
+	 */
+	private void attachCouponListener(JButton jb) {
+		jb.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setCoupon(jb.getName());
+			}
+		});
+	}
+	
+	/**
+	 * Set coupon styling in UI, and set corresponding coupon
+	 * to active in the DB via the controller
+	 * 
+	 * @param coupon - the string for the coupon to set
+	 */
+	private void setCoupon(String coupon) {
+		for(Component comp: couponsDisplay.getComponents()) {
+			if(comp instanceof JButton) {
+
+				if(comp.getName().equals(coupon)) {
+					
+					if(coupon.equals("0.0")) {
+						((JButton)comp).setText("Coupons Disabled");
+						comp.setBackground(Color.LIGHT_GRAY);
+						comp.setForeground(Color.BLACK);
+					} else {
+						((JButton)comp).setText(comp.getName() + "% OFF (active)");
+						comp.setBackground(Color.ORANGE);
+						comp.setForeground(Color.BLACK);
+					}
+					comp.setEnabled(false);
+				} else {
+					comp.setBackground(Color.BLACK);
+					comp.setForeground(Color.WHITE);
+					if(comp.getName().equals("0.0")) {
+						((JButton)comp).setText("Disable coupons");
+					} else {
+						((JButton)comp).setText(comp.getName() + "% OFF");
+					}
+					comp.setEnabled(true);
+				}
+			}
+		}
+		try {
+			couponController.activateCoupon(coupon);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 
+	 * @return The list of coupons in DB to the UI via the controller
+	 */
+	private ArrayList<ArrayList<String>> getCoupons() {
+		ArrayList<ArrayList<String>> couponList = null;
+		try {
+			couponList = couponController.displayCoupons();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		if(couponList == null || couponList.size() == 0) return null;
+		return couponList;
+	}
 	
 	/**
 	 * Fetches the INVENTORY and SALES 2D lists, and calls respective
