@@ -4,10 +4,13 @@ import java.awt.*;
 import java.awt.event.*;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
 
 import controller.ManagerUIController;
@@ -79,7 +82,7 @@ public class ManagerPage extends JFrame implements ActionListener {
 
 	//Coupon button panel
 	JPanel couponsDisplay;
-	
+	private JLabel couponMessage;
 	private JScrollPane scrollPane;
 	
 	/**
@@ -608,7 +611,7 @@ public class ManagerPage extends JFrame implements ActionListener {
 	private void createRestComponent() {
 		JPanel restHistory = new JPanel();
 		restHistory.setLayout(new GridLayout(3, 2, 0, 0));
-		restHistory.setBounds(170,0,375, 145);
+		restHistory.setBounds(170,0,230, 145);
 		restHistory.setBackground(Color.white);
 		restHistory.setBorder(new LineBorder(Color.black, 1));
 		bottomDisplayPanel.add(restHistory);
@@ -652,7 +655,7 @@ public class ManagerPage extends JFrame implements ActionListener {
 	 */
 	private void addPopularLabel(JPanel restHistory) throws SQLException {
 
-		JLabel currentFavorite = new JLabel("CURRENT POPULAR: ");
+		JLabel currentFavorite = new JLabel("POPULAR: ");
 		currentFavorite.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		restHistory.add(currentFavorite);
 		currentFavorite.setBorder(new LineBorder(Color.WHITE, 10));
@@ -670,7 +673,7 @@ public class ManagerPage extends JFrame implements ActionListener {
 	 * @throws SQLException
 	 */
 	private void addRatingsLabel(JPanel restHistory) throws SQLException {
-		JLabel ratingLabel = new JLabel("RESTAURANT RATING: "  );
+		JLabel ratingLabel = new JLabel("OVR RATING: "  );
 		ratingLabel.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		restHistory.add(ratingLabel);
 		ratingLabel.setBorder(new LineBorder(Color.WHITE, 10));
@@ -686,7 +689,7 @@ public class ManagerPage extends JFrame implements ActionListener {
 	 */
 	private void createCouponsComponent() {
 		JPanel couponPanel = new JPanel();
-		couponPanel.setBounds(560,0,205,145);
+		couponPanel.setBounds(420,0,200,145);
 		couponPanel.setBackground(Color.white);
 		couponPanel.setLayout(new BoxLayout(couponPanel, BoxLayout.Y_AXIS));
 		couponPanel.setBorder(new LineBorder(Color.black, 1));
@@ -696,7 +699,79 @@ public class ManagerPage extends JFrame implements ActionListener {
 		couponPanel.add(couponTitle);
 		createCouponDisplay(couponPanel);
 		bottomDisplayPanel.add(couponPanel);
+		createCouponAdder();
 	} 
+	/**
+	 * Creates a "Add Coupon" panel with double input spinner.
+	 */
+	private void createCouponAdder() {
+		JPanel adderPanel = new JPanel();
+		adderPanel.setBounds(610,0,150,145);
+		adderPanel.setBackground(Color.white);
+		adderPanel.setBorder(new LineBorder(Color.black, 1));
+		bottomDisplayPanel.add(adderPanel);
+		JLabel couponTitle = new JLabel("Add Coupon");
+		couponTitle.setAlignmentX(CENTER_ALIGNMENT);
+		adderPanel.add(couponTitle);
+		addCouponAdder(adderPanel);
+	}
+	
+	/**
+	 * Creates the double input spinner.
+	 * @param jp - panel to add spinner to.
+	 */
+	private void addCouponAdder(JPanel jp) {
+		SpinnerNumberModel model = new SpinnerNumberModel(5.0, 5.0, 100.0, 0.5);
+		JSpinner spinner = new JSpinner(model);
+		JSpinner.NumberEditor editor = new JSpinner.NumberEditor(spinner, "#0.0");
+		spinner.setEditor(editor);
+		jp.add(spinner);
+		JLabel percent = new JLabel("%");
+		percent.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		jp.add(percent);
+		addCouponAddButton(jp, spinner);
+		JFormattedTextField field = editor.getTextField();
+		field.setEnabled(false);
+		couponMessage = new JLabel("");
+		couponMessage.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		jp.add(couponMessage);
+	}
+	
+	/**
+	 * Creates the add button for adding coupons.
+	 * @param jp
+	 */
+	private void addCouponAddButton(JPanel jp, JSpinner spinner) {
+		JButton addCouponBtn = new JButton("Add Coupon");
+		addCouponBtn.setBorder(null);
+		addCouponBtn.setBackground(Color.BLACK);
+		addCouponBtn.setForeground(Color.white);
+		addCouponBtn.setPreferredSize(new Dimension(100, 35));
+		addCouponBtn.setFocusable(false);
+		jp.add(addCouponBtn);
+		addCouponHandler(addCouponBtn, spinner);
+	}
+	/**
+	 * Helper to handle button click
+	 * @param addCouponBtn
+	 * @param spinner
+	 */
+	private void addCouponHandler(JButton addCouponBtn, JSpinner spinner){
+		addCouponBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	couponMessage.setText("");
+            	double val = (Double)spinner.getValue();
+            	if(!couponExists(val)) {
+            		couponMessage.setText(addCoupon(val));
+                	populateCouponsDisplay(couponsDisplay);
+                	validate();
+                	repaint();
+            		if(couponMessage.getText().contains("Added"))spinner.setValue(5.0);
+            	}
+            }
+        });
+	}
 	
 	/**
 	 * Create grid view to render all coupon buttons
@@ -706,12 +781,15 @@ public class ManagerPage extends JFrame implements ActionListener {
 		//Main Coupon display
 		couponsDisplay = new JPanel(new GridBagLayout());
 		if(!populateCouponsDisplay(couponsDisplay)) return;
-		couponsDisplay.setPreferredSize(new Dimension(80, 130));
 
 		//Scroll Panel to hold main display	
 		JScrollPane scroll = new JScrollPane(couponsDisplay);
 		jp.add(scroll);
 		scroll.setBorder(new LineBorder(Color.white, 5));
+		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+		scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		scroll.getVerticalScrollBar().setPreferredSize(new Dimension(0, 0)); // Hides the vertical scrollbar
+		scroll.getHorizontalScrollBar().setPreferredSize(new Dimension(0, 0)); // Hides the horizontal scrollbar
 	}
 	
 	/**
@@ -720,6 +798,7 @@ public class ManagerPage extends JFrame implements ActionListener {
 	 * @return True if done successfully, false otherwise
 	 */
 	private boolean populateCouponsDisplay(JPanel jp){
+		jp.removeAll();
 	    ArrayList<ArrayList<String>> couponList = getCoupons();
 	    GridBagConstraints c = new GridBagConstraints();
 	    c.fill = GridBagConstraints.HORIZONTAL;
@@ -729,20 +808,22 @@ public class ManagerPage extends JFrame implements ActionListener {
 	    for(ArrayList<String> coupon: couponList) {
 	    	c.gridx = 0;
 	    	c.gridy = row;
+	    	
 	        JButton jb;
-	        if(coupon.get(0).equals("0.0")) {
+	        String couponVal = round2dp(Double.parseDouble(coupon.get(0)));
+	        if(couponVal.equals("0.0")) {
 	            jb = new JButton("Disable coupons");
 	        }else {
-	            jb = new JButton(coupon.get(0) + "%");
+	            jb = new JButton(couponVal + "%");
 	        }
-	        jb.setName(coupon.get(0));
+	        jb.setName(couponVal);
 	        if(coupon.get(1).equals("1")){
 	            if(jb.getName().equals("0.0")) {
 	                jb.setText("Coupons Disabled");
 	                jb.setBackground(Color.LIGHT_GRAY);
 	                jb.setForeground(Color.BLACK);
 	            } else {
-	                jb.setText(coupon.get(0) + "% (active)");
+	                jb.setText(couponVal + "% (ON)");
 	                jb.setBackground(Color.ORANGE);
 	                jb.setForeground(Color.BLACK);
 	            }
@@ -755,15 +836,26 @@ public class ManagerPage extends JFrame implements ActionListener {
 	        jb.setFocusable(false);
 	        if(row == 0) {c.gridwidth = 2;} else {c.gridwidth=1;}
 	        jp.add(jb, c);
+	        
 	        // Create a new delete button
 	        if(!jb.getName().equals("0.0")) {
 		        c.gridx = 1;
+		        c.weightx = 0.25;
 	        	jp.add(createDeleteButton(jp, jb), c);
 		    }
 	        row++;
+	        c.weightx = 1;
 	    }
 	    return true;
 	}
+	
+	/**
+	 * Creates a delete button and appends it to the 
+	 * item to be deleted.
+	 * @param jp - Display panel
+	 * @param jb - Button to append delete
+	 * @return delete button
+	 */
 	private JButton createDeleteButton(JPanel jp, JButton jb) {
 	    JButton deleteButton = new JButton("X");
 	    deleteButton.setBackground(Color.black);
@@ -772,7 +864,7 @@ public class ManagerPage extends JFrame implements ActionListener {
 	    deleteButton.addActionListener(new ActionListener() {
 	        @Override
 	        public void actionPerformed(ActionEvent e) {
-	        	
+	        	deleteCoupon(jb);
 	            jp.remove(jb);
 	            jp.remove(deleteButton);
 	            jp.revalidate();
@@ -781,7 +873,35 @@ public class ManagerPage extends JFrame implements ActionListener {
 	    });
 	    return deleteButton;
 	}
-
+	
+	/**
+	 * Helper for deleting the coupon from the DB.
+	 * @param jb
+	 */
+	private void deleteCoupon(JButton jb) {
+    	try {
+			couponController.removeCoupon(jb.getName());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	private String addCoupon(double couponVal) {
+		try {
+			return couponController.addCoupon(couponVal);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return "Connection error";
+	}
+	private boolean couponExists(double couponVal) {
+		try {
+			return couponController.couponExists(couponVal);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
 	/**
 	 * Attach actionlistener to each Coupon button
 	 * @param jb - button to attach listener to
@@ -811,7 +931,7 @@ public class ManagerPage extends JFrame implements ActionListener {
 						comp.setBackground(Color.LIGHT_GRAY);
 						comp.setForeground(Color.BLACK);
 					} else {
-						((JButton)comp).setText(comp.getName() + "% OFF (active)");
+						((JButton)comp).setText(comp.getName() + "% (ON)");
 						comp.setBackground(Color.ORANGE);
 						comp.setForeground(Color.BLACK);
 					}
@@ -822,7 +942,7 @@ public class ManagerPage extends JFrame implements ActionListener {
 					if(comp.getName().equals("0.0")) {
 						((JButton)comp).setText("Disable coupons");
 					} else {
-						((JButton)comp).setText(comp.getName() + "% OFF");
+						((JButton)comp).setText(comp.getName() + "%");
 					}
 					comp.setEnabled(true);
 				}
@@ -1192,5 +1312,9 @@ public class ManagerPage extends JFrame implements ActionListener {
 		
 		// Returns the input E.g. 9.475 as "$9.48"
 		return new DecimalFormat("$#,##0.00").format(input);
+	}
+	private String round2dp(double num) {
+		DecimalFormat df = new DecimalFormat("#.##");
+		return df.format(num);
 	}
 }
