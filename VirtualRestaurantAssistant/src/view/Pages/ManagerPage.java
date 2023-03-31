@@ -704,10 +704,11 @@ public class ManagerPage extends JFrame implements ActionListener {
 	 */
 	private void createCouponDisplay(JPanel jp) {
 		//Main Coupon display
-		couponsDisplay = new JPanel();
+		couponsDisplay = new JPanel(new GridBagLayout());
 		if(!populateCouponsDisplay(couponsDisplay)) return;
-		couponsDisplay.setLayout(new GridLayout(0, 1, 0, 0));
-		//Scroll Panel to hold main display
+		couponsDisplay.setPreferredSize(new Dimension(80, 130));
+
+		//Scroll Panel to hold main display	
 		JScrollPane scroll = new JScrollPane(couponsDisplay);
 		jp.add(scroll);
 		scroll.setBorder(new LineBorder(Color.white, 5));
@@ -719,38 +720,68 @@ public class ManagerPage extends JFrame implements ActionListener {
 	 * @return True if done successfully, false otherwise
 	 */
 	private boolean populateCouponsDisplay(JPanel jp){
-		ArrayList<ArrayList<String>> couponList = getCoupons();
-		if(couponList == null) return false;
-		for(ArrayList<String> coupon: couponList) {
-			JButton jb;
-			if(coupon.get(0).equals("0.0")) {
-				jb = new JButton("Disable coupons");
-			}else {
-				jb = new JButton(coupon.get(0) + "% OFF");
-			}
-			jb.setName(coupon.get(0));
-			if(coupon.get(1).equals("1")){
-				if(jb.getName().equals("0.0")) {
-					jb.setText("Coupons Disabled");
-					jb.setBackground(Color.LIGHT_GRAY);
-					jb.setForeground(Color.BLACK);
-				} else {
-					jb.setText(coupon.get(0) + "% OFF (active)");
-					jb.setBackground(Color.ORANGE);
-					jb.setForeground(Color.BLACK);
-				}
-				jb.setEnabled(false);
-			} else {
-				jb.setBackground(Color.BLACK);
-				jb.setForeground(Color.WHITE);
-			}
-			attachCouponListener(jb);
-			jb.setFocusable(false);
-			jp.add(jb);
-		}
-		return true;
+	    ArrayList<ArrayList<String>> couponList = getCoupons();
+	    GridBagConstraints c = new GridBagConstraints();
+	    c.fill = GridBagConstraints.HORIZONTAL;
+	    int row = 0;
+	    
+	    if(couponList == null) return false;
+	    for(ArrayList<String> coupon: couponList) {
+	    	c.gridx = 0;
+	    	c.gridy = row;
+	        JButton jb;
+	        if(coupon.get(0).equals("0.0")) {
+	            jb = new JButton("Disable coupons");
+	        }else {
+	            jb = new JButton(coupon.get(0) + "%");
+	        }
+	        jb.setName(coupon.get(0));
+	        if(coupon.get(1).equals("1")){
+	            if(jb.getName().equals("0.0")) {
+	                jb.setText("Coupons Disabled");
+	                jb.setBackground(Color.LIGHT_GRAY);
+	                jb.setForeground(Color.BLACK);
+	            } else {
+	                jb.setText(coupon.get(0) + "% (active)");
+	                jb.setBackground(Color.ORANGE);
+	                jb.setForeground(Color.BLACK);
+	            }
+	            jb.setEnabled(false);
+	        } else {
+	            jb.setBackground(Color.BLACK);
+	            jb.setForeground(Color.WHITE);
+	        }
+	        attachCouponListener(jb);
+	        jb.setFocusable(false);
+	        if(row == 0) {c.gridwidth = 2;} else {c.gridwidth=1;}
+	        jp.add(jb, c);
+	        // Create a new delete button
+	        if(!jb.getName().equals("0.0")) {
+		        c.gridx = 1;
+	        	jp.add(createDeleteButton(jp, jb), c);
+		    }
+	        row++;
+	    }
+	    return true;
 	}
-	
+	private JButton createDeleteButton(JPanel jp, JButton jb) {
+	    JButton deleteButton = new JButton("X");
+	    deleteButton.setBackground(Color.black);
+	    deleteButton.setForeground(Color.RED);
+	    deleteButton.setFocusable(false);
+	    deleteButton.addActionListener(new ActionListener() {
+	        @Override
+	        public void actionPerformed(ActionEvent e) {
+	        	
+	            jp.remove(jb);
+	            jp.remove(deleteButton);
+	            jp.revalidate();
+	            jp.repaint();
+	        }
+	    });
+	    return deleteButton;
+	}
+
 	/**
 	 * Attach actionlistener to each Coupon button
 	 * @param jb - button to attach listener to
@@ -772,7 +803,7 @@ public class ManagerPage extends JFrame implements ActionListener {
 	private void setCoupon(String coupon) {
 		for(Component comp: couponsDisplay.getComponents()) {
 			if(comp instanceof JButton) {
-
+				if(comp.getName() == null) continue;
 				if(comp.getName().equals(coupon)) {
 					
 					if(coupon.equals("0.0")) {
