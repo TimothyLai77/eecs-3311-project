@@ -305,7 +305,7 @@ public class ReceiptGenerator {
 		congratulationsLbl.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		congratulationsLbl.setBounds(80, 420, 150, 20);
 		panel.add(congratulationsLbl);
-		JLabel couponLabel = new JLabel("Coupon (" + couponValue*100 + "% off)"); //Coupon Label to show percentage
+		JLabel couponLabel = new JLabel("Coupon (" + new DecimalFormat("#.##").format(couponValue*100) + "% off)"); //Coupon Label to show percentage
 		couponLabel.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		couponLabel.setBounds(40, 435, 120, 20);
 		panel.add(couponLabel);
