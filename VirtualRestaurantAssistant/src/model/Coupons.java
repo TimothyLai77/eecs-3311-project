@@ -34,27 +34,25 @@ public class Coupons {
 	
 	/**
 	 * Add a discount coupon to the database. Param value must be between 10 and 100.
-	 * @param discount	String percentage eg: 20, 15, 50.
+	 * @param discount	double percentage eg: 20, 15, 50.
 	 * @return String message.
 	 * */
-	public String addCoupon(String discount) throws SQLException {
-		if(!discount.isEmpty()) {
-			if(Integer.parseInt(discount) > 100 || Integer.parseInt(discount) < 10) {
-				return "value must be between 10 and 100!";
-			}
-			Double value = (double) (Double.parseDouble(discount) / 100);
-			String command = "insert into coupon(discountValue) values('" + value + "');";
+	public String addCoupon(double discount) throws SQLException {
+		if(discount < 100 && discount > 0) {
+			discount/=100;
+			System.out.println(discount);
+			String command = "insert into coupon(discountValue) values('" + discount + "');";
 			PreparedStatement st = connection.prepareStatement(command);
 			try {
 				st.executeUpdate(command);
-				return "Coupon added successfully!";
+				return "Coupon Added!";
 			}
 			catch(Exception ex) {
-				return "This discount value is already in the database!";
+				return "Coupon exists.";
 			}
 		}
 		
-		return "Input field is empty!";
+		return "Enter valid Coupon.";
 	}
 	
 	/**
@@ -80,7 +78,7 @@ public class Coupons {
 	/**
 	 * Check whether a coupon value is in the database.
 	 * */
-	private boolean couponExists(double value) throws SQLException {
+	public boolean couponExists(double value) throws SQLException {
 		String query = "select count(*) as count from coupon where discountValue='" + value + "';";
 		PreparedStatement st = connection.prepareStatement(query);
 		int count = -1;
