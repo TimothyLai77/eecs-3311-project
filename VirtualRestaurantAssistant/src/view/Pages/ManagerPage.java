@@ -864,6 +864,7 @@ public class ManagerPage extends JFrame implements ActionListener {
 	    deleteButton.addActionListener(new ActionListener() {
 	        @Override
 	        public void actionPerformed(ActionEvent e) {
+	        	couponMessage.setText("");
 	        	deleteCoupon(jb);
 	            jp.remove(jb);
 	            jp.remove(deleteButton);
