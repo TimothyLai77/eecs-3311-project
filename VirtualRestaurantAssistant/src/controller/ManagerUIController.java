@@ -34,8 +34,12 @@ public class ManagerUIController {
 		coupon = new Coupons();
 	}
 	
-	public String addCoupon(String percentValue) throws SQLException {
+	public String addCoupon(double percentValue) throws SQLException {
 		return coupon.addCoupon(percentValue);
+	}
+	
+	public boolean couponExists(double percentValue) throws SQLException {
+		return coupon.couponExists(percentValue);
 	}
 	
 	public String removeCoupon(String percentValue) throws SQLException {
