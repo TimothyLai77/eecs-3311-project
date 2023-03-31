@@ -40,7 +40,7 @@ create table manager (
 
 create table coupon (
     isActive		BIT(1)		default 0,	
-    discountValue	DECIMAL(10,2)	NOT NULL   unique
+    discountValue	DECIMAL(10,3)	NOT NULL   unique
 );
 
 
@@ -61,8 +61,4 @@ INSERT INTO INGREDIENTS(ingredient_name, ingredient_type, quantity, price) VALUE
 
 
 INSERT INTO coupon (isActive, discountValue) VALUES
-(true, 0.00),
-(false, 0.10),
-(false, 0.05),
-(false, 0.15),
-(false, 0.20);
+(true, 0.00);
