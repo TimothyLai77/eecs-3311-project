@@ -811,14 +811,14 @@ public class ManagerPage extends JFrame implements ActionListener {
 	    	
 	        JButton jb;
 	        String couponVal = round2dp(Double.parseDouble(coupon.get(0)));
-	        if(couponVal.equals("0.0")) {
+	        if(couponVal.equals("0")) {
 	            jb = new JButton("Disable coupons");
 	        }else {
 	            jb = new JButton(couponVal + "%");
 	        }
 	        jb.setName(couponVal);
 	        if(coupon.get(1).equals("1")){
-	            if(jb.getName().equals("0.0")) {
+	            if(jb.getName().equals("0")) {
 	                jb.setText("Coupons Disabled");
 	                jb.setBackground(Color.LIGHT_GRAY);
 	                jb.setForeground(Color.BLACK);
@@ -838,7 +838,7 @@ public class ManagerPage extends JFrame implements ActionListener {
 	        jp.add(jb, c);
 	        
 	        // Create a new delete button
-	        if(!jb.getName().equals("0.0")) {
+	        if(!jb.getName().equals("0")) {
 		        c.gridx = 1;
 		        c.weightx = 0.25;
 	        	jp.add(createDeleteButton(jp, jb), c);
@@ -921,12 +921,13 @@ public class ManagerPage extends JFrame implements ActionListener {
 	 * @param coupon - the string for the coupon to set
 	 */
 	private void setCoupon(String coupon) {
+		couponMessage.setText("");
 		for(Component comp: couponsDisplay.getComponents()) {
 			if(comp instanceof JButton) {
 				if(comp.getName() == null) continue;
 				if(comp.getName().equals(coupon)) {
 					
-					if(coupon.equals("0.0")) {
+					if(coupon.equals("0")) {
 						((JButton)comp).setText("Coupons Disabled");
 						comp.setBackground(Color.LIGHT_GRAY);
 						comp.setForeground(Color.BLACK);
@@ -939,7 +940,7 @@ public class ManagerPage extends JFrame implements ActionListener {
 				} else {
 					comp.setBackground(Color.BLACK);
 					comp.setForeground(Color.WHITE);
-					if(comp.getName().equals("0.0")) {
+					if(comp.getName().equals("0")) {
 						((JButton)comp).setText("Disable coupons");
 					} else {
 						((JButton)comp).setText(comp.getName() + "%");

@@ -40,7 +40,6 @@ public class Coupons {
 	public String addCoupon(double discount) throws SQLException {
 		if(discount < 100 && discount > 0) {
 			discount/=100;
-			System.out.println(discount);
 			String command = "insert into coupon(discountValue) values('" + discount + "');";
 			PreparedStatement st = connection.prepareStatement(command);
 			try {
