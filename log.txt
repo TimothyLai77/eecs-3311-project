@@ -146,6 +146,8 @@ Mar 16:
 
 * Testing
 	* Finished by Quang (2 days)
+
+* This time around there were no changes to the user stories, everything we planned was finished. 
 ----------------------------------------------
 
 --- Other ---
