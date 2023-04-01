@@ -41,5 +41,6 @@ create table manager (
 
 create table coupon (
     isActive		BIT(1)		default 0,	
-    discountValue	DECIMAL(10,2)	NOT NULL   unique
+    discountValue	DECIMAL(10,3)	NOT NULL   unique
 );
+

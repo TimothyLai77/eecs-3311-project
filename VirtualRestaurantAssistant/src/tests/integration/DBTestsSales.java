@@ -65,7 +65,7 @@ class DBTestsSales {
 	void testGetTotalSales() throws SQLException {
 		sales.updateSalesHistory("123456", 12.12, "2023-03-08");
 		try {
-			assertEquals("$12.12", sales.getTotalSales());
+			assertEquals(12.12, sales.getTotalSales());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -115,7 +115,7 @@ class DBTestsSales {
 			e1.printStackTrace();
 		}
 		
-		String expected = "Chicken: 2\n";
+		String expected = "Chicken (2 sales)<br>\n";
 		String actual = "";
 		try {
 			actual = sales.getCounts();
