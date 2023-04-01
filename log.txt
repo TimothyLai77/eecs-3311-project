@@ -128,5 +128,28 @@ User Story Changes:
 Mar 16:
 * Did QA for the other group, submitted issues on their Github.
 	* Didn't get too much time, they only gave us their repo on the 15th. 
+	* Done by Tim
 
+* Fixed issues we got on GitHub 
+	* Finished by Ali (6 days)
+
+--- STORIES FOR ITERATION 3 ---
+* Ratings
+	* Finished by Ali, Quang, and Aum (6 days)
+
+* Customer Coupouns
+	* Finished by Ali, and Quang (6 days)
+
+
+* Dietary Restrictions 
+	* Finished by, Ali (2 days)
+
+* Testing
+	* Finished by Quang (2 days)
+----------------------------------------------
+
+--- Other ---
+	* Presentation stuff finished by Aum and Muhammad
+	* documentation done by Tim
+	
 
