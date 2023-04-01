@@ -1,6 +1,9 @@
 package controller;
 
+import java.awt.Color;
+
 import javax.swing.UIManager;
+import javax.swing.plaf.ColorUIResource;
 
 import view.Pages.HomePage;
 
@@ -15,6 +18,7 @@ public class Main {
 
 		// look and feel setting for java swing.
 		try {
+			UIManager.put("Button.disabledText", new ColorUIResource(Color.BLACK));
 		    UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
 		} catch (Exception e) {
 		    e.printStackTrace();

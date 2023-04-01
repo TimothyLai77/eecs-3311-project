@@ -732,6 +732,7 @@ public class ManagerPage extends JFrame implements ActionListener {
 		addCouponAddButton(jp, spinner);
 		JFormattedTextField field = editor.getTextField();
 		field.setEnabled(false);
+		field.setDisabledTextColor(Color.BLACK);
 		couponMessage = new JLabel("");
 		couponMessage.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		jp.add(couponMessage);
