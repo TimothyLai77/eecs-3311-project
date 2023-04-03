@@ -1107,7 +1107,7 @@ public class ManagerPage extends JFrame implements ActionListener {
 	}
 	
 	/**
-	 * Create each table with same config as schema
+	 * Create each table with same configuration as the sql schema
 	 */
 	
 	private void createInventoryTable() {
