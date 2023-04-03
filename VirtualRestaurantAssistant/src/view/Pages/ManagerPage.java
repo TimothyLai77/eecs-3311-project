@@ -15,6 +15,7 @@ import javax.swing.table.DefaultTableModel;
 
 import controller.ManagerUIController;
 import view.Components.ImageImports;
+import view.Components.MultiLineCellRenderer;
 
 public class ManagerPage extends JFrame implements ActionListener {
 
@@ -1115,16 +1116,17 @@ public class ManagerPage extends JFrame implements ActionListener {
 		JTable invTable = new JTable(invModel);
 		invTable.setEnabled(false);
 		scrollPane = new JScrollPane(invTable);
-		scrollPane.setBounds(176, 36, 580, 102);
+		scrollPane.setBounds(176, 10, 580, 140);
 		bottomDisplayPanel.add(scrollPane);
 	}
 	private void createSalesTable() {
 		String col[] = {"Order ID", "Total", "Order Date", "Feedback", "Rating / 5"};
 		salesModel = new DefaultTableModel(col, 0);
 		JTable salesTable = new JTable(salesModel);
+	    salesTable.getColumnModel().getColumn(3).setCellRenderer(new MultiLineCellRenderer());
 		salesTable.setEnabled(false);
 		scrollPane = new JScrollPane(salesTable);
-		scrollPane.setBounds(176, 36, 580, 102);
+		scrollPane.setBounds(176, 10, 580, 140);
 		bottomDisplayPanel.add(scrollPane);
 	}
 	
