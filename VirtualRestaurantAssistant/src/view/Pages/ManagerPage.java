@@ -1119,7 +1119,7 @@ public class ManagerPage extends JFrame implements ActionListener {
 		bottomDisplayPanel.add(scrollPane);
 	}
 	private void createSalesTable() {
-		String col[] = {"Order ID", "Total", "Order Date", "Feedback", "Rating"};
+		String col[] = {"Order ID", "Total", "Order Date", "Feedback", "Rating / 5"};
 		salesModel = new DefaultTableModel(col, 0);
 		JTable salesTable = new JTable(salesModel);
 		salesTable.setEnabled(false);
