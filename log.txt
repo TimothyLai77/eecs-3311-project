@@ -133,7 +133,11 @@ Mar 16:
 * Fixed issues we got on GitHub 
 	* Finished by Ali (6 days)
 
---- STORIES FOR ITERATION 3 ---
+* Other
+	* Presentation stuff finished by Aum and Muhammad
+	* documentation done by Tim
+
+=== STORIES FOR ITERATION 3 ===
 * Ratings
 	* Finished by Ali, Quang, and Aum (6 days)
 
@@ -146,12 +150,12 @@ Mar 16:
 
 * Testing
 	* Finished by Quang (2 days)
+	* Manual end to end testing written by Devesh (2-3 days)
 
-* This time around there were no changes to the user stories, everything we planned was finished. 
-----------------------------------------------
 
---- Other ---
-	* Presentation stuff finished by Aum and Muhammad
-	* documentation done by Tim
+* Story Changes: We removed the detailed user story where the app would should calories for each sandwich. The UI changes 
+needed would have taken a while, and we didn't have time to finish it due to work from other courses. 
+============================================
+--------------------------------------------------------------------
 	
 
