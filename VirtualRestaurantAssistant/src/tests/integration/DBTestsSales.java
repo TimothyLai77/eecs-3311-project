@@ -10,6 +10,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import model.ManagerRatings;
 import model.ManagerSales;
 import view.Components.CartItem;
 
@@ -44,6 +45,11 @@ class DBTestsSales {
 	void testDisplaySales() throws SQLException {
 		sales.updateSalesHistory("123456", 14.12, "2023-03-08");
 		sales.updateSalesHistory("123457", 44.08, "2023-03-14");
+		
+		ManagerRatings rt = new ManagerRatings(DBTests.con);
+		rt.submitFeedback("123456", 5, "great");
+		rt.submitFeedback("123457", 4, "good");
+		
 		ArrayList<ArrayList<String>> sa = sales.displaySales();
 		
 		ArrayList<String> o1 = new ArrayList<>();
@@ -52,13 +58,18 @@ class DBTestsSales {
 		o1.add("123456");
 		o1.add("14.12");
 		o1.add("2023-03-08");
+		o1.add("great");
+		o1.add("5");
 		
 		o2.add("123457");
 		o2.add("44.08");
 		o2.add("2023-03-14");
+		o2.add("good");
+		o2.add("4");
 		
 		assertTrue(sa.contains(o1));
 		assertTrue(sa.contains(o2));
+		
 	}
 
 	@Test

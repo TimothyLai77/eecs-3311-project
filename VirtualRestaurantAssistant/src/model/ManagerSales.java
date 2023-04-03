@@ -58,7 +58,7 @@ public class ManagerSales {
 	 * */
 	public ArrayList<ArrayList<String>> displaySales() throws SQLException {
 		Statement st = connection.createStatement();
-		String query = "SELECT * FROM ORDERS ORDER BY order_date DESC;";
+		String query = "SELECT order_id, order_total, order_date, feedback, score from ORDERS JOIN ratings ON ORDERS.ORDER_ID = RATINGS.ROrder_id ORDER BY order_date DESC;";
 		ResultSet rs = st.executeQuery(query);
 		ArrayList<ArrayList<String>> rows = new ArrayList<>();
 		
@@ -70,6 +70,11 @@ public class ManagerSales {
 			row.add(total);
 			String date = rs.getString("order_date");
 			row.add(date);
+			String feedback = rs.getString("feedback");
+			row.add(feedback);
+			String score = rs.getString("score");
+			row.add(score);
+			
 			rows.add(row);
 		}
 		return rows;

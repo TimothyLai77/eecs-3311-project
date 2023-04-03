@@ -53,9 +53,9 @@ public class ManagerPage extends JFrame implements ActionListener {
 	// Panel and Component references
 	private JComboBox<String> ingredientDropdown; //Dropdown list of names
 	
-	//Ingredient type components
-	private JPanel ingredientTypePanel; 
-	private ButtonGroup typeGroup;
+	//Ingredient type components	
+	private JPanel ingredientTypePanel; 	
+	private ButtonGroup typeGroup;  	
 	
 	//Individual buttons
 	private JRadioButton addChoiceBtn;
@@ -1003,7 +1003,7 @@ public class ManagerPage extends JFrame implements ActionListener {
 	private void setSalesDisplay(ArrayList<ArrayList<String>> rows) {
 		salesModel.setRowCount(0);
 		for(ArrayList<String> row : rows) {
-			Object[] data = {row.get(0),currencyFormat(Double.parseDouble(row.get(1))), row.get(2)};
+			Object[] data = {row.get(0),currencyFormat(Double.parseDouble(row.get(1))), row.get(2), row.get(3), row.get(4)};
 			salesModel.addRow(data);
 		}
 	}	
@@ -1119,7 +1119,7 @@ public class ManagerPage extends JFrame implements ActionListener {
 		bottomDisplayPanel.add(scrollPane);
 	}
 	private void createSalesTable() {
-		String col[] = {"Order ID", "Total", "Order Date"};
+		String col[] = {"Order ID", "Total", "Order Date", "Feedback", "Rating / 5"};
 		salesModel = new DefaultTableModel(col, 0);
 		JTable salesTable = new JTable(salesModel);
 		salesTable.setEnabled(false);
