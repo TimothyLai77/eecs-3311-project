@@ -47,11 +47,10 @@ public class ManagerMain {
 				System.out.println("Connected to database!");
 				return con;
 			}
-			catch(Exception e){
-				String message = e.getMessage().split("\n", 2)[0].toLowerCase().replaceAll(" ", "");
-				if(message.equals("communicationslinkfailure")) {
-					new ErrorPrompt("<html>No Local Server found. Please start a<br>local MySQL Server to run this app.</html>", true).setVisible(true);;
-				}
+			catch(SQLException e){
+				new ErrorPrompt("<html>No Local Server found. Please start a<br>local MySQL Server to run this app.</html>", true).setVisible(true);
+			} catch (Exception e) {
+				new ErrorPrompt("<html>Unknown error has occurred</html>", true).setVisible(true);;
 			}
 			
 			return null;
