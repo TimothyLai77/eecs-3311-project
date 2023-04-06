@@ -20,6 +20,8 @@ In addition issues brought up from our QA have also been resolved. We have imple
 
 [Retrospective writeup](https://raw.githubusercontent.com/TimothyLai77/eecs-3311-project/main/Documentation/Iteration%203/Software%20Design%20Retrospective-1.pdf)
 
+[Manual Testing](https://raw.githubusercontent.com/TimothyLai77/eecs-3311-project/main/Documentation/Iteration%203/Manual%20User%20Story%20Testing.pdf)
+
 
 ### Running the App
 * Download the VirtualRestaurantAssistant.jar from the root folder
