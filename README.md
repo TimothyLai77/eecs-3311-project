@@ -1,6 +1,7 @@
 Repo for EECS3311 W23 Project
 
- [Wiki](https://github.com/TimothyLai77/eecs-3311-project/wiki) The wiki is just a copy of the readme and the past iterations.
+ [Wiki](https://github.com/TimothyLai77/eecs-3311-project/wiki). The wiki is just a copy of the readme and for the past iterations.
+
 
 ## Iteration 3
 Almost all of the planned stories from iteration 0 have been implemented. We added icons to the ordering page for customers with dietary restrictions. We added ratings so the customers can leave their order feedback after they place the order. Finally we added randomized discounts. The manager can set the discount in the manager view page, and the customer will just get the discount applied at random. 
@@ -18,10 +19,11 @@ In addition issues brought up from our QA have also been resolved. We have imple
 
 [QA report for Team2](https://raw.githubusercontent.com/TimothyLai77/eecs-3311-project/main/Documentation/Iteration%203/Bug%20Report%20List%20for%20Team2.pdf)
 
+[Finding Team 2's Bugs/Issues](https://raw.githubusercontent.com/TimothyLai77/eecs-3311-project/main/Documentation/Iteration%203/Finding%20Team%202%20Bugs.pdf)
+
 [Retrospective writeup](https://raw.githubusercontent.com/TimothyLai77/eecs-3311-project/main/Documentation/Iteration%203/Software%20Design%20Retrospective-1.pdf)
 
 [Manual Testing](https://raw.githubusercontent.com/TimothyLai77/eecs-3311-project/main/Documentation/Iteration%203/Manual%20User%20Story%20Testing.pdf)
-
 
 ### Running the App
 * Download the VirtualRestaurantAssistant.jar from the root folder
@@ -47,3 +49,4 @@ The app is configured to use the database with the following credentials:
 
 
 \* The easiest way to run the setup scripts is to open MySQL Workbench. Navigate to File > Open SQL Script... > select the desired script > open > execute 
+
