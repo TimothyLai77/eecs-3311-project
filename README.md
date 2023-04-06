@@ -8,6 +8,11 @@ Almost all of the planned stories from iteration 0 have been implemented. We add
 In addition issues brought up from our QA have also been resolved. We have implemented most of their feedback, although we couldn't fix one of their issues.
 
 ### Documentation 
+* Anything that wasn't linked is probably in /Documentation/Iteration 3/
+
+[Original User Stories](https://raw.githubusercontent.com/TimothyLai77/eecs-3311-project/main/Documentation/Iteration%203/Original%20Stories.png)
+
+[Revised User Stories](https://raw.githubusercontent.com/TimothyLai77/eecs-3311-project/main/Documentation/Iteration%203/revised%20stories.png)
 
 [System Architecture Sketch](https://raw.githubusercontent.com/TimothyLai77/eecs-3311-project/main/Documentation/Iteration%203/System_Architecure_Sketch.pdf)
 
